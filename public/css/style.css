@@ -1,6 +1,7 @@
 :root{
     font-family: sans-serif;
     font-size: 16px;
+    overflow-x: hidden;
 }
 
 body{
@@ -10,16 +11,23 @@ body{
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
     box-sizing: border-box;
+    overflow-x: hidden;
 }
 
-nav .nav-wrap, footer.page-footer{
-    background-color: rgb(102, 102, 192);
+nav, footer.page-footer{
+    background-color: rgb(102, 102, 192) !important;
+}
+
+nav{
+    line-height: none ;
+    height: 4.35rem !important;
 }
 
 .nav-wrap{
     display: flex;
     justify-content: space-between;
     padding-right: 1rem;
+    height: auto;
 }
 
 .contentP{
@@ -84,3 +92,55 @@ li a:hover{
 .footer-copyright a{
     margin-left: 2rem;
 }
+
+.img-back{
+    background: url('/assets/img/placeholder.png') center;
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+    height: 15rem;
+    width: 100%;
+}
+
+.carroussel{
+    width: 400%;
+    overflow-x: hidden;
+    white-space: nowrap;
+    display: flex;
+    animation: carousel 20s linear infinite;
+}
+
+#contenu{
+    width: 100vw ;
+    max-width: 100% ;
+    margin: 0;
+}
+
+@keyframes carousel {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(0);
+    }
+    28%{
+        transform: translateX(-25%);
+    }
+    50% {
+      transform: translateX(-25%);
+    }
+    53% {
+        transform: translateX(-50%);
+      }
+    75% {
+      transform: translateX(-50%);
+    }
+    77% {
+      transform: translateX(-75%);
+    }
+    97% {
+        transform: translateX(-75%);
+      }
+    100%{
+        transform: translateX(100%);
+    }
+  }
