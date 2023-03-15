@@ -1,0 +1,22 @@
+{
+  "name": "airneis",
+  "version": "0.0.1",
+  "description": "Projet site Ecommerce",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FastiGun/AIRNEIS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FastiGun/AIRNEIS/issues"
+  },
+  "homepage": "https://github.com/FastiGun/AIRNEIS#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
