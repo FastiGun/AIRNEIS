@@ -102,11 +102,11 @@ li a:hover{
 }
 
 .carroussel{
-    width: 400%;
+    width: 300%;
     overflow-x: hidden;
     white-space: nowrap;
     display: flex;
-    animation: carousel 20s linear infinite;
+    animation: carousel 15s linear infinite;
 }
 
 #contenu{
@@ -117,28 +117,22 @@ li a:hover{
 
 @keyframes carousel {
     0% {
-      transform: translateX(0);
+        transform: translateX(0);
     }
-    25% {
-      transform: translateX(0);
+    32% {
+        transform: translateX(0);
     }
-    28%{
-        transform: translateX(-25%);
+    35%{
+        transform: translateX(-33.33%);
     }
-    50% {
-      transform: translateX(-25%);
+    64% {
+        transform: translateX(-33.33%);
     }
-    53% {
-        transform: translateX(-50%);
+    67% {
+        transform: translateX(-66.66%);
       }
-    75% {
-      transform: translateX(-50%);
-    }
-    77% {
-      transform: translateX(-75%);
-    }
     97% {
-        transform: translateX(-75%);
+        transform: translateX(-66.66%);
       }
     100%{
         transform: translateX(100%);
