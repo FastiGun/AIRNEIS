@@ -11,17 +11,48 @@ body{
     min-height: 100vh;
 }
 
+nav .nav-wrap, footer.page-footer{
+    background-color: rgb(102, 102, 192);
+}
+
+.nav-wrap{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1rem;
+}
+
 .contentP{
     font-size: 1.5rem;
 }
 
-.brand-logo{
-    margin-left: 1rem;
+.logo{
     font-weight: 500;
-    
+    font-size: 2rem;
+    padding: 0.2rem 0.6rem;
+    transition: 0.2s;
 }
 
-.create_date{
-    display: block;
-    color: darkgrey;
+.logo:hover{
+    background-color: rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+ul .right{
+    align-items: center;
+}
+
+ul{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+li a{
+    width: 56px;
+    height: 100%;
+    margin: auto;
+}
+
+li a:hover{
+    border-radius: 5px;
 }
