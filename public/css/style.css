@@ -9,6 +9,7 @@ body{
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
+    box-sizing: border-box;
 }
 
 nav .nav-wrap, footer.page-footer{
@@ -26,14 +27,15 @@ nav .nav-wrap, footer.page-footer{
 }
 
 .logo{
-    font-weight: 500;
+    font-weight: 900;
     font-size: 2rem;
-    padding: 0.2rem 0.6rem;
+    padding: 0.2rem 1rem;
     transition: 0.2s;
+    letter-spacing: 0.2rem;
 }
 
 .logo:hover{
-    background-color: rgba(0,0,0,0.1);
+    color: rgb(206, 206, 206);
     transition: 0.2s;
 }
 
@@ -55,4 +57,30 @@ li a{
 
 li a:hover{
     border-radius: 5px;
+}
+
+.page-footer ul{
+    display: flex;
+    justify-content: left;
+    gap: 3rem;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.page-footer ul li a{
+    color: white;
+    transition: 0.2s;
+}
+
+.page-footer ul li a:hover{
+    transition: 0.2s;
+    color: rgb(206, 206, 206);
+}
+
+.footer-copyright a i{
+    font-size: 1.3rem;
+}
+
+.footer-copyright a{
+    margin-left: 2rem;
 }
