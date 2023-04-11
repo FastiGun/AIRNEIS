@@ -97,7 +97,7 @@ li a:hover{
     background: url('/assets/img/placeholder.png') center;
     background-repeat: no-repeat, repeat;
     background-size: cover;
-    height: 15rem;
+    height: 25rem;
     width: 100%;
 }
 
@@ -107,12 +107,23 @@ li a:hover{
     white-space: nowrap;
     display: flex;
     animation: carousel 15s linear infinite;
+    margin-bottom: 40rem;
 }
 
 #contenu{
     width: 100vw ;
     max-width: 100% ;
     margin: 0;
+}
+
+i.fa-brands:hover{
+    opacity: 0.8;
+    transition : 0.2s;
+}
+
+i.fa-brands{
+    opacity: 1;
+    transition : 0.2s;
 }
 
 @keyframes carousel {
