@@ -126,6 +126,10 @@ i.fa-brands{
     transition : 0.2s;
 }
 
+.container{
+    max-width: 1100px;
+}
+
 @keyframes carousel {
     0% {
         transform: translateX(0);
