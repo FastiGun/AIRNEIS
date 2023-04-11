@@ -188,10 +188,15 @@ i.fa-brands{
 
 .ecran-panier{
     display: flex;
+    margin: 3rem 0;
 }
 
 .droite-panier, .gauche-panier{
     width: 50%;
+}
+
+.droite-panier{
+    padding: 0 2rem;
 }
 
 .infos-produit-panier{
@@ -202,6 +207,7 @@ i.fa-brands{
 
 .article-panier{
     display: flex;
+    margin: 0 0 3rem 0;
 }
 
 .img-article-panier{
@@ -219,7 +225,10 @@ i.fa-brands{
 }
 
 .chiffres-produit-panier{
+    display: flex;
+    flex-direction: column;
     text-align: right;
+    justify-content: space-between;
 }
 
 .row.panier{
@@ -229,4 +238,25 @@ i.fa-brands{
 .prix-produit-panier{
     margin: 0 0;
     font-size: 1rem;
+}
+
+.desc-produit-panier{
+    padding: 0 1rem 0 0;
+}
+
+.montant-panier{
+    display: flex;
+    justify-content: space-between;
+}
+
+.montant-panier h4{
+    margin: 0;
+}
+
+.montant-gauche{
+    text-align: left;
+}
+
+.montant-droite{
+    text-align: right;
 }
