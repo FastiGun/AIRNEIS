@@ -182,3 +182,51 @@ i.fa-brands{
     margin: 2rem 0;
 }
 
+.button, .btn, .waves-effect, .waves-light{
+    background-color: rgb(102, 102, 192) !important;
+}
+
+.ecran-panier{
+    display: flex;
+}
+
+.droite-panier, .gauche-panier{
+    width: 50%;
+}
+
+.infos-produit-panier{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.article-panier{
+    display: flex;
+}
+
+.img-article-panier{
+    height: 150px;
+}
+
+.nom-produit-panier{
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.infos-produit-panier{
+    padding: 0 1rem;
+}
+
+.chiffres-produit-panier{
+    text-align: right;
+}
+
+.row.panier{
+    margin: 0;
+}
+
+.prix-produit-panier{
+    margin: 0 0;
+    font-size: 1rem;
+}
