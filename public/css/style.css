@@ -107,7 +107,6 @@ li a:hover{
     white-space: nowrap;
     display: flex;
     animation: carousel 15s linear infinite;
-    margin-bottom: 40rem;
 }
 
 #contenu{
@@ -152,4 +151,34 @@ i.fa-brands{
     100%{
         transform: translateX(100%);
     }
-  }
+}
+
+.contact-h1, .titre-accueil, .titre-produits-accueil{
+    font-weight: 300;
+    font-size: 3rem;
+    text-align: center;
+}
+
+.titreh2-index{
+    padding: 3rem 0;
+}
+
+.grille-categories-accueil, .grille-produits-accueil {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0 0 3rem 0;
+    flex-wrap: wrap;
+}
+
+.categorie-accueil, .produit-accueil{
+    height: 200px;
+    width: 300px;
+    background-color: grey;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
