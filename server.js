@@ -20,6 +20,10 @@ app.get("/contact", function (req, res) {
   res.render("pages/contact", { title: "Contact" });
 });
 
+app.get("/connexion", function (req, res) {
+  res.render("pages/connexion", { title: "Connexion" });
+});
+
 app.listen(8080, function () {
   console.log("Je tourne ici : http://localhost:8080");
 });
