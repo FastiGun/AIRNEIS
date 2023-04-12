@@ -1,29 +1,35 @@
 const express = require("express");
-const app = express();
+const { connexion } = require("./db");
 
-app.set("view engine", "pug");
-app.use("/assets", express.static("public"));
+const PORT = 3001;
 
-app.get("/", function (req, res) {
-  res.render("pages/index", { title: "Accueil" });
-});
+connexion.then(async (db) => {
+  const app = express();
 
-app.get("/search", function (req, res) {
-  res.render("pages/search", { title: "Recherche" });
-});
+  app.set("view engine", "pug");
+  app.use("/assets", express.static("public"));
 
-app.get("/cart", function (req, res) {
-  res.render("pages/cart", { title: "Panier" });
-});
+  app.get("/", function (req, res) {
+    res.render("pages/index", { title: "Accueil" });
+  });
 
-app.get("/contact", function (req, res) {
-  res.render("pages/contact", { title: "Contact" });
-});
+  app.get("/search", function (req, res) {
+    res.render("pages/search", { title: "Recherche" });
+  });
 
-app.get("/connexion", function (req, res) {
-  res.render("pages/connexion", { title: "Connexion" });
-});
+  app.get("/cart", function (req, res) {
+    res.render("pages/cart", { title: "Panier" });
+  });
 
-app.listen(8080, function () {
-  console.log("Je tourne ici : http://localhost:8080");
+  app.get("/contact", function (req, res) {
+    res.render("pages/contact", { title: "Contact" });
+  });
+
+  app.get("/connexion", function (req, res) {
+    res.render("pages/connexion", { title: "Connexion" });
+  });
+
+  app.listen(PORT, function () {
+    console.log(`Je tourne ici : http://localhost:${PORT}`);
+  });
 });

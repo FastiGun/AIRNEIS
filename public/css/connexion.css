@@ -1,6 +1,8 @@
 .connexion-h1{
     display: flex;
     justify-content: center;
+    font-weight: 300;
+    margin-top: 5rem;
 }
 
 
