@@ -1,0 +1,27 @@
+.inscription-h1{
+    display: flex;
+    justify-content: center;
+    font-weight: 300;
+    margin-top: 5rem;
+}
+
+
+.inscription{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 5rem;
+}
+
+form {
+    grid-column-start: 2;
+}
+
+.row4 {
+    display: flex;
+    align-items: center; 
+    justify-content: flex-start;
+}
+
+.row4 p{
+    margin-right: 0.7rem;
+}

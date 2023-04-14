@@ -29,6 +29,10 @@ connexion.then(async (db) => {
     res.render("pages/connexion", { title: "Connexion" });
   });
 
+  app.get("/inscription", function (req, res) {
+    res.render("pages/inscription", { title: "Inscription" });
+  });
+
   app.listen(PORT, function () {
     console.log(`Je tourne ici : http://localhost:${PORT}`);
   });
