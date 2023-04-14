@@ -7,13 +7,14 @@
 
 
 .inscription{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
     margin-bottom: 5rem;
 }
 
-form {
-    grid-column-start: 2;
+@media (min-width: 1000px){
+    form {
+        max-width: 500px;
+        margin: auto;
+    }
 }
 
 .row5 {
