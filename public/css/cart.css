@@ -1,11 +1,4 @@
-.ecran-panier{
-  display: flex;
-  margin: 3rem 0;
-}
 
-.droite-panier, .gauche-panier{
-  width: 50%;
-}
 
 .droite-panier{
   padding: 0 2rem;
@@ -71,4 +64,28 @@
 
 .montant-droite{
   text-align: right;
+}
+
+@media (min-width: 1100px){
+  .ecran-panier{
+    display: flex;
+    margin: 3rem 0;
+  }
+
+  .droite-panier, .gauche-panier{
+    width: 50%;
+  }
+}
+
+@media (max-width: 1100px){
+  .ecran-panier{
+    display: flex;
+    flex-direction: column;
+    margin: 3rem auto;
+    width: 100%;
+  }
+
+  .droite-panier, .gauche-panier{
+    width: 100%;
+  }
 }
