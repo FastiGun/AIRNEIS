@@ -5,13 +5,14 @@
 }
 
 body{
-    margin: 0;
+    margin:0;
     padding: 0;
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
     box-sizing: border-box;
     overflow-x: hidden;
+    position: relative;
 }
 
 nav, footer.page-footer{
@@ -21,6 +22,10 @@ nav, footer.page-footer{
 nav{
     line-height: none ;
     height: 4.35rem !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
 }
 
 .nav-wrap{
@@ -112,7 +117,7 @@ li a:hover{
 #contenu{
     width: 100vw ;
     max-width: 100% ;
-    margin: 0;
+    margin:  4.35rem 0 0 0;
 }
 
 i.fa-brands:hover{
