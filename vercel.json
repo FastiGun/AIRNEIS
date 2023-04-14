@@ -1,16 +1,25 @@
 {
   "version": 2,
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+  "build": {
+    "env": {
+        "ENABLE_FILE_SYSTEM_API": "1"
+      }
+  },
   "builds": [
     {
-      "src": "server.js",
-      "use": "@now/node"
-    }
+      "src": "./server.js",
+      "use": "@vercel/node"
+    },
+    { "src": "./public/*.*", "use": "@vercel/static" }
   ],
   "routes": [
     {
+      "src": "/public/(.*)",
+      "dest": "/public"
+    },
+    {
       "src": "/(.*)",
-      "dest": "server.js"
+      "dest": "/"
     }
   ]
 }
