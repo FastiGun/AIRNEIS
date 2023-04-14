@@ -9,21 +9,21 @@ block content
     .inscription
       form(action="GET")
         .row1
-           .input-field.col.s12
-            input#email(name="Nom", placeholder="Nom*")
-            label(for="email")
-         .row2
-           .input-field.col.s12
-            input#email(name="Prénom", placeholder="Prénom*")
-            label(for="email")   
+          .input-field.col.s12
+            input#nom(name="Nom", placeholder="Nom*")
+            label(for="nom")
+        .row2
+          .input-field.col.s12
+          input#prenom(name="Prénom", placeholder="Prénom*")
+          label(for="prenom")   
         .row3
           .input-field.col.s12
             input#email(name="Email", placeholder="Email*")
             label(for="email")
         .row4    
           .input-field.col.s12
-            textarea.materialize-textarea#mail(name="Mot de passe", placeholder="Mot de passe*")
-            label(for="mail")
+            input#motdepasse(name="motdepasse", placeholder="Mot de passe*")
+            label(for="motdepasse")
         .row5
           p.compte-p Déjà un compte ?
           a(href="/connexion") Connectez-vous.  
