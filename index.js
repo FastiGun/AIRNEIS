@@ -5,7 +5,6 @@ const { connexion } = require("./db");
 const { PORT = '3001' } = process.env;
 const ASSETS_PATH = '/assets';
 
-connexion.then(async (db) => {
   const app = express();
 
   app.set('view engine', 'pug');
@@ -43,5 +42,4 @@ connexion.then(async (db) => {
 
   app.listen(PORT, function () {
     console.log(`Je tourne ici : http://localhost:${PORT}`);
-  });
 });
