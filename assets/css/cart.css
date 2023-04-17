@@ -1,0 +1,91 @@
+
+
+.droite-panier{
+  padding: 0 2rem;
+}
+
+.infos-produit-panier{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.article-panier{
+  display: flex;
+  margin: 0 0 3rem 0;
+}
+
+.img-article-panier{
+  height: 150px;
+}
+
+.nom-produit-panier{
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.infos-produit-panier{
+  padding: 0 1rem;
+}
+
+.chiffres-produit-panier{
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  justify-content: space-between;
+}
+
+.row.panier{
+  margin: 0;
+}
+
+.prix-produit-panier{
+  margin: 0 0;
+  font-size: 1rem;
+}
+
+.desc-produit-panier{
+  padding: 0 1rem 0 0;
+}
+
+.montant-panier{
+  display: flex;
+  justify-content: space-between;
+}
+
+.montant-panier h4{
+  margin: 0;
+}
+
+.montant-gauche{
+  text-align: left;
+}
+
+.montant-droite{
+  text-align: right;
+}
+
+@media (min-width: 1100px){
+  .ecran-panier{
+    display: flex;
+    margin: 3rem 0;
+  }
+
+  .droite-panier, .gauche-panier{
+    width: 50%;
+  }
+}
+
+@media (max-width: 1100px){
+  .ecran-panier{
+    display: flex;
+    flex-direction: column;
+    margin: 3rem auto;
+    width: 100%;
+  }
+
+  .droite-panier, .gauche-panier{
+    width: 100%;
+  }
+}

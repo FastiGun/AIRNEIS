@@ -1,0 +1,31 @@
+.connexion-h1{
+    display: flex;
+    justify-content: center;
+    font-weight: 300;
+    margin-top: 5rem;
+}
+
+
+.connexion{
+    
+    margin-bottom: 5rem;
+    width: 100%;
+}
+
+@media (min-width: 1000px){
+    form {
+        max-width: 500px;
+        margin: auto;
+    }
+}
+
+
+.row3 {
+    display: flex;
+    align-items: center; 
+    justify-content: flex-start;
+}
+
+.row3 p{
+    margin-right: 0.7rem;
+}

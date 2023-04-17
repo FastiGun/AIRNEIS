@@ -1,0 +1,198 @@
+:root{
+    font-family: sans-serif;
+    font-size: 16px;
+    overflow-x: hidden;
+}
+
+body{
+    margin:0;
+    padding: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    position: relative;
+}
+
+nav, footer.page-footer{
+    background-color: rgb(102, 102, 192) !important;
+}
+
+nav{
+    line-height: none ;
+    height: 4.35rem !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.nav-wrap{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1rem;
+    height: auto;
+}
+
+.contentP{
+    font-size: 1.5rem;
+}
+
+.logo{
+    font-weight: 900;
+    font-size: 2rem;
+    padding: 0.2rem 1rem;
+    transition: 0.2s;
+    letter-spacing: 0.2rem;
+}
+
+.logo:hover{
+    color: rgb(206, 206, 206);
+    transition: 0.2s;
+}
+
+ul .right{
+    align-items: center;
+}
+
+ul{
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+li a{
+    width: 56px;
+    height: 100%;
+    margin: auto;
+}
+
+li a:hover{
+    border-radius: 5px;
+}
+
+.page-footer ul{
+    display: flex;
+    justify-content: left;
+    gap: 3rem;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.page-footer ul li a{
+    color: white;
+    transition: 0.2s;
+}
+
+.page-footer ul li a:hover{
+    transition: 0.2s;
+    color: rgb(206, 206, 206);
+}
+
+.footer-copyright a i{
+    font-size: 1.3rem;
+}
+
+.footer-copyright a{
+    margin-left: 2rem;
+}
+
+.img-back{
+    background: url('/assets/img/placeholder.png') center;
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+    height: 25rem;
+    width: 100%;
+}
+
+.carroussel{
+    width: 300%;
+    overflow-x: hidden;
+    white-space: nowrap;
+    display: flex;
+    animation: carousel 15s linear infinite;
+}
+
+#contenu{
+    width: 100vw ;
+    max-width: 100% ;
+    margin:  4.35rem 0 0 0;
+    min-height: 40rem;
+}
+
+i.fa-brands:hover{
+    opacity: 0.8;
+    transition : 0.2s;
+}
+
+i.fa-brands{
+    opacity: 1;
+    transition : 0.2s;
+}
+
+.container{
+    max-width: 1100px;
+}
+
+@keyframes carousel {
+    0% {
+        transform: translateX(0);
+    }
+    32% {
+        transform: translateX(0);
+    }
+    35%{
+        transform: translateX(-33.33%);
+    }
+    64% {
+        transform: translateX(-33.33%);
+    }
+    67% {
+        transform: translateX(-66.66%);
+      }
+    97% {
+        transform: translateX(-66.66%);
+      }
+    100%{
+        transform: translateX(100%);
+    }
+}
+
+.contact-h1, .titre-accueil, .titre-produits-accueil{
+    font-weight: 300;
+    font-size: 3rem;
+    text-align: center;
+}
+
+.contact-h1{
+    margin-top: 5rem;
+}
+
+.titreh2-index{
+    padding: 3rem 0;
+}
+
+.grille-categories-accueil, .grille-produits-accueil {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 0 0 3rem 0;
+    flex-wrap: wrap;
+}
+
+.categorie-accueil, .produit-accueil{
+    height: 200px;
+    width: 300px;
+    background-color: grey;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.button, .btn, .waves-effect, .waves-light{
+    background-color: rgb(102, 102, 192) !important;
+}
+

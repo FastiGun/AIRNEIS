@@ -1,0 +1,28 @@
+.inscription-h1{
+    display: flex;
+    justify-content: center;
+    font-weight: 300;
+    margin-top: 5rem;
+}
+
+
+.inscription{
+    margin-bottom: 5rem;
+}
+
+@media (min-width: 1000px){
+    form {
+        max-width: 500px;
+        margin: auto;
+    }
+}
+
+.row5 {
+    display: flex;
+    align-items: center; 
+    justify-content: flex-start;
+}
+
+.row5 p{
+    margin-right: 0.7rem;
+}
