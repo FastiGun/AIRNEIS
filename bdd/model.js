@@ -47,23 +47,15 @@ class Paiement {
 
 module.exports = Paiement;
 
-class Histo_commande {
-    constructor({ id, date, prix, statut, nb_articles }) {
-        this.id = id;
-        this.date = date;
-        this.prix = prix;
-        this.statut = statut;
-        this.nb_articles = nb_articles;
-    }
-}    
-
-module.exports = Histo_commande; 
-
 class Commande {
-    constructor({ id, date, prix }) {
+    constructor({ id, date, prix, statut, nb_articles, articles, num_client }) {
         this.id = id;
         this.date = date;
         this.prix = prix;
+        this.statut = statut; 
+        this.nb_articles = nb_articles; 
+        this.articles = articles; 
+        this.num_client = num_client; 
     }
 }    
 
