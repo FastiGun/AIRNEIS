@@ -1,10 +1,16 @@
 const express = require("express");
 const { connexion } = require("./db");
+const routes = require("./routes");
 
 const PORT = 3001;
 
 connexion.then(async (db) => {
   const app = express();
+
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  routes(app,db);
 
   app.set("view engine", "pug");
   app.use("/assets", express.static("public"));
@@ -31,6 +37,12 @@ connexion.then(async (db) => {
 
   app.get("/inscription", function (req, res) {
     res.render("pages/inscription", { title: "Inscription" });
+  });
+
+  app.get("/produit", async (req, res) => {
+    const collection = db.collection("produit");
+    const list = await collection.find({}).toArray();
+    res.json(list);
   });
 
   app.listen(PORT, function () {

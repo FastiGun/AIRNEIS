@@ -14,9 +14,9 @@ class Produit {
 module.exports = Produit;
 
 class Categorie {
-    constructor({ id, title }) {
+    constructor({ id, nom }) {
         this.id = id;
-        this.title = title;
+        this.nom = nom;
     }
 }    
 
