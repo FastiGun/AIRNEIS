@@ -1,39 +1,52 @@
-class Produits {
-    constructor({ title, price, stock, id, description }) {
-        this.title = title;
-        this.price = price;
-        this.stock = stock;
+class Produit {
+    constructor({ id, nom, prix, stock, description, categorie }) {
         this.id = id;
+        this.nom = nom;
+        this.prix = prix;
+        this.stock = stock;
         this.description = description;
+        this.categorie = categorie;
     }
 }
 
-module.exports = Produits;
+module.exports = Produit;
 
-class Categories {
+class Categorie {
     constructor({ id, title }) {
         this.id = id;
         this.title = title;
     }
 }    
 
-module.exports = Categories;
+module.exports = Categorie;
 
 class Client {
-    constructor({ id, nom, prenom, mail, mdp, rue, ville, cp , port }) {
+    constructor({ id, nom, prenom, mail, mdp, adresses, telephone, paiements }) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom; 
         this.mail = mail; 
         this.mdp = mdp; 
-        this.rue = rue; 
-        this.ville = ville; 
-        this.cp = cp; 
-        this.port = port;  
+        this.adresses = adresses;
+        this.telephone = telephone;  
+        this.paiements = paiements;
     }
 }
 
 module.exports = Client;
+
+class Adresse {
+    constructor({ id, nom, rue, ville, cp, num }){
+        this.id = id;
+        this.nom = nom;
+        this.rue = rue;
+        this.ville = ville;
+        this.cp = cp;
+        this.num = num;
+    }
+}
+
+module.exports = Adresse;
 
 class Paiement {
     constructor({ id, nom_carte , num_carte, date_expiration, cvv }) {
@@ -48,34 +61,40 @@ class Paiement {
 module.exports = Paiement;
 
 class Commande {
-    constructor({ id, date, prix, statut, nb_articles, articles, num_client }) {
+    constructor({ id, date, prixHT, prixTTC, statut, articles, client }) {
         this.id = id;
         this.date = date;
-        this.prix = prix;
+        this.prixHT = prixHT;
+        this.prixTTC = prixTTC;
         this.statut = statut; 
-        this.nb_articles = nb_articles; 
         this.articles = articles; 
-        this.num_client = num_client; 
+        this.client = client; 
     }
 }    
 
 module.exports = Commande; 
 
 class Panier {
-    constructor({ id, prix, nb_article }) {
+    constructor({ id, articles, prixHT, prixTTC, client }) {
         this.id = id; 
-        this.prix = prix;
-        this.nb_article = nb_article; 
+        this.articles = articles;
+        this.prixHT = prixHT;
+        this.prixTTC = prixTTC;
+        this.client = client;
     }
 }
 
 module.exports = Panier; 
 
-class Statut {
-    constructor({ id, statut }) {
-        this.id = id; 
-        this.statut = statut; 
+class Favoris {
+    constructor({ categorie1, categorie2, categorie3, article1, article2, article3 }){
+        this.categorie1 = categorie1;
+        this.categorie2 = categorie2;
+        this.categorie3 = categorie3;
+        this.article1 = article1;
+        this.article2 = article2;
+        this.article3 = article3;
     }
 }
 
-module.exports = Statut; 
+module.exports = Favoris
