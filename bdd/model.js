@@ -1,11 +1,12 @@
 class Produit {
-    constructor({ id, nom, prix, stock, description, categorie }) {
+    constructor({ id, nom, prix, stock, description, categorie, quantite }) {
         this.id = id;
         this.nom = nom;
         this.prix = prix;
         this.stock = stock;
         this.description = description;
         this.categorie = categorie;
+        this.quantite = quantite;
     }
 }
 
@@ -21,7 +22,7 @@ class Categorie {
 module.exports = Categorie;
 
 class Client {
-    constructor({ id, nom, prenom, mail, mdp, adresses, telephone, paiements }) {
+    constructor({ id, nom, prenom, mail, mdp, adresses, telephone, paiements, panier }) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom; 
@@ -30,19 +31,21 @@ class Client {
         this.adresses = adresses;
         this.telephone = telephone;  
         this.paiements = paiements;
+        this.panier = panier;
     }
 }
 
 module.exports = Client;
 
 class Adresse {
-    constructor({ id, nom, rue, ville, cp, num }){
+    constructor({ id, nom, rue, ville, cp, num, complement }){
         this.id = id;
         this.nom = nom;
         this.rue = rue;
         this.ville = ville;
         this.cp = cp;
         this.num = num;
+        this.complement = complement;
     }
 }
 
@@ -61,13 +64,15 @@ class Paiement {
 module.exports = Paiement;
 
 class Commande {
-    constructor({ id, date, prixHT, prixTTC, statut, articles, client }) {
+    constructor({ id, date, prixHT, prixTTC, statut, produits, adresseFacturation, adresseLivraison, client }) {
         this.id = id;
         this.date = date;
         this.prixHT = prixHT;
         this.prixTTC = prixTTC;
         this.statut = statut; 
-        this.articles = articles; 
+        this.produits = produits; 
+        this.adresseFacturation = adresseFacturation;
+        this.adresseLivraison = adresseLivraison;
         this.client = client; 
     }
 }    
@@ -75,12 +80,11 @@ class Commande {
 module.exports = Commande; 
 
 class Panier {
-    constructor({ id, articles, prixHT, prixTTC, client }) {
+    constructor({ id, produits, prixHT, prixTTC }) {
         this.id = id; 
-        this.articles = articles;
+        this.produits = produits;
         this.prixHT = prixHT;
         this.prixTTC = prixTTC;
-        this.client = client;
     }
 }
 
