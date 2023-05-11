@@ -39,13 +39,13 @@ connexion.then(async (db) => {
     res.render("pages/inscription", { title: "Inscription" });
   });
 
-  app.get("/produit", async (req, res) => {
+  app.get("/api/produit", async (req, res) => {
     const collection = db.collection("produit");
     const list = await collection.find({}).toArray();
     res.json(list);
   });
 
-  app.listen(PORT, function () {
+  app.listen(PORT, () => {
     console.log(`Je tourne ici : http://localhost:${PORT}`);
   });
 });
