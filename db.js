@@ -1,5 +1,6 @@
 const { MongoClient } = require("mongodb");
-const url = "mongodb+srv://admin:admin@cluster05326.ihn9hcl.mongodb.net/?retryWrites=true&w=majority";
+require('dotenv').config();
+const url = process.env.DB_URL;
 const client = new MongoClient(url);
 const dbName = "airneis";
 
