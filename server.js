@@ -3,6 +3,7 @@ const { connexion } = require("./db");
 const routes = require("./routes");
 
 const PORT = 3001;
+const ASSETS_PATH = '/assets';
 
 connexion.then(async (db) => {
   const app = express();
@@ -10,10 +11,16 @@ connexion.then(async (db) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  routes(app,db);
+  routes(app, db);
 
-  app.set("view engine", "pug");
-  app.use("/assets", express.static("public"));
+  app.set('view engine', 'pug');
+  app.set('views', __dirname + '/views');
+  app.use(ASSETS_PATH, express.static('assets'));
+
+  app.use((req, res, next) => {
+    res.locals.assetsPath = ASSETS_PATH;
+    next();
+  });
 
   app.get("/", function (req, res) {
     res.render("pages/index", { title: "Accueil" });
