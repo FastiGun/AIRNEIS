@@ -1,6 +1,6 @@
 const { object, string, number } = require("yup");
 const { ObjectId } = require("mongodb");
-const Products = require("./model");
+const Produit = require("./model");
 
 const productSchema = object({
   id: number().required().positive().integer(),
@@ -22,9 +22,9 @@ const readOne = (db) => async (req, res) => {
   try {
     const id = new ObjectId(req.params.id);
     const collection = db.collection("produit");
-    const product = await collection.findOne({ _id: id });
-    if (product) {
-      res.status(200).json(product);
+    const produit = await collection.findOne({ _id: id });
+    if (produit) {
+      res.status(200).json(produit);
     } else {
       res.status(404).json({ status: 404, message: "Produit introuvable" });
     }
@@ -37,10 +37,10 @@ const create = (db) => async (req, res) => {
   const { body } = req;
   try {
     const parsedProducts = productSchema.cast({ ...body });
-    const product = new Products({ ...parsedProducts });
+    const produit = new Produit({ ...parsedProducts });
     try {
       const collection = db.collection("produit");
-      const result = await collection.insertOne(product);
+      const result = await collection.insertOne(produit);
       res.status(200).json(result);
     } catch (err) {
       res.status(500).json({ message: "Erreur serveur" });

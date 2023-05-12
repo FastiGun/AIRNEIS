@@ -52,6 +52,12 @@ connexion.then(async (db) => {
     res.json(list);
   });
 
+  app.get("/api/client", async (req, res) => {
+    const collection = db.collection("client");
+    const list = await collection.find({}).toArray();
+    res.json(list);
+  });
+
   app.listen(PORT, () => {
     console.log(`Je tourne ici : http://localhost:${PORT}`);
   });

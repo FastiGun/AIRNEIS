@@ -29,9 +29,7 @@ class Client {
         this.prenom = prenom; 
         this.mail = mail; 
         this.mdp = mdp; 
-        this.adresses = adresses;
         this.telephone = telephone;  
-        this.paiements = paiements;
         this.panier = panier;
     }
 }
@@ -39,8 +37,9 @@ class Client {
 module.exports = Client;
 
 class Adresse {
-    constructor({ id, nom, rue, ville, cp, num, complement }){
+    constructor({ id, id_client, nom, rue, ville, cp, num, complement }){
         this.id = id;
+        this.id_client = id_client;
         this.nom = nom;
         this.rue = rue;
         this.ville = ville;
@@ -53,8 +52,9 @@ class Adresse {
 module.exports = Adresse;
 
 class Paiement {
-    constructor({ id, nom_carte , num_carte, date_expiration, cvv }) {
+    constructor({ id, id_client, nom_carte , num_carte, date_expiration, cvv }) {
         this.id = id;
+        this.id_client = id_client;
         this.nom_carte = nom_carte;
         this.num_carte = num_carte; 
         this.date_expiration = date_expiration; 
