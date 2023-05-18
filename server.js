@@ -1,9 +1,9 @@
 const express = require("express");
-const routes = require("./routes");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const session = require("express-session");
 require("dotenv").config();
 
 const PORT = 3001;
@@ -44,6 +44,15 @@ mongoose
       next();
     });
 
+    app.use(
+      session({
+        secret: "votre_secret",
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false },
+      })
+    );
+
     app.get("/", function (req, res) {
       res.render("pages/index", { title: "Accueil" });
     });
@@ -61,7 +70,24 @@ mongoose
     });
 
     app.get("/connexion", function (req, res) {
+      if (req.session.userId) {
+        return res.redirect("/");
+      }
       res.render("pages/connexion", { title: "Connexion" });
+    });
+
+    app.post("/connexion", async (req, res) => {
+      const { mail, mdp } = req.body;
+      const existingClient = await Client.findOne({ mail: mail });
+      if (!existingClient) {
+        return res.status(401).send("Compte inexistant");
+      }
+      const motDePasseCorrect = await bcrypt.compare(mdp, existingClient.mdp);
+      if (!motDePasseCorrect) {
+        return res.status(401).send("Mot de passe incorrect");
+      }
+      req.session.userId = existingClient.id;
+      res.redirect("/");
     });
 
     app.get("/inscription", function (req, res) {
