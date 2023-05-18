@@ -7,7 +7,7 @@ block content
   .container
     h1.inscription-h1 Inscription
     .inscription
-      form(action="GET")
+      form(action="/inscription", method="post")
         .row1
           .input-field.col.s12
             input#nom(name="nom", placeholder="Nom*")
@@ -18,12 +18,12 @@ block content
           label(for="prenom")   
         .row3
           .input-field.col.s12
-            input#email(name="email", placeholder="Email*")
+            input#email(name="mail", placeholder="Email*")
             label(for="email")
         .row4    
           .input-field.col.s12
             input#motdepasse(name="motdepasse", placeholder="Mot de passe*")
-            label(for="motdepasse")
+            label(for="mdp")
         .row5
           p.compte-p Déjà un compte ?
           a(href="/connexion") Connectez-vous.  
