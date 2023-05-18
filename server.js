@@ -128,11 +128,22 @@ mongoose
         });
         console.log(nouveauCompte);
         await nouveauCompte.save();
+        req.session.userId = nouveauCompte.id;
         res.redirect("/");
       } catch (erreur) {
         console.error(erreur);
         res.status(500).send("Erreur lors de la création du compte");
       }
+    });
+
+    app.get("/deconnexion", function (req, res) {
+      req.session.destroy(function (err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).send("Erreur lors de la déconnexion");
+        }
+        res.redirect("/connexion");
+      });
     });
 
     app.listen(PORT, () => {
