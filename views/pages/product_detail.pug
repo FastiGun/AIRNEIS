@@ -1,0 +1,29 @@
+extends ../layouts/layout.pug
+
+block links 
+    link(rel='stylesheet' href='assets/css/product_detail.css')
+
+block content 
+    .wrapper-product-detail 
+        .rigth-side-wrapper 
+            img(src='/assets/img/placeholder.pug')
+        .left-side-wrapper 
+            h1.product-name-title name
+            p.product-stock in stock
+            p.product-price $
+            p.product-description description 
+            button.add-to-cart(type='button') 
+        .wrapper-similar-product
+            .similar-product 
+                img(src='assets/img/placeholder.png')
+                p.similar-product-name name
+                p.similar-product-price price
+            .similar-product 
+                img(src='assets/img/placeholder.png')
+                p.similar-product-name name
+                p.similar-product-price price
+            .similar-product 
+                img(src='assets/img/placeholder.png')
+                p.similar-product-name name
+                p.similar-product-price price
+        
