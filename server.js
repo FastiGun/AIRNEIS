@@ -46,6 +46,18 @@ connexion.then(async (db) => {
     res.render("pages/inscription", { title: "Inscription" });
   });
 
+  app.get("/category", function (req, res) {
+    res.render("pages/category", { title: "Category List" });
+  });
+
+  app.get("/product_list", function (req, res) {
+    res.render("pages/product_list", { title: "Product List" });
+  });
+
+  app.get("/product_detail", function (req, res) {
+    res.render("pages/product_detail", { title: "Product Detail" });
+  });
+
   app.get("/api/produit", async (req, res) => {
     const collection = db.collection("produit");
     const list = await collection.find({}).toArray();
