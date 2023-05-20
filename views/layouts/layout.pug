@@ -5,9 +5,10 @@ head
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     link(rel='stylesheet' href='/assets/css/style.css')
     link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer")
     link(href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
+    script(src='/assets/script/menu_burger.js')
     block links
     block scripts
     title AIRNEIS - #{title}
@@ -15,6 +16,7 @@ head
 body 
   block header
     include ../layouts/header.pug
+    include ../layouts/menu_burger.pug
   #contenu.container 
     block content 
   block footer 
