@@ -7,15 +7,15 @@ block content
   .container
     h1.connexion-h1 Connexion
     .connexion
-      form(action="GET")
+      form(action="/connexion", method="post")
         .row1
            .input-field
-            input#email(name="email", placeholder="Email*")
-            label(for="email")
+            input#mail(name="mail", placeholder="Email*")
+            label(for="mail")
         .row2
           .input-field
-            input#motdepasse(name="motdepasse", placeholder="Mot de passe*")
-            label(for="motdepasse")
+            input#mdp(name="mdp", placeholder="Mot de passe*")
+            label(for="mdp")
         .row3
           p.compte-p Pas de compte ?
           a(href="/inscription") Inscrivez-vous.  
