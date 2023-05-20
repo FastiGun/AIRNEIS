@@ -1,0 +1,7 @@
+.wrapper-category-list{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5rem;
+    width: 80%;
+    margin-left: 10%;
+}
