@@ -253,6 +253,26 @@ mongoose
       res.json(list);
     });
 
+    app.get("/api/categories", async (req, res) => {
+      try {
+        const categories = await Categorie.find({});
+        res.json(categories);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des catégories.");
+      }
+    });
+
+    app.get("/categories", async (req, res) => {
+      try {
+        const categories = await Categorie.find({});
+        res.render("pages/categories", { title: "Catégories", categories });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des catégories.");
+      }
+    });
+
     app.post("/inscription", async (req, res) => {
       const { id, nom, prenom, mail, mdp, telephone } = req.body;
       const existingClient = await Client.findOne({ mail: mail });
