@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 //Client
 const clientSchema = new mongoose.Schema({
-  id: { type: String, unique: true },
   nom: String,
   prenom: String,
   mail: String,
@@ -14,7 +13,6 @@ const Client = mongoose.model("Client", clientSchema, "client");
 
 //Panier
 const panierSchema = new mongoose.Schema({
-  id: { type: String, unique: true },
   client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },
   article: { type: mongoose.Schema.Types.ObjectId, ref: "Produit" },
   quantite: { type: Number, default: 0 },
@@ -24,7 +22,6 @@ const Panier = mongoose.model("Panier", panierSchema, "panier");
 
 //Produit
 const produitSchema = new mongoose.Schema({
-  id: { type: String, unique: true },
   nom: String,
   prix: Number,
   stock: Number,
@@ -37,7 +34,6 @@ const Produit = mongoose.model("Produit", produitSchema, "produit");
 
 //Categorie
 const categorieSchema = new mongoose.Schema({
-  id: { type: String, unique: true },
   nom: String,
 });
 
@@ -45,7 +41,6 @@ const Categorie = mongoose.model("Categorie", categorieSchema, "categorie");
 
 //Adresse
 const adresseSchema = new mongoose.Schema({
-  id: { type: String, unique: true },
   client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },
   nom: String,
   rue: String,

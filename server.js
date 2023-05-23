@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const { string } = require("yup");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const {
   Client,
@@ -16,9 +17,12 @@ const {
   Commande,
   Favoris,
 } = require("./models");
+const { ObjectId } = require("mongodb");
 
+const secretKey = process.env.SECRET_KEY;
 const PORT = 3001;
 const ASSETS_PATH = "/assets";
+const saltRounds = 10;
 
 mongoose
   .connect(process.env.DB_URL, {
@@ -131,8 +135,73 @@ mongoose
       res.redirect("/");
     });
 
+    app.post("/api/connexion", async (req, res) => {
+      try {
+        const { mail, motDePasse } = req.body;
+
+        // Vérification si l'utilisateur existe
+        const client = await Client.findOne({ mail });
+        if (!client) {
+          return res
+            .status(404)
+            .json({ message: "Aucun compte trouvé avec cette adresse e-mail" });
+        }
+
+        // Vérification du mot de passe
+        const motDePasseCorrect = await bcrypt.compare(motDePasse, client.mdp);
+        if (!motDePasseCorrect) {
+          return res.status(401).json({ message: "Mot de passe incorrect" });
+        }
+
+        // Génération du token d'authentification
+        const token = generateAuthToken(client);
+
+        res.status(200).json({ message: "Connexion réussie", token });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur lors de la connexion" });
+      }
+    });
+
     app.get("/inscription", function (req, res) {
       res.render("pages/inscription", { title: "Inscription" });
+    });
+
+    app.post("/api/inscription", async (req, res) => {
+      try {
+        const { nom, prenom, mail, motDePasse, telephone } = req.body;
+
+        // Vérification si l'utilisateur existe déjà
+        const clientExistant = await Client.findOne({ mail });
+        if (clientExistant) {
+          return res.status(409).json({
+            message: "Un compte avec cette adresse e-mail existe déjà",
+          });
+        }
+
+        // Hachage du mot de passe
+        const hashedPassword = await bcrypt.hash(motDePasse, saltRounds);
+
+        // Création d'un nouveau client
+        const nouveauCompte = new Client({
+          id: uuidv4(),
+          nom,
+          prenom,
+          mail,
+          mdp: hashedPassword,
+          telephone,
+        });
+
+        // Enregistrement du client dans la base de données
+        await nouveauCompte.save();
+
+        res.status(201).json({ message: "Inscription réussie" });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({ message: "Erreur lors de la création du compte" });
+      }
     });
 
     app.get("/api/produits", async (req, res) => {
@@ -148,11 +217,117 @@ mongoose
       }
     });
 
+    app.get("/api/produits/:produitId", async (req, res) => {
+      try {
+        const produitId = req.params.produitId;
+        const produit = await Produit.findById(produitId);
+        if (!produit) {
+          return res.status(404).send("Produit non trouvé");
+        }
+        res.json(produit);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération du produit");
+      }
+    });
+
     app.get("/api/client", async (req, res) => {
       const collection = Client.collection;
       const list = await collection.find({}).toArray();
       res.json(list);
     });
+
+    app.get("/api/client/:clientId", authenticate, async (req, res) => {
+      try {
+        const clientId = req.params.clientId;
+        const client = await Client.findById(clientId);
+        if (!client) {
+          return res.status(404).send("Client non trouvé");
+        }
+
+        const adresses = await Adresse.find({ client: clientId });
+        const paiements = await Paiement.find({ client: clientId });
+
+        res.json({ client, adresses, paiements });
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .send("Erreur lors de la récupération des informations du client");
+      }
+    });
+
+    app.get(
+      "/api/client/:clientId/adresses",
+      authenticate,
+      async (req, res) => {
+        try {
+          const clientId = req.params.clientId;
+          const client = await Client.findById(clientId);
+          if (!client) {
+            return res.status(404).send("Client non trouvé");
+          }
+
+          const adresses = await Adresse.find({ client: clientId });
+          res.json(adresses);
+        } catch (error) {
+          console.log(error);
+          res
+            .status(500)
+            .send("Erreur lors de la récupération des adresses du client");
+        }
+      }
+    );
+
+    app.get(
+      "/api/client/:clientId/paiements",
+      authenticate,
+      async (req, res) => {
+        try {
+          const clientId = req.params.clientId;
+          const client = await Client.findById(clientId);
+          if (!client) {
+            return res.status(404).send("Client non trouvé");
+          }
+
+          const paiements = await Paiement.find({ client: clientId });
+          res.json(paiements);
+        } catch (error) {
+          console.log(error);
+          res
+            .status(500)
+            .send(
+              "Erreur lors de la récupération des moyens de paiement du client"
+            );
+        }
+      }
+    );
+
+    app.get(
+      "/api/clients/:clientId/paniers",
+      authenticate,
+      async (req, res) => {
+        try {
+          const clientId = req.params.clientId;
+
+          // Vérifier si le client existe
+          const client = await Client.findById(clientId);
+          if (!client) {
+            return res.status(404).json({ message: "Client non trouvé" });
+          }
+
+          // Récupérer les paniers du client
+          const paniers = await Panier.find({ client: clientId });
+
+          res.json(paniers);
+        } catch (error) {
+          console.log(error);
+          res
+            .status(500)
+            .json({ message: "Erreur lors de la récupération des paniers" });
+        }
+      }
+    );
 
     app.get("/api/categories", async (req, res) => {
       try {
@@ -161,6 +336,22 @@ mongoose
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des catégories.");
+      }
+    });
+
+    app.get("/api/categories/:categorie/produits", async (req, res) => {
+      try {
+        const categorieId = req.params.categorie;
+        const categorie = await Categorie.findById(categorieId);
+        if (!categorie) {
+          return res.status(404).send("Catégorie non trouvée");
+        }
+
+        const produits = await Produit.find({ categorie: categorieId });
+        res.json(produits);
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération des produits");
       }
     });
 
@@ -184,7 +375,7 @@ mongoose
         return res.status(409).send("Informations manquantes");
       }
       try {
-        const empreinteMotDePasse = await bcrypt.hash(mdp, 10);
+        const empreinteMotDePasse = await bcrypt.hash(mdp, saltRounds);
         const nouveauCompte = new Client({
           id: uuidv4(),
           nom,
@@ -210,6 +401,38 @@ mongoose
         res.redirect("/connexion");
       });
     });
+
+    // Fonction pour générer le token d'authentification (par exemple, JWT)
+    function generateAuthToken(client) {
+      const secretKey = "votre_clé_secrète"; // Clé secrète pour signer le token
+      const token = jwt.sign({ id: client._id }, secretKey, {
+        expiresIn: "1h",
+      }); // Exemple avec une expiration d'une heure
+      return token;
+    }
+
+    // Middleware d'authentification
+    function authenticate(req, res, next) {
+      const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
+
+      if (!token) {
+        return res
+          .status(401)
+          .json({ message: "Token d'authentification manquant" });
+      }
+
+      try {
+        const secretKey = "votre_clé_secrète"; // Clé secrète utilisée lors de la génération du token
+        const decodedToken = jwt.verify(token, secretKey); // Vérifier la validité du token
+
+        req.userId = decodedToken.id; // Ajouter l'identifiant de l'utilisateur extrait du token à l'objet req
+
+        next(); // Passer au prochain middleware ou à la route suivante
+      } catch (error) {
+        console.error(error);
+        res.status(401).json({ message: "Token d'authentification invalide" });
+      }
+    }
 
     app.listen(PORT, () => {
       console.log(`Je tourne ici : http://localhost:${PORT}`);
