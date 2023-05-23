@@ -406,8 +406,8 @@ mongoose
     function generateAuthToken(client) {
       const secretKey = "votre_clé_secrète"; // Clé secrète pour signer le token
       const token = jwt.sign({ id: client._id }, secretKey, {
-        expiresIn: "1h",
-      }); // Exemple avec une expiration d'une heure
+        expiresIn: "24h",
+      }); // Exemple avec une expiration d'une journée
       return token;
     }
 
