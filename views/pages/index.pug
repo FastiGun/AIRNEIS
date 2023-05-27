@@ -2,17 +2,17 @@ extends ../layouts/layout.pug
 
 block content
   .carroussel 
-    .img-back
+    .img-back 
     .img-back
     .img-back
   .container.titreh2-index
     h2.titre-accueil VENANT DES HAUTES TERRES D'ÉCOSSE NOS MEUBLES SONT IMMORTELS
   .container.grille-categories-accueil 
-    .categorie-accueil Catégorie 1
-    .categorie-accueil Catégorie 2
-    .categorie-accueil Catégorie 3
+    .categorie-accueil #{favoris.categorie1.nom}
+    .categorie-accueil #{favoris.categorie2.nom}
+    .categorie-accueil #{favoris.categorie3.nom}
   .container.titre-produits-accueil Les Highlanders du moment
   .container.grille-produits-accueil 
-    .produit-accueil Produit 1
-    .produit-accueil Produit 2
-    .produit-accueil Produit 3
+    .produit-accueil #{favoris.article1.nom}
+    .produit-accueil #{favoris.article2.nom}
+    .produit-accueil #{favoris.article3.nom}

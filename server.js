@@ -23,6 +23,7 @@ const secretKey = process.env.SECRET_KEY;
 const PORT = 3001;
 const ASSETS_PATH = "/assets";
 const saltRounds = 10;
+const idFavoris = "645ca83cd9b701ecef37f60c";
 
 mongoose
   .connect(process.env.DB_URL, {
@@ -58,14 +59,13 @@ mongoose
 
     app.get("/", async (req, res) => {
       try {
-        const favoris = await Favoris.findOne({});
+        const favoris = await Favoris.findById(idFavoris);
         const categorie1 = await Categorie.findById(favoris.categorie1);
         const categorie2 = await Categorie.findById(favoris.categorie2);
         const categorie3 = await Categorie.findById(favoris.categorie3);
-        const article1 = await Produit.findById(favoris.article1);
-        const article2 = await Produit.findById(favoris.article2);
-        const article3 = await Produit.findById(favoris.article3);
-
+        const article1 = await Produit.findById(favoris.produit1);
+        const article2 = await Produit.findById(favoris.produit2);
+        const article3 = await Produit.findById(favoris.produit3);
         res.render("pages/index", {
           title: "Accueil",
           favoris: {
