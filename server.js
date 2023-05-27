@@ -19,8 +19,12 @@ const {
   Favoris,
 } = require("./models");
 const { ObjectId } = require("mongodb");
+const e = require("express");
 
 const secretKey = process.env.SECRET_KEY;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 const passwordEmail = process.env.PASSWORD_MAIL;
 const PORT = 3001;
 const ASSETS_PATH = "/assets";
@@ -376,6 +380,13 @@ mongoose
       if (nom === "" || prenom === "" || mail === "" || mdp === "") {
         return res.status(409).send("Informations manquantes");
       }
+      if (!passwordRegex.test(mdp)) {
+        return res
+          .status(400)
+          .send(
+            "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial."
+          );
+      }
       try {
         const empreinteMotDePasse = await bcrypt.hash(mdp, saltRounds);
         const nouveauCompte = new Client({
@@ -390,6 +401,7 @@ mongoose
         req.session.userId = nouveauCompte.id;
         res.redirect("/");
       } catch (erreur) {
+        console.log(erreur);
         res.status(500).send("Erreur lors de la création du compte");
       }
     });
