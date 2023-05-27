@@ -6,20 +6,20 @@ block links
 block content
   .container
     h1.contact-h1 Contactez-nous
-    form(action="GET")
+    form(action="/send-mail-contact", method="post")
       .row
         .input-field.col.s6
-          input#email(placeholder="Email")
+          input#email(placeholder="Email", name="email", required)
           label(for="email")
         .input-field.col.s6
-          input#objet(placeholder="Objet")
-          label(for="objet")
+          input#objet(placeholder="Objet", name="sujet", required)
+          label(for="sujet")
       .row
         .input-field.col.s12
-          textarea.materialize-textarea#mail(name="mail", cols="30", rows="10", placeholder="Votre message")
-          label(for="mail")
+          textarea.materialize-textarea#mail(name="message", cols="30", rows="10", placeholder="Votre message", required)
+          label(for="message")
       .row 
         .input-field.col.s12
-          button.btn.waves-effect.waves-light(type='submit' name='action')
+          button.btn.waves-effect.waves-light(type='submit', name='action')
             | Envoyer le message 
             i.material-icons.right send

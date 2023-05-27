@@ -7,6 +7,7 @@ const session = require("express-session");
 const { string } = require("yup");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const nodemailer = require("nodemailer");
 const {
   Client,
   Panier,
@@ -20,6 +21,7 @@ const {
 const { ObjectId } = require("mongodb");
 
 const secretKey = process.env.SECRET_KEY;
+const passwordEmail = process.env.PASSWORD_MAIL;
 const PORT = 3001;
 const ASSETS_PATH = "/assets";
 const saltRounds = 10;
@@ -399,6 +401,39 @@ mongoose
           return res.status(500).send("Erreur lors de la déconnexion");
         }
         res.redirect("/connexion");
+      });
+    });
+
+    app.post("/send-mail-contact", async (req, res) => {
+      const { email, sujet, message } = req.body;
+
+      // Configuration du transporteur d'e-mails (Gmail)
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "benjamin760080@gmail.com",
+          pass: passwordEmail,
+        },
+      });
+
+      // Options pour l'e-mail
+      const mailOptions = {
+        from: email,
+        to: "benjamin760080@gmail.com", // Adresse e-mail du support
+        subject: sujet,
+        text: `Message: ${message}`,
+      };
+
+      // Envoi de l'e-mail
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          res
+            .status(500)
+            .send("Une erreur s'est produite lors de l'envoi de l'e-mail.");
+        } else {
+          res.redirect("/");
+        }
       });
     });
 
