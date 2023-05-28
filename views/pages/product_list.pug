@@ -22,3 +22,12 @@ block content
             p.product-name name
             p.product-price price $
             p.product-stock in stock / or not
+    
+    //.product-list-wrapper
+        each product in products
+            .product
+                img(src='/assets/img/placeholder.png')
+                .basic-info 
+                    p.product-name name
+                    p.product-price price $
+                    p.product-stock in stock / or not
