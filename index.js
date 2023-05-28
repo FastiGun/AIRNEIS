@@ -371,6 +371,18 @@ mongoose
       }
     });
 
+    app.get("/product_list", function (req, res) {
+      res.render("pages/product_list", { title: "Product List" });
+    });
+
+    app.get("/product_detail", function (req, res) {
+      res.render("pages/product_detail", { title: "Product Detail" });
+    });
+
+    app.get("/delivery_address", function (req, res) {
+      res.render("pages/delivery_address", { title: "Delivery Address" });
+    });
+
     app.post("/inscription", async (req, res) => {
       const { id, nom, prenom, mail, mdp, telephone } = req.body;
       const existingClient = await Client.findOne({ mail: mail });
