@@ -196,3 +196,24 @@ i.fa-brands{
     background-color: rgb(102, 102, 192) !important;
 }
 
+.burgermenu {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: lightgray;
+    z-index: 10;
+    width: 20%;
+    align-items: center;
+    top: 70px;
+    right: 0;
+    height: 100vh;
+}
+
+.burgermenu-link {
+    color: black;
+}
+
+.hidden {
+    transform: translateX(100%);
+}
