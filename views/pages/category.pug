@@ -6,18 +6,21 @@ block links
 
 block content 
     .wrapper-category-list
-        a.category-img(href='')
-            img(src='/assets/img/placeholder.png')
-        p.category-name category
-        a.category-img(href='')
-            img(src='/assets/img/placeholder.png')
-        p.category-name category
-        a.category-img(href='')
-            img(src='/assets/img/placeholder.png')
-        p.category-name category
-        a.category-img(href='')
-            img(src='/assets/img/placeholder.png')
-        p.category-name category
-        a.category-img(href='')
-            img(src='/assets/img/placeholder.png')
-        p.category-name category
+        .wrapper-category-list-item
+            a.category-link(href='')
+                img.category-img(src='/assets/img/placeholder.png')
+            p.category-name category
+        .wrapper-category-list-item
+            a.category-link(href='')
+                img.category-img(src='/assets/img/placeholder.png')
+            p.category-name category
+        .wrapper-category-list-item
+            a.category-link(href='')
+                img.category-img(src='/assets/img/placeholder.png')
+            p.category-name category
+                
+        //each category in categories
+            .category
+                a.category-img(href='')
+                    img(src='/assets/img/placeholder.png')
+                p.category-name category
