@@ -4,23 +4,10 @@ block links
   link(rel='stylesheet' href='/assets/css/category.css')
 
 
-block content 
-    .wrapper-category-list
-        .wrapper-category-list-item
-            a.category-link(href='')
-                img.category-img(src='/assets/img/placeholder.png')
-            p.category-name category
-        .wrapper-category-list-item
-            a.category-link(href='')
-                img.category-img(src='/assets/img/placeholder.png')
-            p.category-name category
-        .wrapper-category-list-item
-            a.category-link(href='')
-                img.category-img(src='/assets/img/placeholder.png')
-            p.category-name category
-                
-        //each category in categories
-            .category
-                a.category-img(href='')
-                    img(src='/assets/img/placeholder.png')
-                p.category-name category
+block content
+    .wrapper-category-list   
+        each category in categories
+            .wrapper-category-list-item
+                a.category-link(href='')
+                    img.category-img(src='/assets/img/placeholder.png')
+                p.category-name #{ category.name }

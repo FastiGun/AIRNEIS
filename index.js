@@ -361,10 +361,10 @@ mongoose
       }
     });
 
-    app.get("/categories", async (req, res) => {
+    app.get("/category", async (req, res) => {
       try {
         const categories = await Categorie.find({});
-        res.render("pages/categories", { title: "Catégories", categories });
+        res.render("pages/category", { title: "Catégories", categories });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des catégories.");
