@@ -1,0 +1,27 @@
+extends ../layouts/layout.pug
+
+block links
+    link(rel='stylesheet' href='/assets/css/paiement.css')
+
+block content 
+    h1.paiement-title Enter your information
+    .wrapper-delivery-address-form
+        .input-nom
+            input#fullname(name="fullname", placeholder="Fullname*")
+            label(for="fullname")
+
+        .input-prenom
+            input#cardnumber(name="cardnumber", placeholder="Card number*")
+            label(for="cardnumber")
+
+        .input-address1
+            input#expiration(name="expiration", placeholder="Expiration date*")
+            label(for="expiration")
+
+        .input-address2
+            input#cvv(name="cvv", placeholder="CVV")
+            label(for="cvv")
+        
+        .submit-paiement
+            a(href='/thanks')
+                button.btn.waves-effect.waves-light(type='submit') Vaidate paiement
