@@ -10,11 +10,11 @@ block content
       form(action="/connexion", method="post")
         .row1
            .input-field
-            input#mail(name="mail", placeholder="Email*")
+            input#mail(name="mail", placeholder="Email*", required)
             label(for="mail")
         .row2
           .input-field
-            input#mdp(name="mdp", placeholder="Mot de passe*")
+            input#mdp(name="mdp", placeholder="Mot de passe*", type="password", required)
             label(for="mdp")
         .row3
           p.compte-p Pas de compte ?

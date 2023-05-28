@@ -10,19 +10,19 @@ block content
       form(action="/inscription", method="post")
         .row1
           .input-field.col.s12
-            input#nom(name="nom", placeholder="Nom*")
+            input#nom(name="nom", placeholder="Nom*", required)
             label(for="nom")
         .row2
           .input-field.col.s12
-          input#prenom(name="prenom", placeholder="Prénom*")
+          input#prenom(name="prenom", placeholder="Prénom*", required)
           label(for="prenom")   
         .row3
           .input-field.col.s12
-            input#email(name="mail", placeholder="Email*")
+            input#email(name="mail", placeholder="Email*", required)
             label(for="email")
         .row4    
           .input-field.col.s12
-            input#mdp(name="mdp", placeholder="Mot de passe*")
+            input#mdp(name="mdp", placeholder="Mot de passe*", type="password", required)
             label(for="mdp")
         .row5
           p.compte-p Déjà un compte ?
