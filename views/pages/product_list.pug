@@ -4,24 +4,25 @@ block links
     link(rel='stylesheet' href='/assets/css/product_list.css')
 
 block content 
-    .product-wrapper 
-        img(src='/assets/img/placeholder.png')
-        .basic-info 
-            p.product-name name
-            p.product-price price $
-            p.product-stock in stock / or not
-    .product-wrapper 
-        img(src='/assets/img/placeholder.png')
-        .basic-info 
-            p.product-name name
-            p.product-price price $
-            p.product-stock in stock / or not
-    .product-wrapper 
-        img(src='/assets/img/placeholder.png')
-        .basic-info 
-            p.product-name name
-            p.product-price price $
-            p.product-stock in stock / or not
+    .product-list-wrapper
+        .product-wrapper 
+            img(src='/assets/img/placeholder.png')
+            .basic-info 
+                p.product-name name
+                p.product-price price $
+                p.product-stock in stock / or not
+        .product-wrapper 
+            img(src='/assets/img/placeholder.png')
+            .basic-info 
+                p.product-name name
+                p.product-price price $
+                p.product-stock in stock / or not
+        .product-wrapper 
+            img(src='/assets/img/placeholder.png')
+            .basic-info 
+                p.product-name name
+                p.product-price price $
+                p.product-stock in stock / or not
     
     //.product-list-wrapper
         each product in products
