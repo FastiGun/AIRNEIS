@@ -1,0 +1,7 @@
+.product-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 2rem;
+}
