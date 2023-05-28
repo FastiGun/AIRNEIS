@@ -106,6 +106,10 @@ mongoose
       res.render("pages/product_detail", { title: "Product Detail" });
     });
 
+    app.get("/delivery_address", function (req, res) {
+      res.render("pages/delivery_address", { title: "Delivery Address" });
+    });
+
     /*app.get("/api/produit", async (req, res) => {
       const collection = db.collection("produit");
       const list = await collection.find({}).toArray();
