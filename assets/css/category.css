@@ -1,0 +1,26 @@
+.wrapper-category-list{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 5rem;
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 2rem;
+}
+
+.wrapper-category-list-item{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.category-name {
+    font-size: 2rem;
+    margin-top: 0;
+}
+
+.category-img{
+    width: 10rem;
+    height: 5rem;
+}
