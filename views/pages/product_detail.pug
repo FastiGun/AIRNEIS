@@ -15,8 +15,9 @@ block content
             h1.product-name-title name
             p.product-stock in stock
             p.product-price $
-            p.product-description description 
-            button.add-to-cart(type='button') 
+            p.product-description description
+            a(href='/cart') 
+                button.add-to-cart(type='button') Ajouter au panier
         .wrapper-similar-product
             .similar-product 
                 img(src='assets/img/placeholder.png')
