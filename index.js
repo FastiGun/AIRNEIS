@@ -364,7 +364,7 @@ mongoose
     app.get("/category", async (req, res) => {
       try {
         const categories = await Categorie.find({});
-        res.render("pages/category", { title: "Catégories", categories });
+        res.render("pages/category", { title: "Catégories", categories: categories });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des catégories.");
