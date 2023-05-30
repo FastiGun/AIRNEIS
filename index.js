@@ -712,80 +712,45 @@ mongoose
         });
     });
 
-    app.post("/backoffice/favoris", (req, res) => {
-      const {
-        categorie1,
-        categorie2,
-        categorie3,
-        produit1,
-        produit2,
-        produit3,
-        photo1,
-        photo2,
-        photo3,
-        photo4,
-      } = req.body;
+    app.post("/backoffice/favoris", async (req, res) => {
+      try {
+        const favoris = await Favoris.findById(idFavoris);
 
-      // Vérifier si les catégories et les produits existent avant de les ajouter aux favoris
-      const categoriePromises = [
-        Categorie.findById(categorie1),
-        Categorie.findById(categorie2),
-        Categorie.findById(categorie3),
-      ];
-      const produitPromises = [
-        Produit.findById(produit1),
-        Produit.findById(produit2),
-        Produit.findById(produit3),
-      ];
+        // Vérifier si les favoris existent dans la base de données
+        if (!favoris) {
+          return res.status(404).json({ message: "Aucun favoris trouvé" });
+        }
 
-      Promise.all([...categoriePromises, ...produitPromises])
-        .then((results) => {
-          const categoriesExist = results
-            .slice(0, 3)
-            .every((categorie) => categorie !== null);
-          const produitsExist = results
-            .slice(3)
-            .every((produit) => produit !== null);
+        // Mettre à jour les champs des favoris
+        favoris.categorie1 = req.body.categorie1;
+        favoris.categorie2 = req.body.categorie2;
+        favoris.categorie3 = req.body.categorie3;
+        favoris.produit1 = req.body.produit1;
+        favoris.produit2 = req.body.produit2;
+        favoris.produit3 = req.body.produit3;
 
-          if (categoriesExist && produitsExist) {
-            // Mettre à jour les favoris avec les nouvelles valeurs
-            Favoris.findByIdAndUpdate(
-              idFavoris,
-              {
-                categorie1,
-                categorie2,
-                categorie3,
-                produit1,
-                produit2,
-                produit3,
-                photo1,
-                photo2,
-                photo3,
-                photo4,
-              },
-              { upsert: true, new: true }
-            )
-              .then((favoris) => {
-                res.status(200).json(favoris);
-              })
-              .catch((error) => {
-                res.status(500).json({
-                  error:
-                    "Une erreur s'est produite lors de la modification des favoris",
-                });
-              });
-          } else {
-            res.status(404).json({
-              error: "Une ou plusieurs catégories/produits n'existent pas",
-            });
-          }
-        })
-        .catch((error) => {
-          res.status(500).json({
-            error:
-              "Une erreur s'est produite lors de la recherche des catégories/produits",
-          });
-        });
+        // Télécharger les photos sur Cloudinary
+        const photo1 = await cloudinary.uploader.upload(req.body.photo1);
+        const photo2 = await cloudinary.uploader.upload(req.body.photo2);
+        const photo3 = await cloudinary.uploader.upload(req.body.photo3);
+        const photo4 = await cloudinary.uploader.upload(req.body.photo4);
+
+        // Mettre à jour les champs des photos
+        favoris.photo1 = photo1.secure_url;
+        favoris.photo2 = photo2.secure_url;
+        favoris.photo3 = photo3.secure_url;
+        favoris.photo4 = photo4.secure_url;
+
+        // Enregistrer les modifications dans la base de données
+        await favoris.save();
+
+        res.status(200).json({ message: "Favoris mis à jour avec succès" });
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .json({ message: "Erreur lors de la mise à jour des favoris" });
+      }
     });
 
     app.listen(PORT, () => {
