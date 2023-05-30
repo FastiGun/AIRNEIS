@@ -7,6 +7,7 @@ const clientSchema = new mongoose.Schema({
   mail: String,
   mdp: String,
   telephone: { type: String, default: null },
+  admin: { type: Boolean, default: false },
 });
 
 const Client = mongoose.model("Client", clientSchema, "client");

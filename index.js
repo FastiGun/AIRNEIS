@@ -145,8 +145,13 @@ mongoose
       if (!motDePasseCorrect) {
         return res.status(401).send("Mot de passe incorrect");
       }
-      req.session.userId = existingClient.id;
-      res.redirect("/");
+      if (existingClient.admin) {
+        req.session.userId = existingClient.id;
+        res.redirect("/backoffice");
+      } else {
+        req.session.userId = existingClient.id;
+        res.redirect("/");
+      }
     });
 
     app.post("/api/connexion", async (req, res) => {
@@ -415,7 +420,8 @@ mongoose
           prenom,
           mail,
           mdp: empreinteMotDePasse,
-          telephone,
+          telephone: "",
+          admin: false,
         });
         await nouveauCompte.save();
         req.session.userId = nouveauCompte.id;
