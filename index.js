@@ -130,12 +130,12 @@ mongoose
       }
     });
 
-    app.post("/cart", async (req, res) => {
-      const { clientId, articleId } = req.body;
+    app.post("/add-produit-panier:articleId", async (req, res) => {
+      const articleId = req.params.articleId;
 
       try {
         // Vérifier si le client et l'article existent
-        const client = await Client.findById(clientId);
+        const client = req.session.userId;
         const article = await Produit.findById(articleId);
 
         if (!client || !article) {
@@ -144,7 +144,7 @@ mongoose
 
         // Créer le panier avec les informations fournies
         const panier = new Panier({
-          client: clientId,
+          client: client,
           article: articleId,
           quantite: 1,
         });
@@ -152,7 +152,7 @@ mongoose
         // Sauvegarder le panier dans la base de données
         await panier.save();
 
-        res.redirect("/cart");
+        return res.redirect("/cart");
       } catch (error) {
         console.error(error);
         res
