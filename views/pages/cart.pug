@@ -10,7 +10,7 @@ block content
       .gauche-panier
         each panier, value in paniers
           section.article-panier 
-            img.img-article-panier(src='/assets/img/placeholder.png', alt="Produit") 
+            img.img-article-panier(src=`${panier.article.image1}`, alt="Produit") 
             .infos-produit-panier 
               .desc-produit-panier 
                 h3.nom-produit-panier #{panier.article.nom}
