@@ -131,7 +131,7 @@ mongoose
     });
 
     app.post("/cart", async (req, res) => {
-      const { clientId, articleId, quantite } = req.body;
+      const { clientId, articleId } = req.body;
 
       try {
         // Vérifier si le client et l'article existent
@@ -146,7 +146,7 @@ mongoose
         const panier = new Panier({
           client: clientId,
           article: articleId,
-          quantite: quantite,
+          quantite: 1,
         });
 
         // Sauvegarder le panier dans la base de données
