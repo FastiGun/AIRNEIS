@@ -20,6 +20,14 @@ const {
 } = require("./models");
 const { ObjectId } = require("mongodb");
 const e = require("express");
+const cloudinary = require("cloudinary").v2;
+
+// Configuration Cloudinary
+cloudinary.config({
+  cloud_name: "dkhkhqbvl",
+  api_key: "259432631373519",
+  api_secret: "20TdtjsUtxFV0ELO2lwEr1zpH64",
+});
 
 const secretKey = process.env.SECRET_KEY;
 const passwordRegex =
@@ -491,6 +499,186 @@ mongoose
         console.error(error);
         res.status(401).json({ message: "Token d'authentification invalide" });
       }
+    }
+
+    app.post("/backoffice/categorie", (req, res) => {
+      const { nom, image } = req.body;
+
+      // Validation des données (vous pouvez ajouter des validations supplémentaires selon vos besoins)
+      if (!nom || !image) {
+        return res
+          .status(400)
+          .send("Veuillez fournir un nom et une image pour la catégorie.");
+      }
+
+      // Créer une nouvelle catégorie
+      const nouvelleCategorie = new Categorie({
+        nom,
+        image,
+      });
+
+      // Enregistrer la catégorie dans la base de données
+      nouvelleCategorie
+        .save()
+        .then(() => {
+          res.redirect("/backoffice/categories"); // Rediriger vers la liste des catégories en back office
+        })
+        .catch((error) => {
+          console.log(error);
+          res
+            .status(500)
+            .send("Une erreur est survenue lors de l'ajout de la catégorie.");
+        });
+    });
+
+    app.post("/backoffice/produit", (req, res) => {
+      const { nom, prix, stock, description, categorie } = req.body;
+      const photoFiles = [
+        req.files.photo1,
+        req.files.photo2,
+        req.files.photo3,
+        req.files.photo4,
+      ];
+
+      // Vérifier si au moins une image est téléchargée
+      if (!photoFiles.some((photoFile) => photoFile)) {
+        return res
+          .status(400)
+          .json({
+            error: "Veuillez télécharger au moins une image pour le produit",
+          });
+      }
+
+      const imageUploadPromises = photoFiles
+        .filter((photoFile) => photoFile) // Filtrer les fichiers vides
+        .map(uploadImage);
+
+      Promise.all(imageUploadPromises)
+        .then((imageUrls) => {
+          const [photoUrl1, photoUrl2, photoUrl3, photoUrl4] = imageUrls;
+
+          const nouveauProduit = new Produit({
+            nom,
+            prix,
+            stock,
+            description,
+            categorie: null, // Remplacez par l'ID de la catégorie si vous avez un champ pour la sélection de catégorie dans le formulaire
+            image1: photoUrl1,
+            image2: photoUrl2,
+            image3: photoUrl3,
+            image4: photoUrl4,
+          });
+
+          nouveauProduit
+            .save()
+            .then((produit) => {
+              res.status(201).json(produit);
+            })
+            .catch((error) => {
+              res
+                .status(500)
+                .json({
+                  error:
+                    "Une erreur s'est produite lors de la création du produit",
+                });
+            });
+        })
+        .catch((error) => {
+          res.status(500).json({ error: "Erreur lors de l'upload des photos" });
+        });
+    });
+
+    app.post("/backoffice/favoris", (req, res) => {
+      const {
+        categorie1,
+        categorie2,
+        categorie3,
+        produit1,
+        produit2,
+        produit3,
+        photo1,
+        photo2,
+        photo3,
+        photo4,
+      } = req.body;
+
+      // Vérifier si les catégories et les produits existent avant de les ajouter aux favoris
+      const categoriePromises = [
+        Categorie.findById(categorie1),
+        Categorie.findById(categorie2),
+        Categorie.findById(categorie3),
+      ];
+      const produitPromises = [
+        Produit.findById(produit1),
+        Produit.findById(produit2),
+        Produit.findById(produit3),
+      ];
+
+      Promise.all([...categoriePromises, ...produitPromises])
+        .then((results) => {
+          const categoriesExist = results
+            .slice(0, 3)
+            .every((categorie) => categorie !== null);
+          const produitsExist = results
+            .slice(3)
+            .every((produit) => produit !== null);
+
+          if (categoriesExist && produitsExist) {
+            // Mettre à jour les favoris avec les nouvelles valeurs
+            Favoris.findByIdAndUpdate(
+              idFavoris,
+              {
+                categorie1,
+                categorie2,
+                categorie3,
+                produit1,
+                produit2,
+                produit3,
+                photo1,
+                photo2,
+                photo3,
+                photo4,
+              },
+              { upsert: true, new: true }
+            )
+              .then((favoris) => {
+                res.status(200).json(favoris);
+              })
+              .catch((error) => {
+                res.status(500).json({
+                  error:
+                    "Une erreur s'est produite lors de la modification des favoris",
+                });
+              });
+          } else {
+            res.status(404).json({
+              error: "Une ou plusieurs catégories/produits n'existent pas",
+            });
+          }
+        })
+        .catch((error) => {
+          res.status(500).json({
+            error:
+              "Une erreur s'est produite lors de la recherche des catégories/produits",
+          });
+        });
+    });
+
+    // Fonction pour uploader une image sur Cloudinary
+    function uploadImage(imageFile) {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(
+          imageFile.tempFilePath,
+          { public_id: imageFile.name },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result.secure_url);
+            }
+          }
+        );
+      });
     }
 
     app.listen(PORT, () => {

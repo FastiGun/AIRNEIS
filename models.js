@@ -27,7 +27,10 @@ const produitSchema = new mongoose.Schema({
   stock: Number,
   description: String,
   categorie: { type: mongoose.Schema.Types.ObjectId, ref: "Categorie" },
-  photo: String,
+  image1: String,
+  image2: String,
+  image3: String,
+  image4: String,
 });
 
 const Produit = mongoose.model("Produit", produitSchema, "produit");
@@ -35,6 +38,7 @@ const Produit = mongoose.model("Produit", produitSchema, "produit");
 //Categorie
 const categorieSchema = new mongoose.Schema({
   nom: String,
+  image: String,
 });
 
 const Categorie = mongoose.model("Categorie", categorieSchema, "categorie");
