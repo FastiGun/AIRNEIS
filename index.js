@@ -502,89 +502,156 @@ mongoose
     }
 
     app.post("/backoffice/categorie", (req, res) => {
+      // Récupérer les informations de la catégorie depuis req.body
       const { nom, image } = req.body;
 
-      // Validation des données (vous pouvez ajouter des validations supplémentaires selon vos besoins)
-      if (!nom || !image) {
-        return res
-          .status(400)
-          .send("Veuillez fournir un nom et une image pour la catégorie.");
+      // Vérifier que l'image est présente (obligatoire)
+      if (!image) {
+        return res.status(400).json({ error: "L'image est obligatoire." });
       }
 
-      // Créer une nouvelle catégorie
-      const nouvelleCategorie = new Categorie({
-        nom,
-        image,
-      });
+      // Télécharger l'image sur Cloudinary
+      const uploadOptions = {
+        folder: "images", // Le dossier dans lequel stocker les images sur Cloudinary
+        transformation: [{ width: 500, height: 500, crop: "limit" }], // Options de transformation d'image
+      };
 
-      // Enregistrer la catégorie dans la base de données
-      nouvelleCategorie
-        .save()
-        .then(() => {
-          res.redirect("/backoffice/categories"); // Rediriger vers la liste des catégories en back office
-        })
-        .catch((error) => {
-          console.log(error);
-          res
-            .status(500)
-            .send("Une erreur est survenue lors de l'ajout de la catégorie.");
-        });
-    });
+      cloudinary.uploader
+        .upload(image, uploadOptions)
+        .then((result) => {
+          // L'image a été téléchargée avec succès
+          // Vous pouvez récupérer l'URL sécurisée de l'image à partir de result.secure_url
 
-    app.post("/backoffice/produit", (req, res) => {
-      const { nom, prix, stock, description, categorie } = req.body;
-      const photoFiles = [
-        req.files.photo1,
-        req.files.photo2,
-        req.files.photo3,
-        req.files.photo4,
-      ];
-
-      // Vérifier si au moins une image est téléchargée
-      if (!photoFiles.some((photoFile) => photoFile)) {
-        return res
-          .status(400)
-          .json({
-            error: "Veuillez télécharger au moins une image pour le produit",
-          });
-      }
-
-      const imageUploadPromises = photoFiles
-        .filter((photoFile) => photoFile) // Filtrer les fichiers vides
-        .map(uploadImage);
-
-      Promise.all(imageUploadPromises)
-        .then((imageUrls) => {
-          const [photoUrl1, photoUrl2, photoUrl3, photoUrl4] = imageUrls;
-
-          const nouveauProduit = new Produit({
+          // Enregistrer la catégorie en base de données avec l'URL de l'image
+          const categorie = new Categorie({
             nom,
-            prix,
-            stock,
-            description,
-            categorie: null, // Remplacez par l'ID de la catégorie si vous avez un champ pour la sélection de catégorie dans le formulaire
-            image1: photoUrl1,
-            image2: photoUrl2,
-            image3: photoUrl3,
-            image4: photoUrl4,
+            image: result.secure_url,
           });
 
-          nouveauProduit
+          categorie
             .save()
-            .then((produit) => {
-              res.status(201).json(produit);
+            .then(() => {
+              // La catégorie a été enregistrée avec succès en base de données
+              res.status(201).json({ message: "Catégorie créée avec succès." });
             })
             .catch((error) => {
+              // Une erreur s'est produite lors de l'enregistrement de la catégorie en base de données
+              console.error(
+                "Erreur lors de l'enregistrement de la catégorie en base de données :",
+                error
+              );
               res
                 .status(500)
                 .json({
                   error:
-                    "Une erreur s'est produite lors de la création du produit",
+                    "Une erreur s'est produite lors de la création de la catégorie.",
                 });
             });
         })
         .catch((error) => {
-          res.status(500).json({ error: "Erreur lors de l'upload des photos" });
+          // Une erreur s'est produite lors du téléchargement de l'image
+          // Gérer l'erreur et répondre avec la réponse appropriée
+          console.error("Erreur lors du téléchargement de l'image :", error);
+          res
+            .status(500)
+            .json({
+              error:
+                "Une erreur s'est produite lors de la création de la catégorie.",
+            });
+        });
+    });
+
+    app.post("/backoffice/produit", (req, res) => {
+      // Récupérer les informations du produit depuis req.body
+      const {
+        nom,
+        prix,
+        stock,
+        description,
+        categorie,
+        photo1,
+        photo2,
+        photo3,
+        photo4,
+      } = req.body;
+
+      // Télécharger les images sur Cloudinary
+      const uploadOptions = {
+        folder: "images", // Le dossier dans lequel stocker les images sur Cloudinary
+        transformation: [{ width: 500, height: 500, crop: "limit" }], // Options de transformation d'image
+      };
+
+      const promises = [];
+
+      // Vérifier que la photo1 est présente (obligatoire)
+      if (photo1) {
+        promises.push(cloudinary.uploader.upload(photo1, uploadOptions));
+      } else {
+        // Si la photo1 est manquante, retourner une erreur
+        return res
+          .status(400)
+          .json({ error: "La photo principale est obligatoire." });
+      }
+
+      // Télécharger les autres photos (optionnelles)
+      if (photo2) {
+        promises.push(cloudinary.uploader.upload(photo2, uploadOptions));
+      }
+
+      if (photo3) {
+        promises.push(cloudinary.uploader.upload(photo3, uploadOptions));
+      }
+
+      if (photo4) {
+        promises.push(cloudinary.uploader.upload(photo4, uploadOptions));
+      }
+
+      // Attendre que toutes les images soient téléchargées
+      Promise.all(promises)
+        .then((results) => {
+          // Les images ont été téléchargées avec succès
+          // Vous pouvez récupérer les URLs sécurisées des images à partir des résultats (results)
+
+          const images = results.map((result) => result.secure_url);
+
+          // Enregistrer le produit en base de données avec les URLs des images
+          const produit = new Produit({
+            nom,
+            prix,
+            stock,
+            description,
+            categorie,
+            image1: images[0],
+            image2: images[1] || null,
+            image3: images[2] || null,
+            image4: images[3] || null,
+          });
+
+          produit
+            .save()
+            .then(() => {
+              // Le produit a été enregistré avec succès en base de données
+              res.status(201).json({ message: "Produit créé avec succès." });
+            })
+            .catch((error) => {
+              // Une erreur s'est produite lors de l'enregistrement du produit en base de données
+              console.error(
+                "Erreur lors de l'enregistrement du produit en base de données :",
+                error
+              );
+              res.status(500).json({
+                error:
+                  "Une erreur s'est produite lors de la création du produit.",
+              });
+            });
+        })
+        .catch((error) => {
+          // Une erreur s'est produite lors du téléchargement des images
+          // Gérer l'erreur et répondre avec la réponse appropriée
+          console.error("Erreur lors du téléchargement des images :", error);
+          res.status(500).json({
+            error: "Une erreur s'est produite lors de la création du produit.",
+          });
         });
     });
 
@@ -663,23 +730,6 @@ mongoose
           });
         });
     });
-
-    // Fonction pour uploader une image sur Cloudinary
-    function uploadImage(imageFile) {
-      return new Promise((resolve, reject) => {
-        cloudinary.uploader.upload(
-          imageFile.tempFilePath,
-          { public_id: imageFile.name },
-          (error, result) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(result.secure_url);
-            }
-          }
-        );
-      });
-    }
 
     app.listen(PORT, () => {
       console.log(`Je tourne ici : http://localhost:${PORT}`);
