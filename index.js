@@ -26,7 +26,7 @@ const cloudinary = require("cloudinary").v2;
 cloudinary.config({
   cloud_name: "dkhkhqbvl",
   api_key: "259432631373519",
-  api_secret: "20TdtjsUtxFV0ELO2lwEr1zpH64",
+  api_secret: process.env.SECRET_CLOUDINARY,
 });
 
 const secretKey = process.env.SECRET_KEY;
@@ -540,24 +540,20 @@ mongoose
                 "Erreur lors de l'enregistrement de la catégorie en base de données :",
                 error
               );
-              res
-                .status(500)
-                .json({
-                  error:
-                    "Une erreur s'est produite lors de la création de la catégorie.",
-                });
+              res.status(500).json({
+                error:
+                  "Une erreur s'est produite lors de la création de la catégorie.",
+              });
             });
         })
         .catch((error) => {
           // Une erreur s'est produite lors du téléchargement de l'image
           // Gérer l'erreur et répondre avec la réponse appropriée
           console.error("Erreur lors du téléchargement de l'image :", error);
-          res
-            .status(500)
-            .json({
-              error:
-                "Une erreur s'est produite lors de la création de la catégorie.",
-            });
+          res.status(500).json({
+            error:
+              "Une erreur s'est produite lors de la création de la catégorie.",
+          });
         });
     });
 
