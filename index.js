@@ -130,6 +130,37 @@ mongoose
       }
     });
 
+    app.post("/cart", async (req, res) => {
+      const { clientId, articleId, quantite } = req.body;
+
+      try {
+        // Vérifier si le client et l'article existent
+        const client = await Client.findById(clientId);
+        const article = await Produit.findById(articleId);
+
+        if (!client || !article) {
+          return res.status(404).send("Client ou article introuvable");
+        }
+
+        // Créer le panier avec les informations fournies
+        const panier = new Panier({
+          client: clientId,
+          article: articleId,
+          quantite: quantite,
+        });
+
+        // Sauvegarder le panier dans la base de données
+        await panier.save();
+
+        res.redirect("/cart");
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .send("Une erreur s'est produite lors de la création du panier");
+      }
+    });
+
     app.get("/contact", function (req, res) {
       res.render("pages/contact", { title: "Contact" });
     });
@@ -456,14 +487,17 @@ mongoose
     });
 
     app.get("/product_detail", async (req, res) => {
-      try{
+      try {
         const produit_id = req.query.id;
         const produit = await Produit.findById(produit_id);
         if (!produit) {
           return res.status(404).send("Produit non trouvée");
         }
 
-        res.render("pages/product_detail", { title: "Product Detail", produit: produit });
+        res.render("pages/product_detail", {
+          title: "Product Detail",
+          produit: produit,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération du produit.");
