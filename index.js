@@ -379,8 +379,20 @@ mongoose
       }
     });
 
-    app.get("/product_list", function (req, res) {
-      res.render("pages/product_list", { title: "Product List" });
+    app.get("/product_list", async (req, res) => {
+      try {
+        const categorie_id = req.query.id;
+        const categorie = await Categorie.findById(categorie_id);
+        if (!categorie) {
+          return res.status(404).send("Catégorie non trouvée");
+        }
+        const produits = await Produit.find({ categorie: categorie_id});
+        console.log(produits)
+        res.render("pages/product_list", { title: "Product List", produits: produits });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des produits.");
+      }
     });
 
     app.get("/product_detail", function (req, res) {

@@ -8,9 +8,12 @@ block content
   .container.titreh2-index
     h2.titre-accueil VENANT DES HAUTES TERRES D'ÉCOSSE NOS MEUBLES SONT IMMORTELS
   .container.grille-categories-accueil 
-    .categorie-accueil #{favoris.categorie1.nom}
-    .categorie-accueil #{favoris.categorie2.nom}
-    .categorie-accueil #{favoris.categorie3.nom}
+    .categorie-accueil 
+      a(href='/product_list?id='+favoris.categorie1._id) #{favoris.categorie1.nom}
+    .categorie-accueil
+      a(href='/product_list?id='+favoris.categorie1._id) #{favoris.categorie1.nom}
+    .categorie-accueil
+      a(href='/product_list?id='+favoris.categorie1._id) #{favoris.categorie1.nom}
   a.all-categories.btn.waves-effect.waves-light(href='/category') All categories
   .container.titre-produits-accueil Les Highlanders du moment
   .container.grille-produits-accueil 
