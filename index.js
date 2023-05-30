@@ -571,7 +571,7 @@ mongoose
         from: email,
         to: "benjamin760080@gmail.com", // Adresse e-mail du support
         subject: sujet,
-        text: `Message: ${message}`,
+        text: `Expéditeur : ${email}\nMessage: ${message}`,
       };
 
       // Envoi de l'e-mail
