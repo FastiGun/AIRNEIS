@@ -111,11 +111,17 @@ mongoose
       const clientId = req.session.userId;
 
       try {
-        const paniers = await Panier.find({ id_client: clientId }).populate(
-          "produits"
+        const paniers = await Panier.find({ client: clientId }).populate(
+          "article"
         );
-
-        res.render("pages/cart", { paniers, title: "Panier" });
+        let prixTotal = 0;
+        paniers.forEach((panier) => {
+          prixTotal += panier.article.prix * panier.quantite;
+        });
+        let TVA = prixTotal * 0.2;
+        TVA = TVA.toFixed(2);
+        prixTotal = prixTotal.toFixed(2);
+        res.render("pages/cart", { paniers, prixTotal, TVA, title: "Panier" });
       } catch (error) {
         console.error(error);
         res
@@ -377,7 +383,10 @@ mongoose
     app.get("/category", async (req, res) => {
       try {
         const categories = await Categorie.find({});
-        res.render("pages/category", { title: "Catégories", categories: categories });
+        res.render("pages/category", {
+          title: "Catégories",
+          categories: categories,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des catégories.");
@@ -391,8 +400,12 @@ mongoose
         if (!categorie) {
           return res.status(404).send("Catégorie non trouvée");
         }
-        const produits = await Produit.find({ categorie: categorie_id});
-        res.render("pages/product_list", { title: "Product List", produits: produits });
+        const produits = await Produit.find({ categorie: categorie_id });
+        console.log(produits);
+        res.render("pages/product_list", {
+          title: "Product List",
+          produits: produits,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des produits.");
