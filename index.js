@@ -384,6 +384,49 @@ mongoose
       }
     });
 
+    app.delete("/categories/:id", (req, res) => {
+      const categoryId = req.params.id;
+      Product.deleteMany({ category: categoryId }, (err) => {
+        if (err) {
+          res
+            .status(500)
+            .send(
+              "Une erreur s'est produite lors de la suppression des produits"
+            );
+        } else {
+          Category.findByIdAndRemove(categoryId, (err, category) => {
+            if (err) {
+              res
+                .status(500)
+                .send(
+                  "Une erreur s'est produite lors de la suppression de la catégorie"
+                );
+            } else {
+              res.send(
+                "La catégorie et tous ses produits ont été supprimés avec succès"
+              );
+            }
+          });
+        }
+      });
+    });
+
+    app.delete("/produits/:id", (req, res) => {
+      const productId = req.params.id;
+      Product.findByIdAndRemove(productId, (err, product) => {
+        if (err) {
+          res
+            .status(500)
+            .send(
+              "Une erreur s'est produite lors de la suppression du produit"
+            );
+        } else {
+          res.send("Le produit a été supprimé avec succès");
+        }
+      });
+      res.send("Le produit a été supprimé avec succès");
+    });
+
     app.get("/product_list", function (req, res) {
       res.render("pages/product_list", { title: "Product List" });
     });
