@@ -17,6 +17,9 @@ block content
   a.all-categories.btn.waves-effect.waves-light(href='/category') All categories
   .container.titre-produits-accueil Les Highlanders du moment
   .container.grille-produits-accueil 
-    .produit-accueil #{favoris.article1.nom}
-    .produit-accueil #{favoris.article2.nom}
-    .produit-accueil #{favoris.article3.nom}
+    .produit-accueil 
+      a(href='/product_detail?id='+favoris.article1._id) #{favoris.article1.nom}
+    .produit-accueil 
+      a(href='/product_detail?id='+favoris.article2._id) #{favoris.article2.nom}
+    .produit-accueil 
+      a(href='/product_detail?id='+favoris.article3._id) #{favoris.article3.nom}

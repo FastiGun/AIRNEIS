@@ -10,12 +10,12 @@ block content
         .img-product
     .wrapper-product-detail 
         .rigth-side-wrapper 
-            img(src='/assets/img/placeholder.pug')
+            img(src=produit.image1)
         .left-side-wrapper 
-            h1.product-name-title name
-            p.product-stock in stock
-            p.product-price $
-            p.product-description description
+            h1.product-name-title #{ produit.nom }
+            p.product-stock #{ produit.stock }
+            p.product-price #{ produit.prix }
+            p.product-description #{ produit.description }
             a(href='/cart') 
                 button.add-to-cart(type='button') Ajouter au panier
         .wrapper-similar-product

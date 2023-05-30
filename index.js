@@ -392,7 +392,6 @@ mongoose
           return res.status(404).send("Catégorie non trouvée");
         }
         const produits = await Produit.find({ categorie: categorie_id});
-        console.log(produits)
         res.render("pages/product_list", { title: "Product List", produits: produits });
       } catch (error) {
         console.error(error);
@@ -443,8 +442,19 @@ mongoose
       res.send("Le produit a été supprimé avec succès");
     });
 
-    app.get("/product_detail", function (req, res) {
-      res.render("pages/product_detail", { title: "Product Detail" });
+    app.get("/product_detail", async (req, res) => {
+      try{
+        const produit_id = req.query.id;
+        const produit = await Produit.findById(produit_id);
+        if (!produit) {
+          return res.status(404).send("Produit non trouvée");
+        }
+
+        res.render("pages/product_detail", { title: "Product Detail", produit: produit });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération du produit.");
+      }
     });
 
     app.get("/delivery_address", function (req, res) {

@@ -12,4 +12,5 @@ block content
                     p.product-name #{ produit.nom }
                     p.product-price #{ produit.prix }
                     p.product-stock #{ produit.stock }
-                button.goto-product-detail.btn.waves-effect.waves-light() Check out
+                a(href='/product_detail?id='+produit._id)
+                    button.goto-product-detail.btn.waves-effect.waves-light() Check out
