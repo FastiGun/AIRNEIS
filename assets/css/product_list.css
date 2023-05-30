@@ -4,4 +4,15 @@
     width: 80%;
     margin-left: 10%;
     margin-top: 2rem;
+    gap: 2rem;
+}
+
+.product-wrapper {
+    display: flex;
+    gap: 5rem;
+}
+
+.img-product {
+    width: 15rem;
+    height: 10rem;
 }
