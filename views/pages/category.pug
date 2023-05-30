@@ -6,8 +6,8 @@ block links
 
 block content
     .wrapper-category-list   
-        each category in categories
+        each category, key in categories
             .wrapper-category-list-item
                 a.category-link(href='')
-                    img.category-img(src='/assets/img/placeholder.png')
-                p.category-name #{ category.name }
+                    img.category-img(src=category.image)
+                p.category-name #{ category.nom }
