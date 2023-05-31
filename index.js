@@ -66,13 +66,8 @@ mongoose
       session({
         secret: "votre_secret",
         resave: false,
-        saveUninitialized: false,
-        cookie: {
-          secure: true, // Utilisez "true" si votre application utilise HTTPS
-          httpOnly: true, // Empêche l'accès aux cookies via JavaScript
-          sameSite: "strict", // Empêche l'envoi des cookies sur des domaines tiers
-          maxAge: 86400000, // Durée de validité du cookie en millisecondes (ex. : 24 heures)
-        },
+        saveUninitialized: true,
+        cookie: { secure: false },
       })
     );
 
