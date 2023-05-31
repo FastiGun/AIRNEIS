@@ -130,6 +130,37 @@ mongoose
       }
     });
 
+    app.post("/add-produit-panier:articleId", async (req, res) => {
+      const articleId = req.params.articleId;
+
+      try {
+        // Vérifier si le client et l'article existent
+        const client = req.session.userId;
+        const article = await Produit.findById(articleId);
+
+        if (!client || !article) {
+          return res.status(404).send("Client ou article introuvable");
+        }
+
+        // Créer le panier avec les informations fournies
+        const panier = new Panier({
+          client: client,
+          article: articleId,
+          quantite: 1,
+        });
+
+        // Sauvegarder le panier dans la base de données
+        await panier.save();
+
+        return res.redirect("/cart");
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .send("Une erreur s'est produite lors de la création du panier");
+      }
+    });
+
     app.get("/contact", function (req, res) {
       res.render("pages/contact", { title: "Contact" });
     });
@@ -456,14 +487,17 @@ mongoose
     });
 
     app.get("/product_detail", async (req, res) => {
-      try{
+      try {
         const produit_id = req.query.id;
         const produit = await Produit.findById(produit_id);
         if (!produit) {
           return res.status(404).send("Produit non trouvée");
         }
 
-        res.render("pages/product_detail", { title: "Product Detail", produit: produit });
+        res.render("pages/product_detail", {
+          title: "Product Detail",
+          produit: produit,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération du produit.");
@@ -537,7 +571,7 @@ mongoose
         from: email,
         to: "benjamin760080@gmail.com", // Adresse e-mail du support
         subject: sujet,
-        text: `Message: ${message}`,
+        text: `Expéditeur : ${email}\nMessage: ${message}`,
       };
 
       // Envoi de l'e-mail
