@@ -23,8 +23,9 @@ block content
                       option(value=val, selected) #{val}
                     else
                       option(value=val) #{val}
-                button.btn.waves-effect.waves-light(type='' name='action')
-                  i.material-icons delete    
+                a(href=`/remove-produit-panier/${panier.article._id}`)      
+                  button.btn.waves-effect.waves-light(type='', name='action')
+                    i.material-icons delete    
       .droite-panier
         .montant-panier
           .montant-gauche

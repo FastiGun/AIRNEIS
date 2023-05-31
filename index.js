@@ -130,7 +130,7 @@ mongoose
       }
     });
 
-    app.post("/add-produit-panier:articleId", async (req, res) => {
+    app.get("/add-produit-panier/:articleId", async (req, res) => {
       const articleId = req.params.articleId;
 
       try {
@@ -158,6 +158,28 @@ mongoose
         res
           .status(500)
           .send("Une erreur s'est produite lors de la création du panier");
+      }
+    });
+
+    app.get("/remove-produit-panier/:articleId", async (req, res) => {
+      const articleId = req.params.articleId;
+      const client = req.session.userId;
+
+      try {
+        // Vérifier si le client et l'article existent
+        if (!client || !articleId) {
+          return res.status(404).send("Client ou article introuvable");
+        }
+
+        // Supprimer le panier correspondant à l'article et au client
+        await Panier.findOneAndDelete({ client: client, article: articleId });
+
+        return res.redirect("/cart");
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .send("Une erreur s'est produite lors de la suppression du panier");
       }
     });
 

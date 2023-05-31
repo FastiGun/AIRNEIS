@@ -16,7 +16,7 @@ block content
             p.product-stock #{ produit.stock }
             p.product-price #{ produit.prix }
             p.product-description #{ produit.description }
-            a(href='/cart') 
+            a(href=`/add-produit-panier/${produit._id}`) 
                 button.add-to-cart(type='button') Ajouter au panier
         .wrapper-similar-product
             .similar-product 
