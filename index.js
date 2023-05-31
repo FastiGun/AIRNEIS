@@ -137,33 +137,47 @@ mongoose
     });
 
     app.get("/add-produit-panier/:articleId", async (req, res) => {
+      if (!req.session.userId) {
+        // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+        return res.redirect("/connexion");
+      }
+
       const articleId = req.params.articleId;
+      const clientId = req.session.userId;
 
       try {
         // Vérifier si le client et l'article existent
-        const client = req.session.userId;
-        const article = await Produit.findById(articleId);
-
-        if (!client || !article) {
+        if (!clientId || !articleId) {
           return res.status(404).send("Client ou article introuvable");
         }
 
-        // Créer le panier avec les informations fournies
-        const panier = new Panier({
-          client: client,
+        // Vérifier si le panier existe déjà pour cet article et ce client
+        let panier = await Panier.findOne({
+          client: clientId,
           article: articleId,
-          quantite: 1,
         });
 
-        // Sauvegarder le panier dans la base de données
+        if (panier) {
+          // Le panier existe déjà, incrémenter la quantité
+          panier.quantite += 1;
+        } else {
+          // Le panier n'existe pas, créer un nouveau panier
+          panier = new Panier({
+            client: clientId,
+            article: articleId,
+            quantite: 1,
+          });
+        }
+
+        // Enregistrer le panier mis à jour
         await panier.save();
 
-        return res.redirect("/cart");
+        res.redirect("/cart");
       } catch (error) {
         console.error(error);
         res
           .status(500)
-          .send("Une erreur s'est produite lors de la création du panier");
+          .send("Une erreur s'est produite lors de l'ajout au panier.");
       }
     });
 
