@@ -71,6 +71,12 @@ mongoose
       })
     );
 
+    // Middleware pour vérifier l'état de connexion de l'utilisateur
+    app.use((req, res, next) => {
+      res.locals.isLoggedIn = req.session.userId ? true : false;
+      next();
+    });
+
     app.get("/", async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris);
@@ -572,7 +578,7 @@ mongoose
           console.error(err);
           return res.status(500).send("Erreur lors de la déconnexion");
         }
-        res.redirect("/connexion");
+        res.redirect("/");
       });
     });
 
