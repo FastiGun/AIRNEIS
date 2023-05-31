@@ -201,18 +201,30 @@ i.fa-brands{
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background-color: lightgray;
+    background-color: rgba(59, 59, 110, 0.6);
     z-index: 10;
     width: 20%;
-    align-items: center;
+    align-items: start;
     top: 70px;
     right: 0;
     height: 100vh;
     transition: transform .2s linear;
+    padding: 1rem;
 }
 
 .burgermenu-link {
-    color: black;
+    font-size: 1.2rem;
+    color: white;
+    opacity: 1;
+    transition: 0.2s;
+    border-bottom: 1px white solid;
+    width: 100%;
+}
+
+.burgermenu-link:hover {
+    color: white;
+    opacity: 0.7;
+    transition: 0.2s;
 }
 
 .hidden {

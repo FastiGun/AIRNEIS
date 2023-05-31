@@ -1,4 +1,7 @@
 .burgermenu.hidden
+  a.burgermenu-link(href='/') Produits
+  a.burgermenu-link(href='/category') Catégories
+  a.burgermenu-link(href='/contact') Contact
   if isLoggedIn 
     a.burgermenu-link(href='/') Mon compte
     a.burgermenu-link(href='/') Mes commandes
@@ -6,4 +9,4 @@
   else 
     a.burgermenu-link(href='/connexion') Se connecter
     a.burgermenu-link(href='/inscription') S'inscrire
-  a.burgermenu-link(href='/contact') Contact
+  
