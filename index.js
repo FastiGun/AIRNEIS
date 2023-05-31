@@ -67,10 +67,7 @@ mongoose
         secret: process.env.SECRET_KEY,
         resave: true,
         saveUninitialized: true,
-        cookie: {
-          secure: false,
-          maxAge: 86400000, // Durée de validité du cookie en millisecondes (ex. : 24 heures)
-        },
+        maxAge: null,
       })
     );
 
@@ -228,7 +225,7 @@ mongoose
         return res.status(401).send("Mot de passe incorrect");
       }
       if (existingClient.admin) {
-        req.session.userId = existingClient.id;
+        res.session.userId = existingClient.id;
         res.redirect("/backoffice");
       } else {
         req.session.userId = existingClient.id;
