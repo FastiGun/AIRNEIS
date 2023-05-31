@@ -10,22 +10,23 @@ block content
       .gauche-panier
         each panier, value in paniers
           section.article-panier 
-            img.img-article-panier(src=`${panier.article.image1}`, alt="Produit") 
-            .infos-produit-panier 
-              .desc-produit-panier 
-                h3.nom-produit-panier #{panier.article.nom}
-                p.description-produit-panier #{panier.article.description}
-              .chiffres-produit-panier
-                h4.prix-produit-panier #{panier.article.prix}€
-                select.browser-default
-                  each val in [1, 2, 3, 4, 5]
-                    if val == panier.quantite
-                      option(value=val, selected) #{val}
-                    else
-                      option(value=val) #{val}
-                a(href=`/remove-produit-panier/${panier.article._id}`)      
-                  button.btn.waves-effect.waves-light(type='', name='action')
-                    i.material-icons delete    
+            a(href='/product_detail?id='+panier.article._id)
+              img.img-article-panier(src=`${panier.article.image1}`, alt="Produit") 
+              .infos-produit-panier 
+                .desc-produit-panier 
+                  h3.nom-produit-panier #{panier.article.nom}
+                  p.description-produit-panier #{panier.article.description}
+                .chiffres-produit-panier
+                  h4.prix-produit-panier #{panier.article.prix}€
+                  select.browser-default
+                    each val in [1, 2, 3, 4, 5]
+                      if val == panier.quantite
+                        option(value=val, selected) #{val}
+                      else
+                        option(value=val) #{val}
+                  a(href=`/remove-produit-panier/${panier.article._id}`)      
+                    button.btn.waves-effect.waves-light(type='', name='action')
+                      i.material-icons delete    
       .droite-panier
         .montant-panier
           .montant-gauche
