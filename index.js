@@ -68,6 +68,7 @@ mongoose
         resave: true,
         saveUninitialized: true,
         cookie: {
+          secure: false,
           maxAge: 86400000, // Durée de validité du cookie en millisecondes (ex. : 24 heures)
         },
       })
