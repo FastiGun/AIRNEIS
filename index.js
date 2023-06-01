@@ -598,12 +598,14 @@ mongoose
     });
 
     app.get("/backoffice_view_product", async (req, res) => {
-      try{
+      try {
         const produits = await Produit.find({});
 
-        res.render("pages/backoffice_view_product", { title: "BackOffice-Product", produits: produits });
-      }
-      catch (error){
+        res.render("pages/backoffice_view_product", {
+          title: "BackOffice-Product",
+          produits: produits,
+        });
+      } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des produits.");
       }
