@@ -86,6 +86,10 @@ mongoose
         const article1 = await Produit.findById(favoris.produit1);
         const article2 = await Produit.findById(favoris.produit2);
         const article3 = await Produit.findById(favoris.produit3);
+        const photo1 = favoris.photo1;
+        const photo2 = favoris.photo2;
+        const photo3 = favoris.photo3;
+        const photo4 = favoris.photo4;
         res.render("pages/index", {
           title: "Accueil",
           favoris: {
@@ -95,6 +99,10 @@ mongoose
             article1,
             article2,
             article3,
+            photo1,
+            photo2,
+            photo3,
+            photo4,
           },
         });
       } catch (error) {
@@ -586,12 +594,14 @@ mongoose
     });
 
     app.get("/backoffice_view_product", async (req, res) => {
-      try{
+      try {
         const produits = await Produit.find({});
 
-        res.render("pages/backoffice_view_product", { title: "BackOffice-Product", produits: produits });
-      }
-      catch (error){
+        res.render("pages/backoffice_view_product", {
+          title: "BackOffice-Product",
+          produits: produits,
+        });
+      } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des produits.");
       }

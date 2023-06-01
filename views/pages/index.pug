@@ -2,9 +2,10 @@ extends ../layouts/layout.pug
 
 block content
   .carroussel 
-    .img-back 
-    .img-back
-    .img-back
+    .img-back(style=`background-image: url(${favoris.photo1})`)
+    .img-back(style=`background-image: url(${favoris.photo2})`)
+    .img-back(style=`background-image: url(${favoris.photo3})`)
+    .img-back(style=`background-image: url(${favoris.photo4})`)
   .container.titreh2-index
     h2.titre-accueil VENANT DES HAUTES TERRES D'ÉCOSSE NOS MEUBLES SONT IMMORTELS
   .container.grille-categories-accueil 
@@ -19,8 +20,8 @@ block content
   .container.titre-produits-accueil Les Highlanders du moment
   .container.grille-produits-accueil 
     a(href='/product_detail?id='+favoris.article1._id) 
-      .produit-accueil #{favoris.article1.nom}
+      .produit-accueil.img-back(style=`background-image: url(${favoris.article1.image1})`)
     a(href='/product_detail?id='+favoris.article2._id) 
-      .produit-accueil #{favoris.article2.nom}
+      .produit-accueil.img-back(style=`background-image: url(${favoris.article2.image1})`)
     a(href='/product_detail?id='+favoris.article3._id) 
-      .produit-accueil #{favoris.article3.nom}
+      .produit-accueil.img-back(style=`background-image: url(${favoris.article3.image1})`)
