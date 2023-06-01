@@ -279,7 +279,9 @@ mongoose
         // Génération du token d'authentification
         const token = generateAuthToken(client);
 
-        res.status(200).json({ message: "Connexion réussie", token });
+        res
+          .status(200)
+          .json({ message: "Connexion réussie", token, clientId: client._id });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erreur lors de la connexion" });
