@@ -599,7 +599,9 @@ mongoose
 
     app.get("/backoffice_view_product", async (req, res) => {
       try {
-        const produits = await Produit.find({});
+        const produits = await Produit.find({})
+          .populate("categorie", "nom") // Récupère le champ "nom" de la collection "categorie"
+          .exec();
 
         res.render("pages/backoffice_view_product", {
           title: "BackOffice-Product",
