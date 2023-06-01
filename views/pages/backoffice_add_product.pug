@@ -1,0 +1,39 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_add_product.css')
+
+block content
+    .add-product-wrapper 
+        form(action="/backoffice/produit/add" method="post")
+            .input-name
+                input#nom(name="nom", placeholder="Name*")
+                label(for="nom")
+            .input-price
+                input#price(name="prix", placeholder="Price*")
+                label(for="prix")
+            .input-stock
+                input#stock(name="stock", placeholder="Stock*")
+                label(for="stock")
+            .input-dscription
+                input#description(name="description", placeholder="Description*")
+                label(for="description")
+            .input-categorie
+                label(for="categorie") Category :
+                select#categorie(name="categorie")
+                    each category in categories
+                        option(value=category._id) #{ category.nom }
+            .input-img1
+                label(for="photo1") Photo principale
+                input(type="file", name="photo1", id="photo1")
+            .input-img2
+                label(for="photo2") Photo 2 (optionnelle)
+                input(type="file", name="photo2", id="photo2")
+            .input-img3
+                label(for="photo3") Photo 3 (optionnelle)
+                input(type="file", name="photo3", id="photo3")
+            .input-img4
+                label(for="photo4") Photo 4 (optionnelle)
+                input(type="file", name="photo4", id="photo4")
+
+            button.submit(type="submit") Valider

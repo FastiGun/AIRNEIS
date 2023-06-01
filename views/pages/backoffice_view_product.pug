@@ -35,7 +35,9 @@ block content
                             img.product-img(src=produit.image4)
                         td 
                             a()
-                                i.mat-icon create
+                                i.material-icons create
                         td
-                            a()
-                                i.mat-icon delete
+                            a(href="/produit/"+produit._id)
+                                i.material-icons delete
+        a.waves-effect.waves-light.btn-large(href="/backoffice/produit/add") Create product
+            
