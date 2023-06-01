@@ -124,7 +124,8 @@ mongoose
         paniers.forEach((panier) => {
           prixTotal += panier.article.prix * panier.quantite;
         });
-        let TVA = prixTotal * 0.2;
+        let prixTTC = prixTotal * 1.2;
+        TVA = prixTTC - prixTotal;
         TVA = TVA.toFixed(2);
         prixTotal = prixTotal.toFixed(2);
         res.render("pages/cart", { paniers, prixTotal, TVA, title: "Panier" });
@@ -501,7 +502,6 @@ mongoose
           return res.status(404).send("Catégorie non trouvée");
         }
         const produits = await Produit.find({ categorie: categorie_id });
-        console.log(produits);
         res.render("pages/product_list", {
           title: "Product List",
           produits: produits,

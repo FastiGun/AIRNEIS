@@ -35,5 +35,6 @@ block content
           .montant-droite
             h4.panier-total #{prixTotal}€
             p.panier-tva #{TVA}€ 
-        a.waves-effect.waves-light.btn-large(href='/delivery-address') PASSER LA COMMANDE
+        if paniers.length > 0
+          a.waves-effect.waves-light.btn-large(href='/delivery-address') PASSER LA COMMANDE
   script(src='/assets/scripts/ajuste-panier.js')
