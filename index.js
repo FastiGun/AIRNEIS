@@ -590,7 +590,7 @@ mongoose
         return res
           .status(400)
           .send(
-            "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial."
+            "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
           );
       }
       try {
