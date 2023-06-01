@@ -203,6 +203,31 @@ mongoose
       }
     });
 
+    app.get("/ajuste-quantite-panier/:panierId/:quantite", async (req, res) => {
+      const { panierId, quantite } = req.params;
+
+      try {
+        // Trouver le panier dans la base de données en fonction de son ID
+        const panier = await Panier.findById(panierId);
+
+        if (!panier) {
+          return res.status(404).json({ message: "Panier non trouvé" });
+        }
+
+        // Mettre à jour la quantité du panier
+        panier.quantite = quantite;
+        await panier.save();
+
+        return res.redirect("/cart");
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+          message:
+            "Une erreur s'est produite lors de l'ajustement de la quantité du panier",
+        });
+      }
+    });
+
     app.get("/contact", function (req, res) {
       res.render("pages/contact", { title: "Contact" });
     });

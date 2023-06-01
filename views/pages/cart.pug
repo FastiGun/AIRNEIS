@@ -18,12 +18,12 @@ block content
                 p.description-produit-panier #{panier.article.description}
               .chiffres-produit-panier
                 h4.prix-produit-panier #{panier.article.prix}€
-                select.browser-default
-                  each val in [1, 2, 3, 4, 5]
+                select.browser-default.mySelect
+                  each val in Array.from({ length: 10 }, (_, i) => i + 1)
                     if val == panier.quantite
-                      option(value=val, selected) #{val}
+                      option(value=`/ajuste-quantite-panier/${panier.id}/${val}`, selected) #{val}
                     else
-                      option(value=val) #{val}
+                      option(value=`/ajuste-quantite-panier/${panier.id}/${val}`) #{val}
                 a(href=`/remove-produit-panier/${panier.article._id}`)      
                   button.btn.waves-effect.waves-light(type='', name='action')
                     i.material-icons delete    
@@ -36,3 +36,4 @@ block content
             h4.panier-total #{prixTotal}€
             p.panier-tva #{TVA}€ 
         a.waves-effect.waves-light.btn-large(href='/delivery-address') PASSER LA COMMANDE
+  script(src='/assets/scripts/ajuste-panier.js')
