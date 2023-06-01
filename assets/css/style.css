@@ -107,7 +107,7 @@ li a:hover{
 }
 
 .carroussel{
-    width: 300%;
+    width: 400%;
     overflow-x: hidden;
     white-space: nowrap;
     display: flex;
@@ -139,21 +139,27 @@ i.fa-brands{
     0% {
         transform: translateX(0);
     }
-    32% {
+    23% {
         transform: translateX(0);
     }
-    35%{
-        transform: translateX(-33.33%);
+    27%{
+        transform: translateX(-25.00%);
     }
-    64% {
-        transform: translateX(-33.33%);
+    48% {
+        transform: translateX(-25.00%);
     }
-    67% {
-        transform: translateX(-66.66%);
+    51% {
+        transform: translateX(-50.00%);
       }
+    73% {
+        transform: translateX(-50.00%);
+      }
+    76% {
+        transform: translateX(-75.00%);
+    }
     97% {
-        transform: translateX(-66.66%);
-      }
+        transform: translateX(-75.00%);
+        }
     100%{
         transform: translateX(100%);
     }

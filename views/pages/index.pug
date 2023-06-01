@@ -2,9 +2,10 @@ extends ../layouts/layout.pug
 
 block content
   .carroussel 
-    .img-back 
-    .img-back
-    .img-back
+    .img-back(style=`background-image: url(${favoris.photo1})`)
+    .img-back(style=`background-image: url(${favoris.photo2})`)
+    .img-back(style=`background-image: url(${favoris.photo3})`)
+    .img-back(style=`background-image: url(${favoris.photo4})`)
   .container.titreh2-index
     h2.titre-accueil VENANT DES HAUTES TERRES D'ÉCOSSE NOS MEUBLES SONT IMMORTELS
   .container.grille-categories-accueil 

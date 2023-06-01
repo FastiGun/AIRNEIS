@@ -86,6 +86,10 @@ mongoose
         const article1 = await Produit.findById(favoris.produit1);
         const article2 = await Produit.findById(favoris.produit2);
         const article3 = await Produit.findById(favoris.produit3);
+        const photo1 = favoris.photo1;
+        const photo2 = favoris.photo2;
+        const photo3 = favoris.photo3;
+        const photo4 = favoris.photo4;
         res.render("pages/index", {
           title: "Accueil",
           favoris: {
@@ -95,6 +99,10 @@ mongoose
             article1,
             article2,
             article3,
+            photo1,
+            photo2,
+            photo3,
+            photo4,
           },
         });
       } catch (error) {
