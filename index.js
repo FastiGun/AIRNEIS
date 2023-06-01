@@ -259,7 +259,7 @@ mongoose
         return res.status(401).send("Mot de passe incorrect");
       }
       if (existingClient.admin) {
-        res.session.userId = existingClient.id;
+        req.session.userId = existingClient.id;
         res.redirect("/backoffice");
       } else {
         req.session.userId = existingClient.id;
