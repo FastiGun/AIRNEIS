@@ -474,7 +474,6 @@ mongoose
           return res.status(404).send("Catégorie non trouvée");
         }
         const produits = await Produit.find({ categorie: categorie_id });
-        console.log(produits);
         res.render("pages/product_list", {
           title: "Product List",
           produits: produits,
@@ -548,6 +547,22 @@ mongoose
 
     app.get("/delivery_address", function (req, res) {
       res.render("pages/delivery_address", { title: "Delivery Address" });
+    });
+
+    app.get("/backoffice", function (req, res) {
+      res.render("pages/backoffice", { title: "BackOffice" });
+    });
+
+    app.get("/backoffice_view_product", async (req, res) => {
+      try{
+        const produits = await Produit.find({});
+
+        res.render("pages/backoffice_view_product", { title: "BackOffice-Product", produits: produits });
+      }
+      catch (error){
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des produits.");
+      }
     });
 
     app.post("/inscription", async (req, res) => {
