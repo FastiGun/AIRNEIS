@@ -11,17 +11,17 @@ block content
   .container.grille-categories-accueil 
      
     a(href='/product_list?id='+favoris.categorie1._id) 
-      .categorie-accueil #{favoris.categorie1.nom}
+      .categorie-accueil.img(style=`background-image: url(${favoris.categorie1.image})`)
     a(href='/product_list?id='+favoris.categorie2._id) 
-      .categorie-accueil #{favoris.categorie2.nom}
+      .categorie-accueil.img(style=`background-image: url(${favoris.categorie2.image})`)
     a(href='/product_list?id='+favoris.categorie3._id) 
-      .categorie-accueil #{favoris.categorie3.nom}
+      .categorie-accueil.img(style=`background-image: url(${favoris.categorie3.image})`)
   a.all-categories.btn.waves-effect.waves-light(href='/category') All categories
   .container.titre-produits-accueil Les Highlanders du moment
   .container.grille-produits-accueil 
     a(href='/product_detail?id='+favoris.article1._id) 
-      .produit-accueil.img-back(style=`background-image: url(${favoris.article1.image1})`)
+      .produit-accueil.img(style=`background-image: url(${favoris.article1.image1})`)
     a(href='/product_detail?id='+favoris.article2._id) 
-      .produit-accueil.img-back(style=`background-image: url(${favoris.article2.image1})`)
+      .produit-accueil.img(style=`background-image: url(${favoris.article2.image1})`)
     a(href='/product_detail?id='+favoris.article3._id) 
-      .produit-accueil.img-back(style=`background-image: url(${favoris.article3.image1})`)
+      .produit-accueil.img(style=`background-image: url(${favoris.article3.image1})`)

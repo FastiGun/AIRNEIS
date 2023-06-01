@@ -106,6 +106,19 @@ li a:hover{
     width: 100%;
 }
 
+.img{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.img:hover{
+    opacity: 0.7;
+    transition: 0.2s;
+}
+
 .carroussel{
     width: 400%;
     overflow-x: hidden;
@@ -191,7 +204,6 @@ i.fa-brands{
 .categorie-accueil, .produit-accueil{
     height: 200px;
     width: 300px;
-    background-color: grey;
     color: white;
     text-align: center;
     padding: 2rem;
