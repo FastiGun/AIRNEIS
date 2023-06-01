@@ -124,7 +124,8 @@ mongoose
         paniers.forEach((panier) => {
           prixTotal += panier.article.prix * panier.quantite;
         });
-        let TVA = prixTotal * 0.2;
+        let prixTTC = prixTotal * 1.2;
+        TVA = prixTTC - prixTotal;
         TVA = TVA.toFixed(2);
         prixTotal = prixTotal.toFixed(2);
         res.render("pages/cart", { paniers, prixTotal, TVA, title: "Panier" });
@@ -203,6 +204,39 @@ mongoose
       }
     });
 
+    app.get("/ajuste-quantite-panier/:panierId/:quantite", async (req, res) => {
+      const { panierId, quantite } = req.params;
+
+      try {
+        // Convertir la quantité en nombre entier
+        const nouvelleQuantite = parseInt(quantite);
+
+        // Vérifier si la conversion a réussi
+        if (isNaN(nouvelleQuantite)) {
+          return res.status(400).json({ message: "Quantité invalide" });
+        }
+
+        // Trouver le panier dans la base de données en fonction de son ID
+        const panier = await Panier.findById(panierId);
+
+        if (!panier) {
+          return res.status(404).json({ message: "Panier non trouvé" });
+        }
+
+        // Mettre à jour la quantité du panier
+        panier.quantite = nouvelleQuantite;
+        await panier.save();
+
+        return res.redirect("/cart");
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+          message:
+            "Une erreur s'est produite lors de l'ajustement de la quantité du panier",
+        });
+      }
+    });
+
     app.get("/contact", function (req, res) {
       res.render("pages/contact", { title: "Contact" });
     });
@@ -225,7 +259,7 @@ mongoose
         return res.status(401).send("Mot de passe incorrect");
       }
       if (existingClient.admin) {
-        res.session.userId = existingClient.id;
+        req.session.userId = existingClient.id;
         res.redirect("/backoffice");
       } else {
         req.session.userId = existingClient.id;
@@ -254,7 +288,9 @@ mongoose
         // Génération du token d'authentification
         const token = generateAuthToken(client);
 
-        res.status(200).json({ message: "Connexion réussie", token });
+        res
+          .status(200)
+          .json({ message: "Connexion réussie", token, clientId: client._id });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erreur lors de la connexion" });
@@ -578,7 +614,7 @@ mongoose
         return res
           .status(400)
           .send(
-            "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial."
+            "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
           );
       }
       try {
@@ -864,6 +900,137 @@ mongoose
         res
           .status(500)
           .json({ message: "Erreur lors de la mise à jour des favoris" });
+      }
+    });
+
+    app.get("/backoffice", async (req, res) => {
+      try {
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const startOf7DaysAgo = new Date(startOfToday);
+        startOf7DaysAgo.setDate(startOfToday.getDate() - 7);
+
+        const totalSalesByDay = await Commande.aggregate([
+          {
+            $match: {
+              date: { $gte: startOf7DaysAgo, $lt: startOfToday },
+            },
+          },
+          {
+            $group: {
+              _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+              totalSales: { $sum: "$prixTTC" },
+            },
+          },
+          {
+            $sort: { _id: 1 },
+          },
+        ]);
+
+        const salesByCategoryByDay = await Commande.aggregate([
+          {
+            $match: {
+              date: { $gte: startOf7DaysAgo, $lt: startOfToday },
+            },
+          },
+          {
+            $unwind: "$produits",
+          },
+          {
+            $lookup: {
+              from: "produit",
+              localField: "produits",
+              foreignField: "_id",
+              as: "produitInfo",
+            },
+          },
+          {
+            $unwind: "$produitInfo",
+          },
+          {
+            $group: {
+              _id: {
+                day: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                category: "$produitInfo.categorie",
+              },
+              totalSales: { $sum: "$produitInfo.prix" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.day",
+              salesByCategory: {
+                $push: {
+                  category: "$_id.category",
+                  totalSales: "$totalSales",
+                },
+              },
+            },
+          },
+          {
+            $sort: { _id: 1 },
+          },
+        ]);
+
+        const furnitureByCategoryByDay = await Commande.aggregate([
+          {
+            $match: {
+              date: { $gte: startOf7DaysAgo, $lt: startOfToday },
+            },
+          },
+          {
+            $unwind: "$produits",
+          },
+          {
+            $lookup: {
+              from: "produit",
+              localField: "produits",
+              foreignField: "_id",
+              as: "produitInfo",
+            },
+          },
+          {
+            $unwind: "$produitInfo",
+          },
+          {
+            $group: {
+              _id: {
+                day: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                category: "$produitInfo.categorie",
+              },
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.day",
+              furnitureByCategory: {
+                $push: {
+                  category: "$_id.category",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          {
+            $sort: { _id: 1 },
+          },
+        ]);
+
+        const data = {
+          totalSalesByDay,
+          salesByCategoryByDay,
+          furnitureByCategoryByDay,
+        };
+
+        res.render("pages/backoffice", { data });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message:
+            "Une erreur s'est produite lors de la récupération des données",
+        });
       }
     });
 
