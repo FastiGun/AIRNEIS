@@ -1,0 +1,41 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_view_product.css')
+
+block content
+    .view-product-wrapper
+        table 
+            thead 
+                tr 
+                    th Name 
+                    th Price 
+                    th Stock 
+                    th Description
+                    th Category 
+                    th Image 1
+                    th Image 2
+                    th Image 3
+                    th Image 4
+            tbody
+                each produit in produits
+                    tr.view-product-list-item
+                        td.product-name #{ produit.nom }
+                        td.product-price #{ produit.prix }
+                        td.product-stock #{ produit.stock }
+                        td.product-description #{ produit.description }
+                        td.product-category #{ produit.categorie.nom }
+                        td
+                            img.product-img(src=produit.image1)
+                        td 
+                            img.product-img(src=produit.image2)
+                        td
+                            img.product-img(src=produit.image3)
+                        td
+                            img.product-img(src=produit.image4)
+                        td 
+                            a()
+                                i.mat-icon create
+                        td
+                            a()
+                                i.mat-icon delete

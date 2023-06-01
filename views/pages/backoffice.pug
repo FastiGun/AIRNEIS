@@ -1,0 +1,11 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice.css')
+
+block content
+    .backoffice-wrapper 
+        a.waves-effect.waves-light.btn-large(href="/backoffice_view_product") View products
+        a.waves-effect.waves-light.btn-large() View categories
+        a.waves-effect.waves-light.btn-large() Support
+        a.waves-effect.waves-light.btn-large() Return request
