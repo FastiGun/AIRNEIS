@@ -585,10 +585,6 @@ mongoose
       res.render("pages/delivery_address", { title: "Delivery Address" });
     });
 
-    app.get("/backoffice", function (req, res) {
-      res.render("pages/backoffice", { title: "BackOffice" });
-    });
-
     app.get("/backoffice_view_product", async (req, res) => {
       try{
         const produits = await Produit.find({});
