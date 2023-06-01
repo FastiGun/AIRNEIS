@@ -879,6 +879,137 @@ mongoose
       }
     });
 
+    app.get("/backoffice", async (req, res) => {
+      try {
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const startOf7DaysAgo = new Date(startOfToday);
+        startOf7DaysAgo.setDate(startOfToday.getDate() - 7);
+
+        const totalSalesByDay = await Commande.aggregate([
+          {
+            $match: {
+              date: { $gte: startOf7DaysAgo, $lt: startOfToday },
+            },
+          },
+          {
+            $group: {
+              _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+              totalSales: { $sum: "$prixTTC" },
+            },
+          },
+          {
+            $sort: { _id: 1 },
+          },
+        ]);
+
+        const salesByCategoryByDay = await Commande.aggregate([
+          {
+            $match: {
+              date: { $gte: startOf7DaysAgo, $lt: startOfToday },
+            },
+          },
+          {
+            $unwind: "$produits",
+          },
+          {
+            $lookup: {
+              from: "produit",
+              localField: "produits",
+              foreignField: "_id",
+              as: "produitInfo",
+            },
+          },
+          {
+            $unwind: "$produitInfo",
+          },
+          {
+            $group: {
+              _id: {
+                day: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                category: "$produitInfo.categorie",
+              },
+              totalSales: { $sum: "$produitInfo.prix" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.day",
+              salesByCategory: {
+                $push: {
+                  category: "$_id.category",
+                  totalSales: "$totalSales",
+                },
+              },
+            },
+          },
+          {
+            $sort: { _id: 1 },
+          },
+        ]);
+
+        const furnitureByCategoryByDay = await Commande.aggregate([
+          {
+            $match: {
+              date: { $gte: startOf7DaysAgo, $lt: startOfToday },
+            },
+          },
+          {
+            $unwind: "$produits",
+          },
+          {
+            $lookup: {
+              from: "produit",
+              localField: "produits",
+              foreignField: "_id",
+              as: "produitInfo",
+            },
+          },
+          {
+            $unwind: "$produitInfo",
+          },
+          {
+            $group: {
+              _id: {
+                day: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+                category: "$produitInfo.categorie",
+              },
+              count: { $sum: 1 },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.day",
+              furnitureByCategory: {
+                $push: {
+                  category: "$_id.category",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          {
+            $sort: { _id: 1 },
+          },
+        ]);
+
+        const data = {
+          totalSalesByDay,
+          salesByCategoryByDay,
+          furnitureByCategoryByDay,
+        };
+
+        res.render("pages/backoffice", { data });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message:
+            "Une erreur s'est produite lors de la récupération des données",
+        });
+      }
+    });
+
     app.listen(PORT, () => {
       console.log(`Je tourne ici : http://localhost:${PORT}`);
     });

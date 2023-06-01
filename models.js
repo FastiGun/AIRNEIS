@@ -70,7 +70,7 @@ const Paiement = mongoose.model("Paiement", paiementSchema, "paiement");
 
 //Commande
 const commandeSchema = new mongoose.Schema({
-  date: String,
+  date: Date,
   prixHT: Number,
   prixTTC: Number,
   statut: String,
