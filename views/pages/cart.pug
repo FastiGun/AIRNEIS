@@ -8,7 +8,7 @@ block content
     h1.contact-h1 Panier
     .ecran-panier 
       .gauche-panier
-        each panier, value in paniers
+        each panier in paniers
           section.article-panier 
             a(href='/product_detail?id='+panier.article._id)
               img.img-article-panier(src=`${panier.article.image1}`, alt="Produit") 
@@ -37,4 +37,3 @@ block content
             p.panier-tva #{TVA}€ 
         if paniers.length > 0
           a.waves-effect.waves-light.btn-large(href='/delivery-address') PASSER LA COMMANDE
-  script(src='/assets/scripts/ajuste-panier.js')

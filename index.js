@@ -208,6 +208,14 @@ mongoose
       const { panierId, quantite } = req.params;
 
       try {
+        // Convertir la quantité en nombre entier
+        const nouvelleQuantite = parseInt(quantite);
+
+        // Vérifier si la conversion a réussi
+        if (isNaN(nouvelleQuantite)) {
+          return res.status(400).json({ message: "Quantité invalide" });
+        }
+
         // Trouver le panier dans la base de données en fonction de son ID
         const panier = await Panier.findById(panierId);
 
@@ -216,7 +224,7 @@ mongoose
         }
 
         // Mettre à jour la quantité du panier
-        panier.quantite = quantite;
+        panier.quantite = nouvelleQuantite;
         await panier.save();
 
         return res.redirect("/cart");

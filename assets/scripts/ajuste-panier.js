@@ -1,9 +1,9 @@
-const selectElement = document.querySelector(".mySelect");
+const selectElements = document.querySelectorAll(".mySelect");
 
-selectElement.addEventListener("change", function () {
-  const selectedOption = this.options[this.selectedIndex];
-  const url = selectedOption.value;
-
-  // Rediriger vers l'URL sélectionnée
-  window.location.href = url;
+selectElements.forEach((selectElement, index) => {
+  selectElement.addEventListener("change", function () {
+    const selectedOption = this.options[this.selectedIndex];
+    const url = selectedOption.value;
+    window.location.href = url;
+  });
 });
