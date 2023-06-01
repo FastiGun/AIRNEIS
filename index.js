@@ -780,98 +780,90 @@ mongoose
         });
     });
 
-    app.post("/backoffice/produit", (req, res) => {
-      // Récupérer les informations du produit depuis req.body
-      const {
-        nom,
-        prix,
-        stock,
-        description,
-        categorie,
-        photo1,
-        photo2,
-        photo3,
-        photo4,
-      } = req.body;
+    app.post("/backoffice/produit", async (req, res) => {
+      try {
+        // Récupérer les informations du produit depuis req.body
+        const {
+          nom,
+          prix,
+          stock,
+          description,
+          categorie,
+          photo1,
+          photo2,
+          photo3,
+          photo4,
+        } = req.body;
 
-      // Télécharger les images sur Cloudinary
-      const uploadOptions = {
-        folder: "images", // Le dossier dans lequel stocker les images sur Cloudinary
-        transformation: [{ width: 500, height: 500, crop: "limit" }], // Options de transformation d'image
-      };
+        // Vérifier que la catégorie existe en recherchant par son nom
+        const categorieExistante = await Categorie.findOne({ nom: categorie });
 
-      const promises = [];
+        if (!categorieExistante) {
+          return res.status(400).json({ error: "La catégorie est invalide." });
+        }
 
-      // Vérifier que la photo1 est présente (obligatoire)
-      if (photo1) {
-        promises.push(cloudinary.uploader.upload(photo1, uploadOptions));
-      } else {
-        // Si la photo1 est manquante, retourner une erreur
-        return res
-          .status(400)
-          .json({ error: "La photo principale est obligatoire." });
-      }
+        // Télécharger les images sur Cloudinary
+        const uploadOptions = {
+          folder: "images", // Le dossier dans lequel stocker les images sur Cloudinary
+          transformation: [{ width: 500, height: 500, crop: "limit" }], // Options de transformation d'image
+        };
 
-      // Télécharger les autres photos (optionnelles)
-      if (photo2) {
-        promises.push(cloudinary.uploader.upload(photo2, uploadOptions));
-      }
+        const promises = [];
 
-      if (photo3) {
-        promises.push(cloudinary.uploader.upload(photo3, uploadOptions));
-      }
+        // Vérifier que la photo1 est présente (obligatoire)
+        if (photo1) {
+          promises.push(cloudinary.uploader.upload(photo1, uploadOptions));
+        } else {
+          // Si la photo1 est manquante, retourner une erreur
+          return res
+            .status(400)
+            .json({ error: "La photo principale est obligatoire." });
+        }
 
-      if (photo4) {
-        promises.push(cloudinary.uploader.upload(photo4, uploadOptions));
-      }
+        // Télécharger les autres photos (optionnelles)
+        if (photo2) {
+          promises.push(cloudinary.uploader.upload(photo2, uploadOptions));
+        }
 
-      // Attendre que toutes les images soient téléchargées
-      Promise.all(promises)
-        .then((results) => {
-          // Les images ont été téléchargées avec succès
-          // Vous pouvez récupérer les URLs sécurisées des images à partir des résultats (results)
+        if (photo3) {
+          promises.push(cloudinary.uploader.upload(photo3, uploadOptions));
+        }
 
-          const images = results.map((result) => result.secure_url);
+        if (photo4) {
+          promises.push(cloudinary.uploader.upload(photo4, uploadOptions));
+        }
 
-          // Enregistrer le produit en base de données avec les URLs des images
-          const produit = new Produit({
-            nom,
-            prix,
-            stock,
-            description,
-            categorie,
-            image1: images[0],
-            image2: images[1] || null,
-            image3: images[2] || null,
-            image4: images[3] || null,
-          });
+        // Attendre que toutes les images soient téléchargées
+        const results = await Promise.all(promises);
 
-          produit
-            .save()
-            .then(() => {
-              // Le produit a été enregistré avec succès en base de données
-              res.status(201).json({ message: "Produit créé avec succès." });
-            })
-            .catch((error) => {
-              // Une erreur s'est produite lors de l'enregistrement du produit en base de données
-              console.error(
-                "Erreur lors de l'enregistrement du produit en base de données :",
-                error
-              );
-              res.status(500).json({
-                error:
-                  "Une erreur s'est produite lors de la création du produit.",
-              });
-            });
-        })
-        .catch((error) => {
-          // Une erreur s'est produite lors du téléchargement des images
-          // Gérer l'erreur et répondre avec la réponse appropriée
-          console.error("Erreur lors du téléchargement des images :", error);
-          res.status(500).json({
-            error: "Une erreur s'est produite lors de la création du produit.",
-          });
+        // Les images ont été téléchargées avec succès
+        // Vous pouvez récupérer les URLs sécurisées des images à partir des résultats (results)
+        const images = results.map((result) => result.secure_url);
+
+        // Enregistrer le produit en base de données avec les URLs des images et la référence de catégorie
+        const produit = new Produit({
+          nom,
+          prix,
+          stock,
+          description,
+          categorie: categorieExistante._id,
+          image1: images[0],
+          image2: images[1] || null,
+          image3: images[2] || null,
+          image4: images[3] || null,
         });
+
+        await produit.save();
+
+        // Le produit a été enregistré avec succès en base de données
+        res.status(201).json({ message: "Produit créé avec succès." });
+      } catch (error) {
+        // Une erreur s'est produite lors de la création du produit
+        console.error("Erreur lors de la création du produit :", error);
+        res.status(500).json({
+          error: "Une erreur s'est produite lors de la création du produit.",
+        });
+      }
     });
 
     app.post("/backoffice/favoris", async (req, res) => {
