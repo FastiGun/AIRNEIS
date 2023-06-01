@@ -593,7 +593,7 @@ mongoose
       res.render("pages/delivery_address", { title: "Delivery Address" });
     });
 
-    app.get("/backoffice_view_product", async (req, res) => {
+    app.get("/backoffice/produit", async (req, res) => {
       try {
         const produits = await Produit.find({});
 
@@ -604,6 +604,16 @@ mongoose
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des produits.");
+      }
+    });
+
+    app.get("/backoffice/produit/add", async (req,res) => {
+      try{
+        const categories = await Categorie.find({});
+        res.render("pages/backoffice_add_product", { title: "Backoffice-AddProduct", categories: categories })
+      } catch(error){
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des categories.");
       }
     });
 
