@@ -1,0 +1,7 @@
+.img-product {
+}
+
+.wrapper-product-detail{
+  display: flex;
+  flex-direction: column;
+}
