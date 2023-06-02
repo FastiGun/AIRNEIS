@@ -1,7 +1,47 @@
-.img-product {
+.img-product{
+  height: 100%;
+  width: 100%;
+  flex: 2;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.rigth-side-wrapper{
+  flex: 1;
 }
 
 .wrapper-product-detail{
   display: flex;
-  flex-direction: column;
+  height: 25rem;
+  width: 100%;
+  gap: 2rem;
+  justify-content: space-between;
+  padding: 2rem;
 }
+
+.left-side-wrapper{
+  flex: 1.5;
+  text-align: left;
+}
+
+.similar-product{
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  height: 20rem;
+  align-items: center;
+  color: black;
+}
+
+.img-product-similar{
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper-similar-product{
+  margin-bottom: 5rem;
+  margin-top: 5rem;
+  display: flex;
+}
+
