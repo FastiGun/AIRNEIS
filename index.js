@@ -612,7 +612,22 @@ mongoose
     app.get("/backoffice/produit/add", async (req,res) => {
       try{
         const categories = await Categorie.find({});
-        res.render("pages/backoffice_add_product", { title: "Backoffice-AddProduct", categories: categories })
+        res.render("pages/backoffice_add_product", { title: "Backoffice-AddProduct", categories: categories, isProduit: false })
+      } catch(error){
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des categories.");
+      }
+    });
+
+    app.get("/backoffice/produit/modify", async (req,res) => {
+      try{
+        const produit_id = req.query.id;
+        const produit = await Produit.findById(produit_id);
+        if (!produit) {
+          return res.status(404).send("Produit non trouvée");
+        }
+        const categories = await Categorie.find({});
+        res.render("pages/backoffice_add_product", { title: "Backoffice-ModifyProduct", categories: categories, produit: produit, isProduit: true })
       } catch(error){
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des categories.");

@@ -24,7 +24,7 @@ block content
                         td.product-price #{ produit.prix }
                         td.product-stock #{ produit.stock }
                         td.product-description #{ produit.description }
-                        td.product-category #{ produit.categorie.nom }
+                        td.product-category #{ produit.categorie }
                         td
                             img.product-img(src=produit.image1)
                         td 
@@ -34,7 +34,7 @@ block content
                         td
                             img.product-img(src=produit.image4)
                         td 
-                            a()
+                            a(href="/backoffice/produit/modify?id="+produit._id)
                                 i.material-icons create
                         td
                             a(href="/produit/"+produit._id)

@@ -7,33 +7,36 @@ block content
     .add-product-wrapper 
         form(action="/backoffice/produit/add" method="post")
             .input-name
-                input#nom(name="nom", placeholder="Name*")
+                input#nom(name="nom", placeholder="Name*", value=isProduit ? produit.nom : "")
                 label(for="nom")
             .input-price
-                input#price(name="prix", placeholder="Price*")
+                input#price(name="prix", placeholder="Price*", value=isProduit ? produit.prix : "")
                 label(for="prix")
             .input-stock
-                input#stock(name="stock", placeholder="Stock*")
+                input#stock(name="stock", placeholder="Stock*", value=isProduit ? produit.stock : "")
                 label(for="stock")
             .input-dscription
-                input#description(name="description", placeholder="Description*")
+                input#description(name="description", placeholder="Description*", value=isProduit ? produit.description : "")
                 label(for="description")
             .input-categorie
                 label(for="categorie") Category :
                 select#categorie(name="categorie")
                     each category in categories
-                        option(value=category._id) #{ category.nom }
+                        if isProduit
+                            option(value=category._id, selected= (category._id == produit.categorie._id) ) #{ category.nom }
+                        else
+                            option(value=category._id) #{ category.nom }
             .input-img1
                 label(for="photo1") Photo principale
-                input(type="file", name="photo1", id="photo1")
+                input(type="text", name="photo1", id="photo1", value=isProduit ? produit.image1 : "")
             .input-img2
                 label(for="photo2") Photo 2 (optionnelle)
-                input(type="file", name="photo2", id="photo2")
+                input(type="text", name="photo2", id="photo2", value=isProduit ? produit.image2 : "")
             .input-img3
                 label(for="photo3") Photo 3 (optionnelle)
-                input(type="file", name="photo3", id="photo3")
+                input(type="text", name="photo3", id="photo3", value=isProduit ? produit.image3 : "")
             .input-img4
                 label(for="photo4") Photo 4 (optionnelle)
-                input(type="file", name="photo4", id="photo4")
+                input(type="text", name="photo4", id="photo4", value=isProduit ? produit.image4 : "")
 
             button.submit(type="submit") Valider
