@@ -576,12 +576,24 @@ mongoose
         const produit_id = req.query.id;
         const produit = await Produit.findById(produit_id);
         if (!produit) {
-          return res.status(404).send("Produit non trouvée");
+          return res.status(404).send("Produit non trouvé");
         }
+
+        // Récupérer la catégorie du produit principal
+        const categorie = produit.categorie;
+
+        // Récupérer 3 autres produits de la même catégorie
+        const autresProduits = await Produit.find({
+          categorie,
+          _id: { $ne: produit_id },
+        })
+          .limit(3)
+          .lean();
 
         res.render("pages/product_detail", {
           title: "Product Detail",
           produit: produit,
+          autresProduits: autresProduits,
         });
       } catch (error) {
         console.error(error);

@@ -7,7 +7,7 @@ block content
     .product-list-wrapper
         each produit in produits
             .product-wrapper
-                img.img-product(src=produit.image1)
+                .img-product.img(style=`background-image: url(${produit.image1}`)
                 .basic-info 
                     p.product-name #{ produit.nom }
                     p.product-price #{ produit.prix }

@@ -19,16 +19,10 @@ block content
             a(href=`/add-produit-panier/${produit._id}`) 
                 button.add-to-cart(type='button') Ajouter au panier
         .wrapper-similar-product
-            .similar-product 
-                img(src='assets/img/placeholder.png')
-                p.similar-product-name name
-                p.similar-product-price price
-            .similar-product 
-                img(src='assets/img/placeholder.png')
-                p.similar-product-name name
-                p.similar-product-price price
-            .similar-product 
-                img(src='assets/img/placeholder.png')
-                p.similar-product-name name
-                p.similar-product-price price
+            each autreProduit, key in autresProduits
+                .similar-product 
+                    img(src=`${autreProduit.image1}`)
+                    p.similar-product-name #{autreProduit.nom}
+                    p.similar-product-price #{autreProduit.prix}
+            
         

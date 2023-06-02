@@ -8,11 +8,21 @@
 }
 
 .product-wrapper {
+    height: 10rem;
     display: flex;
     gap: 5rem;
 }
 
 .img-product {
-    width: 15rem;
-    height: 10rem;
+    height: 100%;
+    flex: 2;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.basic-info{
+    flex: 3;
 }
