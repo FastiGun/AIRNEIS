@@ -4,31 +4,20 @@ block links
     link(rel='stylesheet' href='assets/css/product_detail.css')
 
 block content 
-    .caroussel 
-        .img-product
-        .img-product
-        .img-product
-    .wrapper-product-detail 
+    .wrapper-product-detail.container
         .rigth-side-wrapper 
-            img(src=produit.image1)
+            .img-product.img(style=`background-image: url(${produit.image1}`)
         .left-side-wrapper 
             h1.product-name-title #{ produit.nom }
-            p.product-stock #{ produit.stock }
-            p.product-price #{ produit.prix }
+            p.product-stock #{ produit.stock } unités en stock
+            p.product-price #{ produit.prix } €
             p.product-description #{ produit.description }
-            a(href=`/add-produit-panier/${produit._id}`) 
-                button.add-to-cart(type='button') Ajouter au panier
-        .wrapper-similar-product
-            .similar-product 
-                img(src='assets/img/placeholder.png')
-                p.similar-product-name name
-                p.similar-product-price price
-            .similar-product 
-                img(src='assets/img/placeholder.png')
-                p.similar-product-name name
-                p.similar-product-price price
-            .similar-product 
-                img(src='assets/img/placeholder.png')
-                p.similar-product-name name
-                p.similar-product-price price
+            a.waves-effect.waves-light.btn(href=`/add-produit-panier/${produit._id}`) Ajouter au panier
+    .wrapper-similar-product.container
+        each autreProduit, key in autresProduits
+            a.similar-product(href='/product_detail?id='+autreProduit._id)
+                .img-product-similar.img(style=`background-image: url(${autreProduit.image1}`)
+                p.similar-product-name #{autreProduit.nom}
+                p.similar-product-price #{autreProduit.prix} €
+            
         
