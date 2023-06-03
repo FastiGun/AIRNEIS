@@ -621,26 +621,35 @@ mongoose
       }
     });
 
-    app.get("/backoffice/produit/add", async (req,res) => {
-      try{
+    app.get("/backoffice/produit/add", async (req, res) => {
+      try {
         const categories = await Categorie.find({});
-        res.render("pages/backoffice_add_product", { title: "Backoffice-AddProduct", categories: categories, isProduit: false })
-      } catch(error){
+        res.render("pages/backoffice_add_product", {
+          title: "Backoffice-AddProduct",
+          categories: categories,
+          isProduit: false,
+        });
+      } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des categories.");
       }
     });
 
-    app.get("/backoffice/produit/modify", async (req,res) => {
-      try{
+    app.get("/backoffice/produit/modify", async (req, res) => {
+      try {
         const produit_id = req.query.id;
         const produit = await Produit.findById(produit_id);
         if (!produit) {
           return res.status(404).send("Produit non trouvée");
         }
         const categories = await Categorie.find({});
-        res.render("pages/backoffice_add_product", { title: "Backoffice-ModifyProduct", categories: categories, produit: produit, isProduit: true })
-      } catch(error){
+        res.render("pages/backoffice_add_product", {
+          title: "Backoffice-ModifyProduct",
+          categories: categories,
+          produit: produit,
+          isProduit: true,
+        });
+      } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des categories.");
       }
@@ -813,10 +822,10 @@ mongoose
         });
     });
 
-    app.post("/backoffice/produit", async (req, res) => {
+    app.post("/backoffice/produit/add", async (req, res) => {
       try {
-        // Récupérer les informations du produit depuis req.body
         const {
+          _id,
           nom,
           prix,
           stock,
@@ -828,74 +837,86 @@ mongoose
           photo4,
         } = req.body;
 
-        // Vérifier que la catégorie existe en recherchant par son nom
-        const categorieExistante = await Categorie.findOne({ nom: categorie });
+        // Vérifier si l'ID du produit est fourni pour déterminer s'il s'agit d'une création ou d'une modification
+        if (_id) {
+          // Modification du produit
+          const produitExistant = await Produit.findById(_id);
 
-        if (!categorieExistante) {
-          return res.status(400).json({ error: "La catégorie est invalide." });
-        }
+          if (!produitExistant) {
+            return res.status(404).json({ error: "Produit non trouvé." });
+          }
 
-        // Télécharger les images sur Cloudinary
-        const uploadOptions = {
-          folder: "images", // Le dossier dans lequel stocker les images sur Cloudinary
-          transformation: [{ width: 500, height: 500, crop: "limit" }], // Options de transformation d'image
-        };
+          // Mise à jour des informations du produit
+          produitExistant.nom = nom;
+          produitExistant.prix = prix;
+          produitExistant.stock = stock;
+          produitExistant.description = description;
+          produitExistant.categorie = categorie;
+          produitExistant.image1 = photo1 || "";
+          produitExistant.image2 = photo2 || "";
+          produitExistant.image3 = photo3 || "";
+          produitExistant.image4 = photo4 || "";
 
-        const promises = [];
+          await produitExistant.save();
 
-        // Vérifier que la photo1 est présente (obligatoire)
-        if (photo1) {
-          promises.push(cloudinary.uploader.upload(photo1, uploadOptions));
+          // Le produit a été mis à jour avec succès en base de données
+          return res.redirect("/backoffice/produit");
         } else {
-          // Si la photo1 est manquante, retourner une erreur
-          return res
-            .status(400)
-            .json({ error: "La photo principale est obligatoire." });
+          // Création du produit
+          const categorieExistante = await Categorie.findById(categorie);
+
+          if (!categorieExistante) {
+            return res
+              .status(400)
+              .json({ error: "La catégorie est invalide." });
+          }
+
+          // Enregistrer le produit en base de données avec les liens vers les images
+          const produit = new Produit({
+            nom,
+            prix,
+            stock,
+            description,
+            categorie: categorie,
+            image1: photo1 || "",
+            image2: photo2 || "",
+            image3: photo3 || "",
+            image4: photo4 || "",
+          });
+
+          await produit.save();
+
+          // Le produit a été enregistré avec succès en base de données
+          return res.redirect("/backoffice/produit");
         }
-
-        // Télécharger les autres photos (optionnelles)
-        if (photo2) {
-          promises.push(cloudinary.uploader.upload(photo2, uploadOptions));
-        }
-
-        if (photo3) {
-          promises.push(cloudinary.uploader.upload(photo3, uploadOptions));
-        }
-
-        if (photo4) {
-          promises.push(cloudinary.uploader.upload(photo4, uploadOptions));
-        }
-
-        // Attendre que toutes les images soient téléchargées
-        const results = await Promise.all(promises);
-
-        // Les images ont été téléchargées avec succès
-        // Vous pouvez récupérer les URLs sécurisées des images à partir des résultats (results)
-        const images = results.map((result) => result.secure_url);
-
-        // Enregistrer le produit en base de données avec les URLs des images et la référence de catégorie
-        const produit = new Produit({
-          nom,
-          prix,
-          stock,
-          description,
-          categorie: categorieExistante._id,
-          image1: images[0],
-          image2: images[1] || null,
-          image3: images[2] || null,
-          image4: images[3] || null,
-        });
-
-        await produit.save();
-
-        // Le produit a été enregistré avec succès en base de données
-        res.status(201).json({ message: "Produit créé avec succès." });
       } catch (error) {
-        // Une erreur s'est produite lors de la création du produit
-        console.error("Erreur lors de la création du produit :", error);
-        res.status(500).json({
-          error: "Une erreur s'est produite lors de la création du produit.",
+        // Une erreur s'est produite lors de la création ou de la mise à jour du produit
+        console.error(
+          "Erreur lors de la création ou de la mise à jour du produit :",
+          error
+        );
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la création ou de la mise à jour du produit.",
         });
+      }
+    });
+
+    app.get("/produit/delete/:id", async (req, res) => {
+      try {
+        const produitId = req.params.id;
+
+        // Supprimez le produit en utilisant l'ID fourni
+        await Produit.findByIdAndRemove(produitId);
+
+        // Redirigez vers la page de la liste des produits après la suppression réussie
+        return res.redirect("/backoffice/produit");
+      } catch (error) {
+        console.error(error);
+        // Gérez les erreurs et renvoyez une réponse appropriée en cas d'échec de suppression
+        return res
+          .status(500)
+          .send("Une erreur s'est produite lors de la suppression du produit.");
       }
     });
 

@@ -6,29 +6,34 @@ block links
 block content
     .add-product-wrapper 
         form(action="/backoffice/produit/add" method="post")
+            .input-id(hidden)
+                    input#nom(name="_id", placeholder="Name*", value=isProduit ? produit._id : "")
+                    label(for="_id")
             .input-name
-                input#nom(name="nom", placeholder="Name*", value=isProduit ? produit.nom : "")
+                input#nom(required name="nom", placeholder="Name*", value=isProduit ? produit.nom : "")
                 label(for="nom")
             .input-price
-                input#price(name="prix", placeholder="Price*", value=isProduit ? produit.prix : "")
+                input#price(required name="prix", placeholder="Price*", value=isProduit ? produit.prix : "")
                 label(for="prix")
             .input-stock
-                input#stock(name="stock", placeholder="Stock*", value=isProduit ? produit.stock : "")
+                input#stock(required name="stock", placeholder="Stock*", value=isProduit ? produit.stock : "")
                 label(for="stock")
             .input-dscription
-                input#description(name="description", placeholder="Description*", value=isProduit ? produit.description : "")
+                input#description(required name="description", placeholder="Description*", value=isProduit ? produit.description : "")
                 label(for="description")
             .input-categorie
                 label(for="categorie") Category :
-                select#categorie(name="categorie")
+                select#categorie(required name="categorie")
                     each category in categories
                         if isProduit
-                            option(value=category._id, selected= (category._id == produit.categorie._id) ) #{ category.nom }
+                            - const categoryId = String(category._id);
+                            - const produitCategoryId = String(produit.categorie);
+                            option(value=category._id, selected= (categoryId === produitCategoryId)) #{ category.nom }
                         else
                             option(value=category._id) #{ category.nom }
             .input-img1
                 label(for="photo1") Photo principale
-                input(type="text", name="photo1", id="photo1", value=isProduit ? produit.image1 : "")
+                input(required type="text", name="photo1", id="photo1", value=isProduit ? produit.image1 : "")
             .input-img2
                 label(for="photo2") Photo 2 (optionnelle)
                 input(type="text", name="photo2", id="photo2", value=isProduit ? produit.image2 : "")
