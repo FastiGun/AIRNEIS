@@ -109,6 +109,25 @@ const favorisSchema = new mongoose.Schema({
 
 const Favoris = mongoose.model("Favoris", favorisSchema, "favoris");
 
+//Message
+const messageSchema = new mongoose.Schema({
+  email: {
+    type: String,
+  },
+  sujet: {
+    type: String,
+  },
+  contenu: {
+    type: String,
+  },
+  dateCreation: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const Message = mongoose.model("Message", messageSchema, "message");
+
 module.exports = {
   Client,
   Panier,
@@ -118,4 +137,5 @@ module.exports = {
   Paiement,
   Commande,
   Favoris,
+  Message,
 };

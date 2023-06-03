@@ -17,12 +17,13 @@ const {
   Paiement,
   Commande,
   Favoris,
+  Message,
 } = require("./models");
 const { ObjectId } = require("mongodb");
 const e = require("express");
 const cloudinary = require("cloudinary").v2;
 
-// Configuration Cloudinary
+// Configuration Cloudinary pour le stockage de photos
 cloudinary.config({
   cloud_name: "dkhkhqbvl",
   api_key: "259432631373519",
@@ -704,34 +705,24 @@ mongoose
     app.post("/send-mail-contact", async (req, res) => {
       const { email, sujet, message } = req.body;
 
-      // Configuration du transporteur d'e-mails (Gmail)
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "benjamin760080@gmail.com",
-          pass: passwordEmail,
-        },
-      });
+      try {
+        // Créer une instance du modèle Message avec les informations fournies
+        const nouveauMessage = new Message({
+          email,
+          sujet,
+          contenu: message,
+        });
 
-      // Options pour l'e-mail
-      const mailOptions = {
-        from: email,
-        to: "benjamin760080@gmail.com", // Adresse e-mail du support
-        subject: sujet,
-        text: `Expéditeur : ${email}\nMessage: ${message}`,
-      };
+        // Enregistrer le nouveau message en base de données
+        await nouveauMessage.save();
 
-      // Envoi de l'e-mail
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log(error);
-          res
-            .status(500)
-            .send("Une erreur s'est produite lors de l'envoi de l'e-mail.");
-        } else {
-          res.redirect("/");
-        }
-      });
+        res.redirect("/");
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .send("Une erreur s'est produite lors de la création du message.");
+      }
     });
 
     // Fonction pour générer le token d'authentification (par exemple, JWT)
