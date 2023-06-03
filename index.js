@@ -34,7 +34,6 @@ const secretKey = process.env.SECRET_KEY;
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-const passwordEmail = process.env.PASSWORD_MAIL;
 const PORT = 3001;
 const ASSETS_PATH = "/assets";
 const saltRounds = 10;
@@ -949,6 +948,25 @@ mongoose
         res
           .status(500)
           .json({ message: "Erreur lors de la mise à jour des favoris" });
+      }
+    });
+
+    app.get("/backoffice/messages", async (req, res) => {
+      try {
+        // Récupérer tous les messages de la base de données, triés par date de création décroissante
+        const messages = await Message.find().sort({ createdAt: -1 });
+
+        res.render("pages/backoffice_messages", {
+          title: "Messages",
+          messages: messages,
+        });
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .send(
+            "Une erreur s'est produite lors de la récupération des messages."
+          );
       }
     });
 

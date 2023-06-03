@@ -1,0 +1,20 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_messages.css')
+
+block content
+  .messages-wrapper
+    h1 Messages
+    if messages.length > 0
+      each message in messages
+        .message-item.container
+          .message-info
+            p.from #{message.email}
+            p.date #{message.dateCreation.toLocaleString()}
+          .message-content
+            p.subject #{message.sujet}
+            p.text #{message.message}
+          hr
+    else
+      p Aucun message trouvé.
