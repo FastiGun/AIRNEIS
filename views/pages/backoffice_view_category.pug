@@ -1,7 +1,7 @@
 extends ../layouts/layout.pug
 
 block links
-  link(rel='stylesheet' href='/assets/css/backoffice_view_product.css')
+  link(rel='stylesheet' href='/assets/css/backoffice_view_category.css')
 
 block content
     .view-product-wrapper
@@ -12,10 +12,10 @@ block content
                     th Image
             tbody
                 each category in categories
-                    tr.view-product-list-item
-                        td.product-name #{ category.nom }
+                    tr.view-category-list-item
+                        td.category-name #{ category.nom }
                         td
-                            img.product-img(src=category.image)
+                            img.category-img(src=category.image)
                         td 
                             a(href="/backoffice/categorie/modify?id="+category._id)
                                 i.material-icons create

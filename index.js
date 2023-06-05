@@ -766,6 +766,24 @@ mongoose
       }
     });
 
+    app.get("/backoffice/categorie/add", async (req, res) => {
+      res.render("pages/backoffice_add_category", { title: "Backoffice - CategoryAdd", isCategory: false })
+    });
+
+    app.get("/backoffice/categorie/modify", async (req, res) => {
+      try{
+        const categorieId = req.query.id;
+        const categorie = await Categorie.findById(categorieId);
+        if(!categorie){
+          return res.status(404).send("Categorie non trouvée");
+        }
+        res.render("pages/backoffice_add_category", { title: "Backoffice - CategoryModif'", isCategory: true, categorie: categorie })
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération de la categorie.");
+      }
+    });
+
     app.post("/backoffice/categorie/add", (req, res) => {
       // Récupérer les informations de la catégorie depuis req.body
       const { nom, image } = req.body;

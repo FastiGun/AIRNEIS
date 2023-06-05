@@ -1,0 +1,19 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_add_category.css')
+
+block content
+    .add-category-wrapper 
+        form(action="/backoffice/categorie/add" method="post")
+            .input-id(hidden)
+                    input#nom(name="_id", placeholder="Name*", value=isCategory ? categorie._id : "")
+                    label(for="_id")
+            .input-name
+                input#nom(required name="nom", placeholder="Name*", value=isCategory ? categorie.nom : "")
+                label(for="nom")
+            .input-img
+                label(for="photo")
+                input(required type="text", name="photo", id="photo",placeholder="Path to Photo*", value=isCategory ? categorie.image : "")
+
+            button.submit.waves-effect.waves-light.btn-large(type="submit") Valider
