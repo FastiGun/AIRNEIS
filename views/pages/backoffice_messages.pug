@@ -4,17 +4,17 @@ block links
   link(rel='stylesheet' href='/assets/css/backoffice_messages.css')
 
 block content
-  .messages-wrapper
+  .messages-wrapper.container
     h1 Messages
     if messages.length > 0
       each message in messages
-        .message-item.container
+        .message-item
           .message-info
             p.from #{message.email}
             p.date #{message.dateCreation.toLocaleString()}
           .message-content
             p.subject #{message.sujet}
-            p.text #{message.message}
+            p.text #{message.contenu}
           hr
     else
       p Aucun message trouvé.
