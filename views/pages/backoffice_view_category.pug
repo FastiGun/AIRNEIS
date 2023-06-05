@@ -1,0 +1,26 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_view_product.css')
+
+block content
+    .view-product-wrapper
+        table 
+            thead 
+                tr 
+                    th Name  
+                    th Image
+            tbody
+                each category in categories
+                    tr.view-product-list-item
+                        td.product-name #{ category.nom }
+                        td
+                            img.product-img(src=category.image)
+                        td 
+                            a(href="/backoffice/categorie/modify?id="+category._id)
+                                i.material-icons create
+                        td
+                            a(href=`/produit/delete/${category._id}`)
+                                i.material-icons delete
+        a.waves-effect.waves-light.btn-large(href="/backoffice/categorie/add") Create category
+            

@@ -756,7 +756,17 @@ mongoose
       }
     }
 
-    app.post("/backoffice/categorie", (req, res) => {
+    app.get("/backoffice/categorie", async (req, res) => {
+      try {
+        const categories = await Categorie.find({});
+        res.render("pages/backoffice_view_category", { title: "Backoffice - CategoriesList", categories : categories })
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des categories.");
+      }
+    });
+
+    app.post("/backoffice/categorie/add", (req, res) => {
       // Récupérer les informations de la catégorie depuis req.body
       const { nom, image } = req.body;
 
