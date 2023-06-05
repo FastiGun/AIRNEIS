@@ -64,10 +64,9 @@ mongoose
 
     app.use(
       session({
-        secret: process.env.SECRET_KEY,
-        resave: true,
+        secret: "votre-secret",
+        resave: false,
         saveUninitialized: true,
-        maxAge: null,
       })
     );
 
@@ -268,6 +267,10 @@ mongoose
       }
       if (existingClient.admin) {
         req.session.userId = existingClient.id;
+        req.session.cookie.expires = new Date(
+          Date.now() + 7 * 24 * 60 * 60 * 1000
+        );
+        req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
         res.redirect("/backoffice");
       } else {
         req.session.userId = existingClient.id;
