@@ -5,7 +5,7 @@ block links
 
 block content
     .add-product-wrapper 
-        form(action="/backoffice/produit/add" method="post")
+        form(action=isProdui ? "/backoffice/produit/modify" : "/backoffice/produit/add" method="post")
             .input-id(hidden)
                     input#nom(name="_id", placeholder="Name*", value=isProduit ? produit._id : "")
                     label(for="_id")
