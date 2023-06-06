@@ -1,0 +1,15 @@
+.favoris-wrapper {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 2rem;
+}
+
+.caroussel-img {
+    width: 10rem;
+    height: 7rem;
+}
+
+.caroussel-img-wrapper, .front-categories-wrapper, .front-products-wrapper {
+    display: flex;
+    justify-content: space-around;
+}

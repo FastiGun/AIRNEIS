@@ -938,7 +938,24 @@ mongoose
       }
     });
 
-    app.post("/backoffice/favoris", async (req, res) => {
+    app.get("/backoffice/favoris", async (req,res) => {
+      try {
+        const favoris = await Favoris.findById(idFavoris)
+            .populate("categorie1", "nom")
+            .populate("categorie2", "nom")
+            .populate("categorie3", "nom")
+            .populate("produit1", "nom")
+            .populate("produit2", "nom")
+            .populate("produit3", "nom")
+            .exec();
+        res.render("pages/backoffice_view_favorie", { title: "Backoffice - ViewFavoris", favoris: favoris});
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des favoris.");
+      }
+    });
+
+    app.post("/backoffice/favoris/modify", async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris);
 

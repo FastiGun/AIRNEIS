@@ -1,0 +1,27 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_view_favorie.css')
+
+block content
+    .favoris-wrapper
+        h1 Caroussel pictures
+        .caroussel-img-wrapper 
+            img.caroussel-img(src=favoris.photo1)
+            img.caroussel-img(src=favoris.photo2)
+            img.caroussel-img(src=favoris.photo3)
+            img.caroussel-img(src=favoris.photo4)
+
+        h1 Front categories 
+        .front-categories-wrapper 
+            p.front-category #{ favoris.categorie1.nom }
+            p.front-category #{ favoris.categorie2.nom }
+            p.front-category #{ favoris.categorie3.nom }
+
+        h1 Front products 
+        .front-products-wrapper 
+            p.front-product #{ favoris.produit1.nom }
+            p.front-product #{ favoris.produit2.nom }
+            p.front-product #{ favoris.produit3.nom }
+
+        a.waves-effect.waves-light.btn-large() Change Favourites
