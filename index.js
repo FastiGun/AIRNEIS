@@ -1034,7 +1034,7 @@ mongoose
             .populate("produit2", "nom")
             .populate("produit3", "nom")
             .exec();
-        res.render("pages/backoffice_modif_favorie", { title: "Backoffice - ViewFavoris", favoris: favoris, categories: categories, produits: produits});
+        res.render("pages/backoffice_modif_favorie", { title: "Backoffice - ModifyFavoris", favoris: favoris, categories: categories, produits: produits});
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des favoris.");
