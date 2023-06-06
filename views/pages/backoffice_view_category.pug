@@ -17,10 +17,10 @@ block content
                         td
                             img.category-img(src=category.image)
                         td 
-                            a(href="/backoffice/categorie/modify?id="+category._id)
+                            a(href="/backoffice/categorie/add?id="+category._id)
                                 i.material-icons create
                         td
-                            a(href=`/produit/delete/${category._id}`)
+                            a(href=`/categorie/delete/${category._id}`)
                                 i.material-icons delete
         a.waves-effect.waves-light.btn-large(href="/backoffice/categorie/add") Create category
             
