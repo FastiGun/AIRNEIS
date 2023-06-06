@@ -60,6 +60,7 @@ const Adresse = mongoose.model("Adresse", adresseSchema, "adresse");
 //Paiement
 const paiementSchema = new mongoose.Schema({
   client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },
+  libelle_carte: String,
   nom_carte: String,
   num_carte: String,
   date_expiration: String,
