@@ -5,35 +5,40 @@ block links
 
 block content
   .container
-    h1.contact-h1 Panier
-    .ecran-panier 
-      .gauche-panier
-        each panier in paniers
-          section.article-panier 
-            a(href='/product_detail?id='+panier.article._id)
-              img.img-article-panier(src=`${panier.article.image1}`, alt="Produit") 
-            .infos-produit-panier 
-              .desc-produit-panier 
-                h3.nom-produit-panier #{panier.article.nom}
-                p.description-produit-panier #{panier.article.description}
-              .chiffres-produit-panier
-                h4.prix-produit-panier #{panier.article.prix}€
-                select.browser-default.mySelect
-                  each val in Array.from({ length: 10 }, (_, i) => i + 1)
-                    if val == panier.quantite
-                      option(value=`/ajuste-quantite-panier/${panier.id}/${val}`, selected) #{val}
-                    else
-                      option(value=`/ajuste-quantite-panier/${panier.id}/${val}`) #{val}
-                a(href=`/remove-produit-panier/${panier.article._id}`)      
-                  button.btn.waves-effect.waves-light(type='', name='action')
-                    i.material-icons delete    
-      .droite-panier
-        .montant-panier
-          .montant-gauche
-            h4.panier-total TOTAL 
-            p.panier-tva TVA 
-          .montant-droite
-            h4.panier-total #{prixTotal}€
-            p.panier-tva #{TVA}€ 
-        if paniers.length > 0
-          a.waves-effect.waves-light.btn-large(href='/cart-confirmation') PASSER LA COMMANDE
+    h1.contact-h1 Cart
+    if paniers.length === 0
+        h4.panier-vide Your cart is empty
+        a(href="/products")
+          h4.panier-vide See our products 
+    else
+      .ecran-panier 
+        .gauche-panier
+          each panier in paniers
+            section.article-panier 
+              a(href='/product_detail?id='+panier.article._id)
+                img.img-article-panier(src=`${panier.article.image1}`, alt="Produit") 
+              .infos-produit-panier 
+                .desc-produit-panier 
+                  h3.nom-produit-panier #{panier.article.nom}
+                  p.description-produit-panier #{panier.article.description}
+                .chiffres-produit-panier
+                  h4.prix-produit-panier #{panier.article.prix}€
+                  select.browser-default.mySelect
+                    each val in Array.from({ length: 10 }, (_, i) => i + 1)
+                      if val == panier.quantite
+                        option(value=`/ajuste-quantite-panier/${panier.id}/${val}`, selected) #{val}
+                      else
+                        option(value=`/ajuste-quantite-panier/${panier.id}/${val}`) #{val}
+                  a(href=`/remove-produit-panier/${panier.article._id}`)      
+                    button.btn.waves-effect.waves-light(type='', name='action')
+                      i.material-icons delete    
+        .droite-panier
+          .montant-panier
+            .montant-gauche
+              h4.panier-total TOTAL 
+              p.panier-tva VAT
+            .montant-droite
+              h4.panier-total #{prixTotal}€
+              p.panier-tva #{TVA}€ 
+          if paniers.length > 0
+            a.waves-effect.waves-light.btn-large(href='/cart-confirmation') Confirm cart
