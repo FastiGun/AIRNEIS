@@ -9,15 +9,17 @@ block content
             .img-product.img(style=`background-image: url(${produit.image1}`)
         .left-side-wrapper 
             h1.product-name-title #{ produit.nom }
-            p.product-stock #{ produit.stock } unités en stock
+            p.product-stock #{ produit.stock } in stocks
             p.product-price #{ produit.prix } €
             p.product-description #{ produit.description }
-            a.waves-effect.waves-light.btn(href=`/add-produit-panier/${produit._id}`) Ajouter au panier
-    .wrapper-similar-product.container
-        each autreProduit, key in autresProduits
-            a.similar-product(href='/product_detail?id='+autreProduit._id)
-                .img-product-similar.img(style=`background-image: url(${autreProduit.image1}`)
-                p.similar-product-name #{autreProduit.nom}
-                p.similar-product-price #{autreProduit.prix} €
+            a.waves-effect.waves-light.btn(href=`/add-produit-panier/${produit._id}`) Add to cart
+    if autresProduits.length !== 0
+        h4.similar-products.container Similar products
+        .wrapper-similar-product.container
+            each autreProduit, key in autresProduits
+                a.similar-product(href='/product_detail?id='+autreProduit._id)
+                    .img-product-similar.img(style=`background-image: url(${autreProduit.image1}`)
+                    p.similar-product-name #{autreProduit.nom}
+                    p.similar-product-price #{autreProduit.prix} €
             
         

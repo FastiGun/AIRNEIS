@@ -1,6 +1,6 @@
 .burgermenu.hidden
   if !req.session.isAdmin
-    a.burgermenu-link(href='/') Produits
+    a.burgermenu-link(href='/products') Produits
     a.burgermenu-link(href='/category') Catégories
     a.burgermenu-link(href='/contact') Contact
   if isLoggedIn 
