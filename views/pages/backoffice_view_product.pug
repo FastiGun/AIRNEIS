@@ -4,12 +4,12 @@ block links
   link(rel='stylesheet' href='/assets/css/backoffice_view_product.css')
 
 block content
-    .view-product-wrapper
+    .view-product-wrapper.container-backo.container
         table 
             thead 
                 tr 
                     th Name 
-                    th Price 
+                    th Price
                     th Stock 
                     th Description
                     th Category 
@@ -21,7 +21,7 @@ block content
                 each produit in produits
                     tr.view-product-list-item
                         td.product-name #{ produit.nom }
-                        td.product-price #{ produit.prix }
+                        td.product-price #{ produit.prix } €
                         td.product-stock #{ produit.stock }
                         td.product-description #{ produit.description }
                         td.product-category #{ produit.categorie.nom }

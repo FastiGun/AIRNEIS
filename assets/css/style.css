@@ -254,3 +254,7 @@ i.fa-brands{
     text-align: center;
     margin: 2rem 0;
 }
+
+.container-backo{
+    margin: 3rem auto !important;
+}

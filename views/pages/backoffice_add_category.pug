@@ -4,7 +4,7 @@ block links
   link(rel='stylesheet' href='/assets/css/backoffice_add_category.css')
 
 block content
-    .add-category-wrapper 
+    .add-category-wrapper.container.container-backo
         form(action="/backoffice/categorie/add" method="post")
             .input-id(hidden)
                     input#nom(name="_id", placeholder="Name*", value=isCategory ? categorie._id : "")

@@ -4,22 +4,22 @@ block links
   link(rel='stylesheet' href='/assets/css/backoffice_view_favorie.css')
 
 block content
-    .favoris-wrapper
+    .favoris-wrapper.container-backo
         h1 Caroussel pictures
-        .caroussel-img-wrapper 
+        .caroussel-img-wrapper.container-backo 
             img.caroussel-img(src=favoris.photo1)
             img.caroussel-img(src=favoris.photo2)
             img.caroussel-img(src=favoris.photo3)
             img.caroussel-img(src=favoris.photo4)
 
         h1 Front categories 
-        .front-categories-wrapper 
+        .front-categories-wrapper.container-backo 
             p.front-category #{ favoris.categorie1.nom }
             p.front-category #{ favoris.categorie2.nom }
             p.front-category #{ favoris.categorie3.nom }
 
         h1 Front products 
-        .front-products-wrapper 
+        .front-products-wrapper.container-backo 
             p.front-product #{ favoris.produit1.nom }
             p.front-product #{ favoris.produit2.nom }
             p.front-product #{ favoris.produit3.nom }

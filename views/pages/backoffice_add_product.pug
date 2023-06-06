@@ -4,7 +4,7 @@ block links
   link(rel='stylesheet' href='/assets/css/backoffice_add_product.css')
 
 block content
-    .add-product-wrapper 
+    .add-product-wrapper.container-backo.container 
         form(action="/backoffice/produit/add" method="post")
             .input-id(hidden)
                     input#nom(name="_id", placeholder="Name*", value=isProduit ? produit._id : "")
