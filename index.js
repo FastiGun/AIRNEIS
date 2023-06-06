@@ -71,6 +71,13 @@ mongoose
       })
     );
 
+    const requireAdmin = (req, res, next) => {
+      if (!req.session.isAdmin) {
+        return res.redirect("/");
+      }
+      next();
+    };
+
     // Middleware pour vérifier l'état de connexion de l'utilisateur
     app.use((req, res, next) => {
       res.locals.isLoggedIn = req.session.userId ? true : false;
@@ -692,7 +699,7 @@ mongoose
       res.render("pages/delivery_address", { title: "Delivery Address" });
     });
 
-    app.get("/backoffice/produit", async (req, res) => {
+    app.get("/backoffice/produit", requireAdmin, async (req, res) => {
       try {
         const produits = await Produit.find({})
           .populate("categorie", "nom") // Récupère le champ "nom" de la collection "categorie"
@@ -708,7 +715,7 @@ mongoose
       }
     });
 
-    app.get("/backoffice/produit/add", async (req, res) => {
+    app.get("/backoffice/produit/add", requireAdmin, async (req, res) => {
       try {
         const categories = await Categorie.find({});
         res.render("pages/backoffice_add_product", {
@@ -722,7 +729,7 @@ mongoose
       }
     });
 
-    app.get("/backoffice/produit/modify", async (req, res) => {
+    app.get("/backoffice/produit/modify", requireAdmin, async (req, res) => {
       try {
         const produit_id = req.query.id;
         const produit = await Produit.findById(produit_id);
@@ -843,7 +850,7 @@ mongoose
       }
     }
 
-    app.get("/backoffice/categorie", async (req, res) => {
+    app.get("/backoffice/categorie", requireAdmin, async (req, res) => {
       try {
         const categories = await Categorie.find({});
         res.render("pages/backoffice_view_category", {
@@ -856,7 +863,7 @@ mongoose
       }
     });
 
-    app.get("/backoffice/categorie/add", async (req, res) => {
+    app.get("/backoffice/categorie/add", requireAdmin, async (req, res) => {
       try {
         const categoryId = req.query.id;
 
@@ -895,7 +902,7 @@ mongoose
       }
     });
 
-    app.post("/backoffice/categorie/add", async (req, res) => {
+    app.post("/backoffice/categorie/add", requireAdmin, async (req, res) => {
       try {
         const { _id, nom, image } = req.body;
 
@@ -941,7 +948,7 @@ mongoose
       }
     });
 
-    app.get("/categorie/delete/:id", async (req, res) => {
+    app.get("/categorie/delete/:id", requireAdmin, async (req, res) => {
       try {
         const categorieId = req.params.id;
 
@@ -966,7 +973,7 @@ mongoose
       }
     });
 
-    app.post("/backoffice/produit/add", async (req, res) => {
+    app.post("/backoffice/produit/add", requireAdmin, async (req, res) => {
       try {
         const {
           _id,
@@ -1046,7 +1053,7 @@ mongoose
       }
     });
 
-    app.get("/produit/delete/:id", async (req, res) => {
+    app.get("/produit/delete/:id", requireAdmin, async (req, res) => {
       try {
         const produitId = req.params.id;
 
@@ -1064,7 +1071,7 @@ mongoose
       }
     });
 
-    app.get("/backoffice/favoris", async (req, res) => {
+    app.get("/backoffice/favoris", requireAdmin, async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris)
           .populate("categorie1", "nom")
@@ -1084,26 +1091,31 @@ mongoose
       }
     });
 
-    app.get("/backoffice/favoris/modify", async (req,res) => {
+    app.get("/backoffice/favoris/modify", requireAdmin, async (req, res) => {
       try {
         const produits = await Produit.find({});
         const categories = await Categorie.find({});
         const favoris = await Favoris.findById(idFavoris)
-            .populate("categorie1", "nom")
-            .populate("categorie2", "nom")
-            .populate("categorie3", "nom")
-            .populate("produit1", "nom")
-            .populate("produit2", "nom")
-            .populate("produit3", "nom")
-            .exec();
-        res.render("pages/backoffice_modif_favorie", { title: "Backoffice - ModifyFavoris", favoris: favoris, categories: categories, produits: produits});
+          .populate("categorie1", "nom")
+          .populate("categorie2", "nom")
+          .populate("categorie3", "nom")
+          .populate("produit1", "nom")
+          .populate("produit2", "nom")
+          .populate("produit3", "nom")
+          .exec();
+        res.render("pages/backoffice_modif_favorie", {
+          title: "Backoffice - ModifyFavoris",
+          favoris: favoris,
+          categories: categories,
+          produits: produits,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des favoris.");
       }
     });
 
-    app.post("/backoffice/favoris/modify", async (req, res) => {
+    app.post("/backoffice/favoris/modify", requireAdmin, async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris);
 
@@ -1138,7 +1150,7 @@ mongoose
       }
     });
 
-    app.get("/backoffice/messages", async (req, res) => {
+    app.get("/backoffice/messages", requireAdmin, async (req, res) => {
       try {
         // Récupérer tous les messages de la base de données, triés par date de création décroissante
         const messages = await Message.find().sort({ createdAt: -1 });
@@ -1157,7 +1169,7 @@ mongoose
       }
     });
 
-    app.get("/backoffice", async (req, res) => {
+    app.get("/backoffice", requireAdmin, async (req, res) => {
       try {
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
