@@ -1,15 +1,19 @@
 .product-list-wrapper {
     display: flex;
     flex-direction: column;
-    width: 80%;
-    margin-left: 10%;
-    margin-top: 2rem;
+    margin: 2rem auto;
     gap: 2rem;
 }
 
+.container-lis-products{
+    max-width: 900px;
+    padding: 0 3rem;
+}
+
 .product-wrapper {
-    height: 10rem;
+    height: 12rem;
     display: flex;
+    justify-content: space-between;
     gap: 5rem;
 }
 
@@ -23,6 +27,15 @@
     transition: 0.2s;
 }
 
+
 .basic-info{
     flex: 3;
+    text-align: right;
+}
+
+.no-products{
+    margin-top: 4rem;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
 }

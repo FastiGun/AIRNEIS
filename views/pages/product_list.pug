@@ -4,12 +4,15 @@ block links
     link(rel='stylesheet' href='/assets/css/product_list.css')
 
 block content 
-    .product-list-wrapper
-        each produit in produits
+    h1.contact-h1 #{categorie ? categorie : "Products"}
+    .product-list-wrapper.container-lis-products
+        if produits.length === 0
+            p.no-products No products to show
+        each produit in produits 
             .product-wrapper
-                .img-product.img(style=`background-image: url(${produit.image1}`)
+                a(href='/product_detail?id='+produit._id).img-product(style=`background-image: url(${produit.image1}`)
                 .basic-info 
                     p.product-name #{ produit.nom }
                     p.product-price #{ produit.prix } €
-                a(href='/product_detail?id='+produit._id)
-                    button.goto-product-detail.btn.waves-effect.waves-light() Check out
+                    a(href='/product_detail?id='+produit._id)
+                        button.goto-product-detail.btn.waves-effect.waves-light() See details
