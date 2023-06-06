@@ -1,13 +1,15 @@
 nav
   .nav-wrap
-    a.logo(href='/') ÀIRNEIS
+    a.logo(href= req.session.isAdmin ? "/backoffice" : "/") ÀIRNEIS
     ul#nav-mobile.right
-      li
-        a(href='/search')
-          i.material-icons search
-      li
-        a(href='/cart')
-          i.material-icons shopping_cart
+      if !req.session.isAdmin
+        li
+          a(href='/search')
+            i.material-icons search
+      if !req.session.isAdmin
+        li
+          a(href='/cart')
+            i.material-icons shopping_cart
       li
         a
           i.material-icons.burger menu

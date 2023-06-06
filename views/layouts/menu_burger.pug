@@ -1,10 +1,12 @@
 .burgermenu.hidden
-  a.burgermenu-link(href='/') Produits
-  a.burgermenu-link(href='/category') Catégories
-  a.burgermenu-link(href='/contact') Contact
+  if !req.session.isAdmin
+    a.burgermenu-link(href='/') Produits
+    a.burgermenu-link(href='/category') Catégories
+    a.burgermenu-link(href='/contact') Contact
   if isLoggedIn 
-    a.burgermenu-link(href='/') Mon compte
-    a.burgermenu-link(href='/') Mes commandes
+    if !req.session.isAdmin 
+      a.burgermenu-link(href='/') Mon compte
+      a.burgermenu-link(href='/') Mes commandes
     a.burgermenu-link(href='/deconnexion') Se déconnecter
   else 
     a.burgermenu-link(href='/connexion') Se connecter

@@ -59,6 +59,7 @@ mongoose
 
     app.use((req, res, next) => {
       res.locals.assetsPath = ASSETS_PATH;
+      res.locals.req = req;
       next();
     });
 
@@ -271,9 +272,15 @@ mongoose
           Date.now() + 7 * 24 * 60 * 60 * 1000
         );
         req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
+        req.session.isAdmin = true;
         res.redirect("/backoffice");
       } else {
+        req.session.cookie.expires = new Date(
+          Date.now() + 7 * 24 * 60 * 60 * 1000
+        );
+        req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
         req.session.userId = existingClient.id;
+        req.session.isAdmin = false;
         res.redirect("/");
       }
     });
@@ -773,84 +780,113 @@ mongoose
     });
 
     app.get("/backoffice/categorie/add", async (req, res) => {
-      res.render("pages/backoffice_add_category", {
-        title: "Backoffice - CategoryAdd",
-        isCategory: false,
-      });
-    });
-
-    app.get("/backoffice/categorie/modify", async (req, res) => {
       try {
-        const categorieId = req.query.id;
-        const categorie = await Categorie.findById(categorieId);
-        if (!categorie) {
-          return res.status(404).send("Categorie non trouvée");
+        const categoryId = req.query.id;
+
+        // Vérifier si l'ID de la catégorie est fourni pour déterminer s'il s'agit d'une modification
+        if (categoryId) {
+          // Récupérer la catégorie existante depuis la base de données
+          const categorieExistante = await Categorie.findById(categoryId);
+          console.log(categorieExistante);
+          if (!categorieExistante) {
+            return res.status(404).json({ error: "Catégorie non trouvée." });
+          }
+
+          // Afficher la page de modification de la catégorie avec les détails de la catégorie existante
+          return res.render("pages/backoffice_add_category", {
+            title: "Backoffice - CategoryAdd",
+            isCategory: true,
+            categorie: categorieExistante,
+          });
+        } else {
+          // Afficher la page de création de la catégorie
+          return res.render("pages/backoffice_add_category", {
+            title: "Backoffice - CategoryAdd",
+            isCategory: false,
+          });
         }
-        res.render("pages/backoffice_add_category", {
-          title: "Backoffice - CategoryModif'",
-          isCategory: true,
-          categorie: categorie,
-        });
       } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération de la categorie.");
+        // Une erreur s'est produite lors de la récupération de la catégorie existante
+        console.error(
+          "Erreur lors de la récupération de la catégorie existante :",
+          error
+        );
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la récupération de la catégorie existante.",
+        });
       }
     });
 
-    app.post("/backoffice/categorie/add", (req, res) => {
-      // Récupérer les informations de la catégorie depuis req.body
-      const { nom, image } = req.body;
+    app.post("/backoffice/categorie/add", async (req, res) => {
+      try {
+        const { _id, nom, image } = req.body;
 
-      // Vérifier que l'image est présente (obligatoire)
-      if (!image) {
-        return res.status(400).json({ error: "L'image est obligatoire." });
-      }
+        // Vérifier si l'ID de la catégorie est fourni pour déterminer s'il s'agit d'une création ou d'une modification
+        if (_id) {
+          // Modification de la catégorie
+          const categorieExistante = await Categorie.findById(_id);
 
-      // Télécharger l'image sur Cloudinary
-      const uploadOptions = {
-        folder: "images", // Le dossier dans lequel stocker les images sur Cloudinary
-        transformation: [{ width: 500, height: 500, crop: "limit" }], // Options de transformation d'image
-      };
+          if (!categorieExistante) {
+            return res.status(404).json({ error: "Catégorie non trouvée." });
+          }
 
-      cloudinary.uploader
-        .upload(image, uploadOptions)
-        .then((result) => {
-          // L'image a été téléchargée avec succès
-          // Vous pouvez récupérer l'URL sécurisée de l'image à partir de result.secure_url
+          // Mise à jour des informations de la catégorie
+          categorieExistante.nom = nom;
+          categorieExistante.image = image;
 
-          // Enregistrer la catégorie en base de données avec l'URL de l'image
+          await categorieExistante.save();
+
+          // La catégorie a été mise à jour avec succès en base de données
+          return res.redirect("/backoffice/categorie");
+        } else {
+          // Création de la catégorie
           const categorie = new Categorie({
             nom,
-            image: result.secure_url,
+            image,
           });
 
-          categorie
-            .save()
-            .then(() => {
-              // La catégorie a été enregistrée avec succès en base de données
-              res.status(201).json({ message: "Catégorie créée avec succès." });
-            })
-            .catch((error) => {
-              // Une erreur s'est produite lors de l'enregistrement de la catégorie en base de données
-              console.error(
-                "Erreur lors de l'enregistrement de la catégorie en base de données :",
-                error
-              );
-              res.status(500).json({
-                error:
-                  "Une erreur s'est produite lors de la création de la catégorie.",
-              });
-            });
-        })
-        .catch((error) => {
-          // Une erreur s'est produite lors du téléchargement de l'image
-          // Gérer l'erreur et répondre avec la réponse appropriée
-          console.error("Erreur lors du téléchargement de l'image :", error);
-          res.status(500).json({
-            error:
-              "Une erreur s'est produite lors de la création de la catégorie.",
-          });
+          await categorie.save();
+
+          // La catégorie a été créée avec succès en base de données
+          return res.redirect("/backoffice/categorie");
+        }
+      } catch (error) {
+        // Une erreur s'est produite lors de la création ou de la mise à jour de la catégorie
+        console.error(
+          "Erreur lors de la création ou de la mise à jour de la catégorie :",
+          error
+        );
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la création ou de la mise à jour de la catégorie.",
         });
+      }
+    });
+
+    app.get("/categorie/delete/:id", async (req, res) => {
+      try {
+        const categorieId = req.params.id;
+
+        // Vérifier si la catégorie existe
+        const categorie = await Categorie.findById(categorieId);
+        if (!categorie) {
+          return res.status(404).json({ error: "Catégorie non trouvée." });
+        }
+
+        // Supprimer la catégorie de la base de données
+        await Categorie.findByIdAndRemove(categorieId);
+
+        // Rediriger vers la page de gestion des catégories
+        return res.redirect("/backoffice/categorie");
+      } catch (error) {
+        // Une erreur s'est produite lors de la suppression de la catégorie
+        console.error("Erreur lors de la suppression de la catégorie :", error);
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la suppression de la catégorie.",
+        });
+      }
     });
 
     app.post("/backoffice/produit/add", async (req, res) => {
