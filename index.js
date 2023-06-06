@@ -153,11 +153,14 @@ mongoose
 
       const articleId = req.params.articleId;
       const clientId = req.session.userId;
+      const article = await Produit.findById(articleId);
 
       try {
         // Vérifier si le client et l'article existent
-        if (!clientId || !articleId) {
-          return res.status(404).send("Client ou article introuvable");
+        if (!clientId || !articleId || article.stock <= 0) {
+          return res
+            .status(404)
+            .send("Client ou article introuvable ou produit hors stock");
         }
 
         // Vérifier si le panier existe déjà pour cet article et ce client
@@ -168,6 +171,9 @@ mongoose
 
         if (panier) {
           // Le panier existe déjà, incrémenter la quantité
+          if (panier.quantite + 1 > article.stock) {
+            return res.send("Stock insuffisant");
+          }
           panier.quantite += 1;
         } else {
           // Le panier n'existe pas, créer un nouveau panier
@@ -226,6 +232,15 @@ mongoose
 
         // Trouver le panier dans la base de données en fonction de son ID
         const panier = await Panier.findById(panierId);
+        const article = await Produit.findById(panier.article);
+
+        if (!article) {
+          return res.status(404).json({ message: "Produit introuvable" });
+        }
+
+        if (nouvelleQuantite > article.stock) {
+          return res.send("Stock insuffisant");
+        }
 
         if (!panier) {
           return res.status(404).json({ message: "Panier non trouvé" });
@@ -987,17 +1002,20 @@ mongoose
       }
     });
 
-    app.get("/backoffice/favoris", async (req,res) => {
+    app.get("/backoffice/favoris", async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris)
-            .populate("categorie1", "nom")
-            .populate("categorie2", "nom")
-            .populate("categorie3", "nom")
-            .populate("produit1", "nom")
-            .populate("produit2", "nom")
-            .populate("produit3", "nom")
-            .exec();
-        res.render("pages/backoffice_view_favorie", { title: "Backoffice - ViewFavoris", favoris: favoris});
+          .populate("categorie1", "nom")
+          .populate("categorie2", "nom")
+          .populate("categorie3", "nom")
+          .populate("produit1", "nom")
+          .populate("produit2", "nom")
+          .populate("produit3", "nom")
+          .exec();
+        res.render("pages/backoffice_view_favorie", {
+          title: "Backoffice - ViewFavoris",
+          favoris: favoris,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des favoris.");
