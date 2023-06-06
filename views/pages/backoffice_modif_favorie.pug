@@ -1,0 +1,90 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_modify_favorie.css')
+
+block content
+    form(action="/backoffice/favoris/modify", method="post")
+        .favoris-wrapper
+            h1 Caroussel pictures
+            .caroussel-img-wrapper 
+                .input-caroussel-img
+                    label(for="photo1") Photo 1
+                    input(required type="text", name="photo1", id="photo1", value=favoris.photo1)
+                .input-caroussel-img
+                    label(for="photo2") Photo 2
+                    input(required type="text", name="photo2", id="photo2", value=favoris.photo2)
+                .input-caroussel-img
+                    label(for="photo3") Photo 3
+                    input(required type="text", name="photo3", id="photo3", value=favoris.photo3)
+                .input-caroussel-img
+                    label(for="photo4") Photo 4
+                    input(required type="text", name="photo4", id="photo4", value=favoris.photo4)
+
+            h1 Front categories 
+            .front-categories-wrapper 
+                .input-categorie
+                label(for="categorie1")
+                select#categorie1(required name="categorie1")
+                    each category in categories
+                        - const categoryId = String(category._id);
+                        - const favorisCategoryId = String(favoris.categorie1._id);
+                        if categoryId === favorisCategoryId
+                            option(value=category._id, selected) #{ category.nom }
+                        else
+                            option(value=category._id) #{ category.nom }
+                .input-categorie
+                label(for="categorie2")
+                select#categorie2(required name="categorie2")
+                    each category in categories
+                        - const categoryId = String(category._id);
+                        - const favorisCategoryId = String(favoris.categorie2._id);
+                        if categoryId === favorisCategoryId
+                            option(value=category._id, selected) #{ category.nom }
+                        else
+                            option(value=category._id) #{ category.nom }
+                .input-categorie
+                label(for="categorie3")
+                select#categorie3(required name="categorie3")
+                    each category in categories
+                        - const categoryId = String(category._id);
+                        - const favorisCategoryId = String(favoris.categorie3._id);
+                        if categoryId === favorisCategoryId
+                            option(value=category._id, selected) #{ category.nom }
+                        else
+                            option(value=category._id) #{ category.nom }
+
+            h1 Front products 
+            .front-products-wrapper
+                .input-categorie
+                label(for="produit1") 
+                select#produit1(required name="produit1")
+                    each produit in produits
+                        - const produitId = String(produit._id);
+                        - const favorisProduitId = String(favoris.produit1._id);
+                        if produitId === favorisProduitId
+                            option(value=produit._id, selected) #{ produit.nom }
+                        else
+                            option(value=produit._id) #{ produit.nom }
+                .input-categorie
+                label(for="produit2") 
+                select#produit2(required name="produit2")
+                    each produit in produits
+                        - const produitId = String(produit._id);
+                        - const favorisProduitId = String(favoris.produit2._id);
+                        if produitId === favorisProduitId
+                            option(value=produit._id, selected) #{ produit.nom }
+                        else
+                            option(value=produit._id) #{ produit.nom }
+                .input-categorie
+                label(for="produit3") 
+                select#produit3(required name="produit3")
+                    each produit in produits
+                        - const produitId = String(produit._id);
+                        - const favorisProduitId = String(favoris.produit3._id);
+                        if produitId === favorisProduitId
+                            option(value=produit._id, selected) #{ produit.nom }
+                        else
+                            option(value=produit._id) #{ produit.nom }
+
+            button.waves-effect.waves-light.btn-large(type="submit") Validate new favourites

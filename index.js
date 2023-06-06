@@ -968,6 +968,25 @@ mongoose
       }
     });
 
+    app.get("/backoffice/favoris/modify", async (req,res) => {
+      try {
+        const produits = await Produit.find({});
+        const categories = await Categorie.find({});
+        const favoris = await Favoris.findById(idFavoris)
+            .populate("categorie1", "nom")
+            .populate("categorie2", "nom")
+            .populate("categorie3", "nom")
+            .populate("produit1", "nom")
+            .populate("produit2", "nom")
+            .populate("produit3", "nom")
+            .exec();
+        res.render("pages/backoffice_modif_favorie", { title: "Backoffice - ViewFavoris", favoris: favoris, categories: categories, produits: produits});
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des favoris.");
+      }
+    });
+
     app.post("/backoffice/favoris/modify", async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris);
@@ -994,7 +1013,7 @@ mongoose
         // Enregistrer les modifications dans la base de données
         await favoris.save();
 
-        res.status(200).json({ message: "Favoris mis à jour avec succès" });
+        res.redirect("/backoffice/favoris");
       } catch (error) {
         console.error(error);
         res

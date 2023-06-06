@@ -1,0 +1,15 @@
+select {
+    width: 10rem;
+    display: block;
+}
+
+.favoris-wrapper {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 2rem;
+}
+
+.front-categories-wrapper, .front-products-wrapper {
+    display: flex;
+    justify-content: space-around;
+}
