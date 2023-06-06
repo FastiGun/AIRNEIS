@@ -51,6 +51,8 @@ const adresseSchema = new mongoose.Schema({
   rue: String,
   ville: String,
   cp: String,
+  pays: String,
+  region: String,
   num: String,
   complement: String,
 });

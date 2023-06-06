@@ -5,9 +5,9 @@ block links
 
 
 block content
-    .wrapper-category-list   
+    .wrapper-category-list.container
         each category, key in categories
             .wrapper-category-list-item
                 a.category-link(href='/product_list?id='+category._id)
-                    img.img(src=category.image)
+                    img.category-img(src=category.image)
                 p.category-name #{ category.nom }

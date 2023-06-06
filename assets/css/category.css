@@ -1,18 +1,17 @@
 .wrapper-category-list{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 5rem;
-    width: 80%;
-    margin-left: 10%;
-    margin-top: 2rem;
+    justify-content:space-evenly;
+    max-width: 1100px;
+    margin: 2rem auto;
+    gap: 3rem;
 }
 
 .wrapper-category-list-item{
-    width: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 15rem;
 }
 
 .category-name {
@@ -21,6 +20,5 @@
 }
 
 .category-img{
-    width: 10rem;
-    height: 5rem;
+    width: 100%;
 }
