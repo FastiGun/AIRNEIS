@@ -64,10 +64,9 @@ mongoose
 
     app.use(
       session({
-        secret: process.env.SECRET_KEY,
-        resave: true,
+        secret: "votre-secret",
+        resave: false,
         saveUninitialized: true,
-        maxAge: null,
       })
     );
 
@@ -268,6 +267,10 @@ mongoose
       }
       if (existingClient.admin) {
         req.session.userId = existingClient.id;
+        req.session.cookie.expires = new Date(
+          Date.now() + 7 * 24 * 60 * 60 * 1000
+        );
+        req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000;
         res.redirect("/backoffice");
       } else {
         req.session.userId = existingClient.id;
@@ -759,7 +762,10 @@ mongoose
     app.get("/backoffice/categorie", async (req, res) => {
       try {
         const categories = await Categorie.find({});
-        res.render("pages/backoffice_view_category", { title: "Backoffice - CategoriesList", categories : categories })
+        res.render("pages/backoffice_view_category", {
+          title: "Backoffice - CategoriesList",
+          categories: categories,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération des categories.");
@@ -767,17 +773,24 @@ mongoose
     });
 
     app.get("/backoffice/categorie/add", async (req, res) => {
-      res.render("pages/backoffice_add_category", { title: "Backoffice - CategoryAdd", isCategory: false })
+      res.render("pages/backoffice_add_category", {
+        title: "Backoffice - CategoryAdd",
+        isCategory: false,
+      });
     });
 
     app.get("/backoffice/categorie/modify", async (req, res) => {
-      try{
+      try {
         const categorieId = req.query.id;
         const categorie = await Categorie.findById(categorieId);
-        if(!categorie){
+        if (!categorie) {
           return res.status(404).send("Categorie non trouvée");
         }
-        res.render("pages/backoffice_add_category", { title: "Backoffice - CategoryModif'", isCategory: true, categorie: categorie })
+        res.render("pages/backoffice_add_category", {
+          title: "Backoffice - CategoryModif'",
+          isCategory: true,
+          categorie: categorie,
+        });
       } catch (error) {
         console.error(error);
         res.status(500).send("Erreur lors de la récupération de la categorie.");
@@ -972,24 +985,18 @@ mongoose
         favoris.produit2 = req.body.produit2;
         favoris.produit3 = req.body.produit3;
 
-        // Télécharger les photos sur Cloudinary
-        const photo1 = await cloudinary.uploader.upload(req.body.photo1);
-        const photo2 = await cloudinary.uploader.upload(req.body.photo2);
-        const photo3 = await cloudinary.uploader.upload(req.body.photo3);
-        const photo4 = await cloudinary.uploader.upload(req.body.photo4);
-
         // Mettre à jour les champs des photos
-        favoris.photo1 = photo1.secure_url;
-        favoris.photo2 = photo2.secure_url;
-        favoris.photo3 = photo3.secure_url;
-        favoris.photo4 = photo4.secure_url;
+        favoris.photo1 = req.body.photo1;
+        favoris.photo2 = req.body.photo2;
+        favoris.photo3 = req.body.photo3;
+        favoris.photo4 = req.body.photo4;
 
         // Enregistrer les modifications dans la base de données
         await favoris.save();
 
         res.status(200).json({ message: "Favoris mis à jour avec succès" });
       } catch (error) {
-        console.log(error);
+        console.error(error);
         res
           .status(500)
           .json({ message: "Erreur lors de la mise à jour des favoris" });
