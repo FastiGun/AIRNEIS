@@ -145,6 +145,68 @@ mongoose
       }
     });
 
+    app.get("/cart-confirmation", async (req, res) => {
+      if (!req.session.userId) {
+        // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+        return res.redirect("/connexion");
+      }
+      const clientId = req.session.userId;
+
+      try {
+        // Récupérer les informations du client
+        const client = await Client.findById(clientId);
+
+        if (!client) {
+          return res.status(404).json({ message: "Client non trouvé" });
+        }
+
+        // Récupérer les paniers du client
+        const paniers = await Panier.find({ client: clientId }).populate(
+          "article"
+        );
+
+        // Calculer le prix total des articles dans le panier
+        let prixTotal = 0;
+        paniers.forEach((panier) => {
+          const prixArticle = panier.article.prix;
+          const quantite = panier.quantite;
+          prixTotal += prixArticle * quantite;
+        });
+
+        // Calculer le prix de la TVA
+        const tauxTVA = 0.2; // Taux de TVA de 20%
+        const prixTVA = prixTotal * tauxTVA;
+
+        // Récupérer les paiements du client
+        const paiements = await Paiement.find({ client: clientId });
+
+        // Récupérer les adresses du client
+        const adresses = await Adresse.find({ client: clientId });
+
+        // Rassembler toutes les informations dans un objet
+        const cartInfo = {
+          client,
+          paniers,
+          prixTotal,
+          prixTVA,
+          paiements,
+          adresses,
+        };
+
+        // Renvoyer les informations du client en tant que réponse
+        res.render("pages/cart-confirmation", {
+          title: "Cart Confirmation",
+          cartInfo,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message:
+            "Une erreur s'est produite lors de la récupération des informations du client",
+        });
+      }
+    });
+
     app.get("/add-produit-panier/:articleId", async (req, res) => {
       if (!req.session.userId) {
         // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
