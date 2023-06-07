@@ -18,17 +18,22 @@ block content
           label(for="prenom")   
         .row3
           .input-field.col.s12
-            input#email(name="mail", placeholder="Email*", required)
-            label(for="email")
+          input#email(name="mail", placeholder="Email*", required)
+          label(for="email")
         .row4    
           .input-field.col.s12
             input#mdp(name="mdp", placeholder="Mot de passe*", type="password", required)
             label(for="mdp")
+            span#mdp-length.error
+            span#mdp-uppercase.error
+            span#mdp-lowercase.error
+            span#mdp-digit.error
+            span#mdp-special.error
         .row5
           p.compte-p Déjà un compte ?
           a(href="/connexion") Connectez-vous.  
         .row6
           .input-field.col.s12
-            button.btn.waves-effect.waves-light(type='submit' name='action')
-              | S'inscrire  
-              
+            button.btn.waves-effect.waves-light(type='submit' name='action' disabled)
+              | S'inscrire
+

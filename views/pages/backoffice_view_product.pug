@@ -12,6 +12,7 @@ block content
                     th Price
                     th Stock 
                     th Description
+                    th Material
                     th Category 
                     th Image 1
                     th Image 2
@@ -24,6 +25,7 @@ block content
                         td.product-price #{ produit.prix } €
                         td.product-stock #{ produit.stock }
                         td.product-description #{ produit.description }
+                        td.product-material #{ produit.materiaux }
                         td.product-category #{ produit.categorie.nom }
                         td
                             img.product-img(src=produit.image1)

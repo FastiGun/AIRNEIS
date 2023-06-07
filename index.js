@@ -19,7 +19,7 @@ const {
   Favoris,
   Message,
 } = require("./models");
-const { ObjectId } = require("mongodb");
+const { ObjectId, deserialize } = require("mongodb");
 const e = require("express");
 const cloudinary = require("cloudinary").v2;
 
@@ -392,7 +392,7 @@ mongoose
 
         res
           .status(200)
-          .json({ message: "Connexion réussie", token, clientId: client._id });
+          .json({ message: "Connexion réussie", token, _id: client._id });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erreur lors de la connexion" });
@@ -889,7 +889,6 @@ mongoose
         if (categoryId) {
           // Récupérer la catégorie existante depuis la base de données
           const categorieExistante = await Categorie.findById(categoryId);
-          console.log(categorieExistante);
           if (!categorieExistante) {
             return res.status(404).json({ error: "Catégorie non trouvée." });
           }
@@ -922,7 +921,7 @@ mongoose
 
     app.post("/backoffice/categorie/add", requireAdmin, async (req, res) => {
       try {
-        const { _id, nom, image } = req.body;
+        const { _id, nom, description, image } = req.body;
 
         // Vérifier si l'ID de la catégorie est fourni pour déterminer s'il s'agit d'une création ou d'une modification
         if (_id) {
@@ -936,6 +935,7 @@ mongoose
           // Mise à jour des informations de la catégorie
           categorieExistante.nom = nom;
           categorieExistante.image = image;
+          categorieExistante.description = description;
 
           await categorieExistante.save();
 
@@ -945,6 +945,7 @@ mongoose
           // Création de la catégorie
           const categorie = new Categorie({
             nom,
+            description,
             image,
           });
 
@@ -999,6 +1000,7 @@ mongoose
           prix,
           stock,
           description,
+          materiaux,
           categorie,
           photo1,
           photo2,
@@ -1020,6 +1022,7 @@ mongoose
           produitExistant.prix = prix;
           produitExistant.stock = stock;
           produitExistant.description = description;
+          produitExistant.materiaux = materiaux;
           produitExistant.categorie = categorie;
           produitExistant.image1 = photo1 || "";
           produitExistant.image2 = photo2 || "";
@@ -1046,6 +1049,7 @@ mongoose
             prix,
             stock,
             description,
+            mateiraux: materiaux ? materiaux : "",
             categorie: categorie,
             image1: photo1 || "",
             image2: photo2 || "",

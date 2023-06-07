@@ -27,6 +27,7 @@ const produitSchema = new mongoose.Schema({
   prix: Number,
   stock: Number,
   description: String,
+  materiaux: String,
   categorie: { type: mongoose.Schema.Types.ObjectId, ref: "Categorie" },
   image1: String,
   image2: String,
@@ -39,6 +40,7 @@ const Produit = mongoose.model("Produit", produitSchema, "produit");
 //Categorie
 const categorieSchema = new mongoose.Schema({
   nom: String,
+  description: String,
   image: String,
 });
 
@@ -53,7 +55,6 @@ const adresseSchema = new mongoose.Schema({
   cp: String,
   pays: String,
   region: String,
-  num: String,
   complement: String,
 });
 

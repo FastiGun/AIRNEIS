@@ -49,3 +49,7 @@
   margin-top: 5rem;
 }
 
+.img-product.img:hover{
+  opacity: 1;
+}
+
