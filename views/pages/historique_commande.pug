@@ -1,0 +1,24 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/historique_commande.css')
+
+block content
+    .historique-commande-wrapper 
+        h1 Historique des commandes
+        if commande != null
+            each commande in commandes 
+                .commande-wrapper 
+                    .left-side
+                        .date #{ commande.date }
+                        each produit in commande.produit
+                            .produit-wrapper
+                                .name-article #{ produit.article.nom }
+                                .quantite-article #{ produit.quantite }
+                    .right-side
+                        .prix-HT #{ commande.prixHT }
+                        .prix-TTC #{ commande.prixTTC }
+                        .status #{ commande.status }
+                        a.waves-effect.waves-light.btn-large() See details
+        else 
+            .no-command No order found

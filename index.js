@@ -322,6 +322,21 @@ mongoose
       }
     });
 
+    app.get("/historique_commande", async (req, res) => {
+      try {
+        if (!req.session.userId) {
+          // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+          return res.redirect("/connexion");
+        }
+
+        const commandes = await Commande.find({ client: req.session.userId }).populate("produits.produit").exec();
+
+        res.render("pages/historique_commande", { title: "Orders Record", commandes: commandes })
+      } catch (error) {
+
+      }
+    })
+
     app.get("/add-produit-panier/:articleId", async (req, res) => {
       if (!req.session.userId) {
         // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion

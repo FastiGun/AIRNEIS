@@ -5,6 +5,7 @@
     a.burgermenu-link(href='/contact') Contact
   if isLoggedIn 
     if !req.session.isAdmin 
+      a.burgermenu-link(href='/historique_commande') My orders
       a.burgermenu-link(href='/') My account
       a.burgermenu-link(href='/') My orders
     a.burgermenu-link(href='/deconnexion') Disconnect
