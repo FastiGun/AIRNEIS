@@ -3,29 +3,27 @@ select {
 }
 
 .cart-confirmation-form {
-    width: 50%;
+    flex: 2;
     display: flex;
     flex-direction: column;
 }
 
 .cart-confirmation-page{
     display: flex;
-    width: 80%;
-    margin-left: 10%;
+    gap: 3rem;
+    margin-bottom: 5rem;
 }
 
 .cart-confirmation-content {
-    position: fixed;
-    top: 5rem;
-    width: 40%;
-    margin-left: 45%;
+    flex:1;
     display: flex;
     flex-direction: column;
+    margin-top: 2rem;
 }
 
 .product-wrapper {
     display: flex;
-    gap: 3rem;
+    gap: 2rem;
 }
 
 .prix-total, .prix-tva, .product-wrapper {
@@ -41,4 +39,14 @@ select {
 .prix-total {
     margin-top: 3rem;
 }
+
+button.waves-effect.waves-light.btn-large{
+    margin-top: 2rem;
+}
+
+.prix-total, .prix-tva {
+    font-weight: 900;
+    font-size: 1.5rem;
+}
+
 

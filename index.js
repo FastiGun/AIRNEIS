@@ -182,7 +182,9 @@ mongoose
 
         // Calculer le prix de la TVA
         const tauxTVA = 0.2; // Taux de TVA de 20%
-        const prixTVA = prixTotal * tauxTVA;
+        let prixTVA = prixTotal * tauxTVA;
+        prixTVA = prixTVA.toFixed(2);
+        prixTotal = prixTotal.toFixed(2);
 
         // Récupérer les paiements du client
         const paiements = await Paiement.find({ client: clientId });
@@ -199,6 +201,8 @@ mongoose
           paiements,
           adresses,
         };
+
+        console.log(cartInfo);
 
         // Renvoyer les informations du client en tant que réponse
         res.render("pages/cart_confirmation", {
