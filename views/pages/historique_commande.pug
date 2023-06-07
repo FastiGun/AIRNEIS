@@ -6,15 +6,15 @@ block links
 block content
     .historique-commande-wrapper 
         h1 Historique des commandes
-        if commande != null
+        if commande !== null
             each commande in commandes 
                 .commande-wrapper 
                     .left-side
                         .date #{ commande.date }
-                        each produit in commande.produit
+                        each product in commande.produits
                             .produit-wrapper
-                                .name-article #{ produit.article.nom }
-                                .quantite-article #{ produit.quantite }
+                                .name-article #{ product.produit.nom }
+                                .quantite-article #{ product.quantite }
                     .right-side
                         .prix-HT #{ commande.prixHT }
                         .prix-TTC #{ commande.prixTTC }
@@ -22,3 +22,5 @@ block content
                         a.waves-effect.waves-light.btn-large() See details
         else 
             .no-command No order found
+            a(href="/products")
+                h4.panier-vide See our products 
