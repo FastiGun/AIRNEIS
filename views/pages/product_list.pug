@@ -10,9 +10,10 @@ block content
             p.no-products No products to show
         each produit in produits 
             .product-wrapper
-                a(href='/product_detail?id='+produit._id).img-product(style=`background-image: url(${produit.image1}`)
+                a.img-product(href='/product_detail?id='+produit._id style=`background-image: url(${produit.image1}`)
                 .basic-info 
                     p.product-name #{ produit.nom }
                     p.product-price #{ produit.prix } €
                     a(href='/product_detail?id='+produit._id)
                         button.goto-product-detail.btn.waves-effect.waves-light() See details
+            

@@ -202,8 +202,6 @@ mongoose
           adresses,
         };
 
-        console.log(cartInfo);
-
         // Renvoyer les informations du client en tant que réponse
         res.render("pages/cart_confirmation", {
           title: "Cart Confirmation",
@@ -282,6 +280,17 @@ mongoose
             produit: panierItem.article._id,
             quantite: panierItem.quantite,
           });
+        });
+
+        produitsCommande.forEach(async (produitCommande) => {
+          const { produit, quantite } = produitCommande;
+          const produitDB = await Produit.findById(produit);
+          if (produitDB.stock >= quantite) {
+            produitDB.stock -= quantite;
+            await produitDB.save();
+          } else {
+            res.status(500).send(`${produitDB.nom} n'a pas assez de stock`);
+          }
         });
 
         const nouvelleCommande = new Commande({
