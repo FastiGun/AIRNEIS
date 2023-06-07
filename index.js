@@ -218,6 +218,110 @@ mongoose
       }
     });
 
+    app.post("/cart-confirmation", async (req, res) => {
+      try {
+        if (!req.session.userId) {
+          // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+          return res.redirect("/connexion");
+        }
+
+        const {
+          nomAdresse,
+          rue,
+          complement,
+          ville,
+          codepostal,
+          pays,
+          region,
+          regaddress,
+          nomCard,
+          fullname,
+          cardnumber,
+          expiration,
+          cvv,
+          regcard,
+          prixTVA,
+          prixTotal,
+        } = req.body;
+
+        const produitsCommande = [];
+        const panier = await Panier.find({ client: req.session.userId })
+          .populate("article")
+          .exec();
+
+        if (regaddress) {
+          const adresseLivraison = new Adresse({
+            client: req.session.userId,
+            nom: nomAdresse,
+            rue,
+            complement,
+            ville,
+            cp: codepostal,
+            pays,
+            region,
+          });
+
+          const adresseLivraisonEnregistree = await adresseLivraison.save();
+        }
+
+        if (regcard) {
+          const paiement = new Paiement({
+            client: req.session.userId,
+            libelle_carte: nomCard,
+            nom_carte: fullname,
+            num_carte: cardnumber,
+            date_expiration: expiration,
+            cvv,
+          });
+
+          const paiementEnregistre = await paiement.save();
+        }
+
+        panier.forEach((panierItem) => {
+          produitsCommande.push({
+            produit: panierItem.article._id,
+            quantite: panierItem.quantite,
+          });
+        });
+
+        const nouvelleCommande = new Commande({
+          date: new Date(),
+          prixHT: (prixTotal - prixTVA).toFixed(2),
+          prixTTC: prixTotal,
+          statut: "En attente",
+          produits: produitsCommande,
+          adresseFacturation: {
+            rue,
+            ville,
+            cp: codepostal,
+            pays,
+            region,
+            complement,
+          },
+          adresseLivraison: {
+            rue,
+            ville,
+            cp: codepostal,
+            pays,
+            region,
+            complement,
+          },
+          client: req.session.userId,
+        });
+
+        const commandeEnregistree = await nouvelleCommande.save();
+
+        await Panier.deleteMany({ client: req.session.userId });
+
+        res.redirect("/cart");
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .send("Une erreur est survenue lors du traitement de la commande.");
+      }
+    });
+
     app.get("/add-produit-panier/:articleId", async (req, res) => {
       if (!req.session.userId) {
         // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion

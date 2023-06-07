@@ -1,3 +1,4 @@
+const { Int32 } = require("mongodb");
 const mongoose = require("mongoose");
 
 //Client
@@ -80,17 +81,25 @@ const commandeSchema = new mongoose.Schema({
   statut: String,
   produits: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Panier",
+      produit: { type: mongoose.Schema.Types.ObjectId, ref: "Produit" },
+      quantite: Number,
     },
   ],
   adresseFacturation: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Adresse",
+    rue: String,
+    ville: String,
+    cp: String,
+    pays: String,
+    region: String,
+    complement: String,
   },
   adresseLivraison: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Adresse",
+    rue: String,
+    ville: String,
+    cp: String,
+    pays: String,
+    region: String,
+    complement: String,
   },
   client: { type: mongoose.Schema.Types.ObjectId, ref: "Client" },
 });
