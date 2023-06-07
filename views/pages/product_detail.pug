@@ -12,7 +12,8 @@ block content
             p.product-stock #{ produit.stock } in stocks
             p.product-price #{ produit.prix } €
             p.product-description #{ produit.description }
-            a.waves-effect.waves-light.btn(href=`/add-produit-panier/${produit._id}`) Add to cart
+            if produit.stock > 0
+                a.waves-effect.waves-light.btn(href=`/add-produit-panier/${produit._id}`) Add to cart
     if autresProduits.length !== 0
         h4.similar-products.container Similar products
         .wrapper-similar-product.container

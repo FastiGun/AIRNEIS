@@ -39,6 +39,21 @@ const ASSETS_PATH = "/assets";
 const saltRounds = 10;
 const idFavoris = "645ca83cd9b701ecef37f60c";
 
+function formatDate(date) {
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZone: "Europe/Paris",
+  };
+
+  return date.toLocaleString("fr-FR", options);
+}
+
 mongoose
   .connect(process.env.DB_URL, {
     useNewUrlParser: true,
@@ -294,7 +309,7 @@ mongoose
         });
 
         const nouvelleCommande = new Commande({
-          date: new Date(),
+          date: formatDate(new Date()),
           prixHT: (prixTotal - prixTVA).toFixed(2),
           prixTTC: prixTotal,
           statut: "En attente",
