@@ -889,7 +889,6 @@ mongoose
         if (categoryId) {
           // Récupérer la catégorie existante depuis la base de données
           const categorieExistante = await Categorie.findById(categoryId);
-          console.log(categorieExistante);
           if (!categorieExistante) {
             return res.status(404).json({ error: "Catégorie non trouvée." });
           }
