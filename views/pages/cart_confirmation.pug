@@ -8,17 +8,41 @@ block content
     form(action="/cart-confirmation", method="post")
         .cart-confirmation-page.container
             .cart-confirmation-form 
-                    h3 Enter your information 
+                    h3 Enter your facturation address 
                     .wrapper-facturation-address-form
                         .input-nom-adresse
-                            input#nom(name="nomAdresse", placeholder="FirstName*", required, value=cartInfo.client.nom)
-                            label(for="nomAdresse")
+                            input#nom(name="nom", placeholder="FirstName*", required, value=cartInfo.client.nom)
+                            label(for="nom")
                         .input-nom-adresse
-                            input#prenom(name="nomAdresse", placeholder="LastName*", required, value=cartInfo.client.prenom)
-                            label(for="nomAdresse")
+                            input#prenom(name="prenom", placeholder="LastName*", required, value=cartInfo.client.prenom)
+                            label(for="prenom")
                         .input-nom-adresse
                             input#tel(name="tel", placeholder="Telephone number*", required, value=(cartInfo.client.telephone != null ? cartInfo.client.telephone : ""))
                             label(for="tel")
+                        .input-rue
+                            input#rue-factu(name="rue-factu", placeholder="Rue*", required)
+                            label(for="rue-factu")
+
+                        .input-complement
+                            input#complement-factu(name="complement-factu", placeholder="Complement d'adresse")
+                            label(for="complement-factu")
+
+                        .input-ville
+                            input#ville-factu(name="ville-factu", placeholder="Ville*", required)
+                            label(for="ville-factu")
+
+                        .input-region
+                            input#region-factu(name="region-factu", placeholder="Region*", required)
+                            label(for="region-factu")
+
+                        .input-codepostal
+                            input#codepostal-factu(name="codepostal-factu", placeholder="Code postal*", required)
+                            label(for="codepostal-factu")
+
+                        .input-pays
+                            input#pays-factu(name="pays-factu", placeholder="Pays*", required)
+                            label(for="pays-factu")
+
                     h3 Enter a delivery address 
                     label(for="address")
                     select#address(name="address")
