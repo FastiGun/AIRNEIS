@@ -1,28 +1,43 @@
-.inscription-h1{
+.inscription-h1 {
     display: flex;
     justify-content: center;
     font-weight: 300;
     margin-top: 5rem;
-}
-
-
-.inscription{
+  }
+  
+  .inscription {
     margin-bottom: 5rem;
-}
-
-@media (min-width: 1000px){
+  }
+  
+  @media (min-width: 1000px) {
     form {
-        max-width: 500px;
-        margin: auto;
+      max-width: 500px;
+      margin: auto;
     }
-}
-
-.row5 {
+  }
+  
+  .row5 {
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: flex-start;
-}
-
-.row5 p{
+  }
+  
+  .row5 p {
     margin-right: 0.7rem;
-}
+  }
+  
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  button:disabled:hover {
+    opacity: 0.5;
+  }
+  
+  span.error {
+    display: block;
+    font-size: 0.7rem;
+    color: red;
+  }
+  
