@@ -1,0 +1,107 @@
+extends ../layouts/layout.pug
+
+block links
+    link(rel='stylesheet' href='/assets/css/cart_confirmation.css')
+
+block content 
+    .cart-confirmation-page
+        .cart-confirmation-form 
+            form(action="/cart-confirmation", method="post")
+                h3 Enter a delivery address 
+                label(for="address")
+                select#address(name="address")
+                    if cartInfo.adresses != null 
+                        each adresse in cartInfo.adresses
+                            option(value=adresse._id) #{adresse.nom}
+                    else 
+                        option(value="") No address registered 
+
+                .wrapper-delivery-address-form
+                    .input-nom-adresse
+                        input#nom-adresse(name="nom-adresse", placeholder="Nom de l'adresse")
+                        label(for="nom-adresse")
+
+                    .input-rue
+                        input#rue(name="rue", placeholder="Rue*", required)
+                        label(for="rue")
+
+                    .input-complement
+                        input#complement(name="complement", placeholder="Complement d'adresse")
+                        label(for="rue")
+
+                    .input-ville
+                        input#ville(name="ville", placeholder="Ville*", required)
+                        label(for="ville")
+
+                    .input-region
+                        input#region(name="region", placeholder="Region*", required)
+                        label(for="region")
+
+                    .input-codepostal
+                        input#codepostal(name="codepostal", placeholder="Code postal*", required)
+                        label(for="codepostal")
+
+                    .input-pays
+                        input#pays(name="pays", placeholder="Pays*", required)
+                        label(for="pays")
+
+                    .input-register 
+                        label() 
+                            input#register-address.filled-in(type="checkbox" name="regaddress")
+                            span Do you wish to save for later ?
+
+                h3 Enter your paiement information 
+                label(for="paiements")
+                select#address(name="paiements")
+                    if cartInfo.paiements != null 
+                        each paiement in cartInfo.paiements
+                            option(value=paiement._id) #{paiement.nom}
+                    else 
+                        option(value="") No card registered 
+                
+                .wrapper-delivery-address-form
+                    .input-nom-card
+                        input#nom-card(name="nom-card", placeholder="Surnom de la carte")
+                        label(for="nom-card")
+                    
+                    .input-fullname
+                        input#fullname(name="fullname", placeholder="Fullname*", required)
+                        label(for="fullname")
+
+                    .input-cardnumber
+                        input#cardnumber(name="cardnumber", placeholder="Card number*", required)
+                        label(for="cardnumber")
+
+                    .input-expiration
+                        input#expiration(name="expiration", placeholder="Expiration date*", required)
+                        label(for="expiration")
+
+                    .input-cvv
+                        input#cvv(name="cvv", placeholder="CVV*", required)
+                        label(for="cvv")
+                    
+                    .input-register 
+                        label() 
+                            input#register-card.filled-in(type="checkbox" name="regcard")
+                            span Do you wish to save for later ?
+
+                button.waves-effect.waves-light.btn-large(type="submit") Confirm Paiement
+        .cart-confirmation-content
+            each panier in cartInfo.paniers 
+                .product-wrapper
+                    .img-product.img(style=`background-image: url(${panier.article.image1}`)
+                    .basic-info 
+                        p.product-name #{ panier.article.nom }
+                        p.product-price #{ panier.quantite } unites
+            .prix-total
+                .total-price PRIX TOTAL 
+                .total-amount #{ cartInfo.prixTotal }
+            .prix-tva 
+                .tva-price PRIX TVA
+                .tva-amount #{ cartInfo.prixTVA }
+            
+
+
+            
+
+                
