@@ -68,6 +68,22 @@ a{
   text-align: right;
 }
 
+.panier-vide{
+  margin-top: 5rem;
+  width: 100%;
+  text-align: center;
+}
+
+a > .panier-vide{
+  color: rgb(102 102 192);
+  transition: 0.2s;
+}
+
+a > .panier-vide:hover{
+  color: black;
+  transition: 0.2s;
+}
+
 @media (min-width: 1100px){
   .ecran-panier{
     display: flex;

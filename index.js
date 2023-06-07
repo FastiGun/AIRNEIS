@@ -604,6 +604,23 @@ mongoose
       }
     });
 
+    app.get("/products", async (req, res) => {
+      try {
+        // Récupérer tous les produits
+        const produits = await Produit.find();
+
+        // Rendre la page des produits avec les données récupérées
+        res.render("pages/product_list", { produits });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .send(
+            "Une erreur s'est produite lors de la récupération des produits."
+          );
+      }
+    });
+
     app.get("/product_list", async (req, res) => {
       try {
         const categorie_id = req.query.id;
@@ -615,6 +632,7 @@ mongoose
         res.render("pages/product_list", {
           title: "Product List",
           produits: produits,
+          categorie: categorie.nom,
         });
       } catch (error) {
         console.error(error);
