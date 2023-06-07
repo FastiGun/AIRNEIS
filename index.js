@@ -284,6 +284,17 @@ mongoose
           });
         });
 
+        produitsCommande.forEach(async (produitCommande) => {
+          const { produit, quantite } = produitCommande;
+          const produitDB = await Produit.findById(produit);
+          if (produitDB.stock >= quantite) {
+            produitDB.stock -= quantite;
+            await produitDB.save();
+          } else {
+            res.status(500).send(`${produitDB.nom} n'a pas assez de stock`);
+          }
+        });
+
         const nouvelleCommande = new Commande({
           date: new Date(),
           prixHT: (prixTotal - prixTVA).toFixed(2),
