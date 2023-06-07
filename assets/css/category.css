@@ -22,3 +22,13 @@
 .category-img{
     width: 100%;
 }
+
+.category-link:hover{
+    opacity: 0.6;
+    transition: 0.2s;
+}
+
+.category-link{
+    opacity: 1;
+    transition: 0.2s;
+}
