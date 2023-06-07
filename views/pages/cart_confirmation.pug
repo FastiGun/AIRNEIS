@@ -8,6 +8,17 @@ block content
     form(action="/cart-confirmation", method="post")
         .cart-confirmation-page.container
             .cart-confirmation-form 
+                    h3 Enter your information 
+                    .wrapper-facturation-address-form
+                        .input-nom-adresse
+                            input#nom(name="nomAdresse", placeholder="FirstName*", required, value=cartInfo.client.nom)
+                            label(for="nomAdresse")
+                        .input-nom-adresse
+                            input#prenom(name="nomAdresse", placeholder="LastName*", required, value=cartInfo.client.prenom)
+                            label(for="nomAdresse")
+                        .input-nom-adresse
+                            input#tel(name="tel", placeholder="Telephone number*", required, value=(cartInfo.client.telephone != null ? cartInfo.client.telephone : ""))
+                            label(for="tel")
                     h3 Enter a delivery address 
                     label(for="address")
                     select#address(name="address")
