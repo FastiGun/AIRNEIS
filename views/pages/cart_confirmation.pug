@@ -9,6 +9,13 @@ block content
         .cart-confirmation-page.container
             .cart-confirmation-form 
                     h3 Enter your facturation address 
+                    label(for="address-factu")
+                    select#address-factu(name="address-factu")
+                        if cartInfo.adresses.length !== 0
+                            each adresse in cartInfo.adresses
+                                option(value=adresse._id) #{adresse.nom}
+                        else 
+                            option(value="") No address registered
                     .wrapper-facturation-address-form
                         .input-nom-adresse
                             input#nom(name="nom", placeholder="FirstName*", required, value=cartInfo.client.nom)
@@ -19,6 +26,10 @@ block content
                         .input-nom-adresse
                             input#tel(name="tel", placeholder="Telephone number*", required, value=(cartInfo.client.telephone != null ? cartInfo.client.telephone : ""))
                             label(for="tel")
+                            
+                        .input-nom-adresse
+                            input#nomAdresseFactu(name="nomAdresseFactu", placeholder="Nom de l'adresse")
+                            label(for="nomAdresseFactu")
                         .input-rue
                             input#rueFactu(name="rueFactu", placeholder="Rue*", required)
                             label(for="rueFactu")
@@ -42,6 +53,11 @@ block content
                         .input-pays
                             input#paysFactu(name="paysFactu", placeholder="Pays*", required)
                             label(for="paysFactu")
+
+                        .input-register 
+                            label() 
+                                input#register-address.filled-in(type="checkbox" name="regaddress")
+                                span Save it
 
                     h3 Enter a delivery address 
                     label(for="address")
