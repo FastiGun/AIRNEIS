@@ -255,6 +255,15 @@ mongoose
           regcard,
           prixTVA,
           prixTotal,
+          nom,
+          prenom,
+          tel,
+          rueFactu,
+          complementFactu,
+          villeFactu,
+          regionFactu,
+          codepostalFactu,
+          paysFactu,
         } = req.body;
 
         const produitsCommande = [];
@@ -315,12 +324,12 @@ mongoose
           statut: "En attente",
           produits: produitsCommande,
           adresseFacturation: {
-            rue,
-            ville,
-            cp: codepostal,
-            pays,
-            region,
-            complement,
+            rue: rueFactu,
+            ville: villeFactu,
+            cp: codepostalFactu,
+            pays: paysFactu,
+            region: regionFactu,
+            complement: complementFactu,
           },
           adresseLivraison: {
             rue,
@@ -353,13 +362,16 @@ mongoose
           return res.redirect("/connexion");
         }
 
-        const commandes = await Commande.find({ client: req.session.userId }).populate("produits.produit").exec();
+        const commandes = await Commande.find({ client: req.session.userId })
+          .populate("produits.produit")
+          .exec();
 
-        res.render("pages/historique_commande", { title: "Orders Record", commandes: commandes })
-      } catch (error) {
-
-      }
-    })
+        res.render("pages/historique_commande", {
+          title: "Orders Record",
+          commandes: commandes,
+        });
+      } catch (error) {}
+    });
 
     app.get("/add-produit-panier/:articleId", async (req, res) => {
       if (!req.session.userId) {
