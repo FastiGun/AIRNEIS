@@ -75,6 +75,9 @@ const Paiement = mongoose.model("Paiement", paiementSchema, "paiement");
 
 //Commande
 const commandeSchema = new mongoose.Schema({
+  nom: String,
+  prenom: String,
+  telephone: String,
   date: String,
   prixHT: Number,
   prixTTC: Number,
