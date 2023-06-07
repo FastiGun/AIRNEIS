@@ -21,6 +21,9 @@ block content
             .input-dscription
                 input#description(required name="description", placeholder="Description*", value=isProduit ? produit.description : "")
                 label(for="description")
+            .input-material
+                input#materiaux(required name="materiaux", placeholder="Material*", value=isProduit ? produit.materiaux : "")
+                label(for="materiaux")
             .input-categorie
                 label(for="categorie") Category :
                 select#categorie(required name="categorie")

@@ -12,6 +12,9 @@ block content
             .input-name
                 input#nom(required name="nom", placeholder="Name*", value=isCategory ? categorie.nom : "")
                 label(for="nom")
+            .input-description
+                input#description(required name="description", placeholder="Description*", value=isCategory ? categorie.description : "")
+                label(for="description")
             .input-img
                 label(for="image")
                 input(required type="text", name="image", id="image",placeholder="Path to Photo*", value=isCategory ? categorie.image : "")

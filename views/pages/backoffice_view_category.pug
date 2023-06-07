@@ -9,11 +9,13 @@ block content
             thead 
                 tr 
                     th Name  
+                    th Description
                     th Image
             tbody
                 each category in categories
                     tr.view-category-list-item
                         td.category-name #{ category.nom }
+                        td.category-description #{ category.description }
                         td
                             img.category-img(src=category.image)
                         td 
