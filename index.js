@@ -258,18 +258,35 @@ mongoose
           nom,
           prenom,
           tel,
+          nomAdresseFactu,
           rueFactu,
           complementFactu,
           villeFactu,
           regionFactu,
           codepostalFactu,
           paysFactu,
+          regaddressFactu,
         } = req.body;
 
         const produitsCommande = [];
         const panier = await Panier.find({ client: req.session.userId })
           .populate("article")
           .exec();
+
+        if (regaddressFactu) {
+          const adresseLivraisonFact = new Adresse({
+            client: req.session.userId,
+            nom: nomAdresseFactu,
+            rue: rueFactu,
+            complement: complementFactu,
+            ville: villeFactu,
+            cp: codepostalFactu,
+            pays: paysFactu,
+            region: regionFactu,
+          });
+
+          const adresseLivraisonEnregistree = await adresseLivraisonFact.save();
+        }
 
         if (regaddress) {
           const adresseLivraison = new Adresse({
