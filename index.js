@@ -318,6 +318,9 @@ mongoose
         });
 
         const nouvelleCommande = new Commande({
+          nom,
+          prenom,
+          telephone: tel,
           date: formatDate(new Date()),
           prixHT: (prixTotal - prixTVA).toFixed(2),
           prixTTC: prixTotal,
