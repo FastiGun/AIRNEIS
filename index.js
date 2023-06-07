@@ -349,7 +349,7 @@ mongoose
 
         await Panier.deleteMany({ client: req.session.userId });
 
-        res.redirect("/cart");
+        res.redirect("/historique_commande");
       } catch (error) {
         console.error(error);
         res
