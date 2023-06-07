@@ -202,8 +202,6 @@ mongoose
           adresses,
         };
 
-        console.log(cartInfo);
-
         // Renvoyer les informations du client en tant que réponse
         res.render("pages/cart_confirmation", {
           title: "Cart Confirmation",
