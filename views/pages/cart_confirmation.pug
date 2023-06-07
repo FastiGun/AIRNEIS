@@ -57,7 +57,7 @@ block content
 
                     h3 Enter your payment information 
                     label(for="paiements")
-                    select#address(name="paiements")
+                    select#paiements(name="paiements")
                         if cartInfo.paiements.length !== 0
                             each paiement in cartInfo.paiements
                                 option(value=paiement._id) #{paiement.nom}
