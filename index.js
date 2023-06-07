@@ -201,9 +201,9 @@ mongoose
         };
 
         // Renvoyer les informations du client en tant que réponse
-        res.render("pages/cart-confirmation", {
+        res.render("pages/cart_confirmation", {
           title: "Cart Confirmation",
-          cartInfo,
+          cartInfo: cartInfo,
         });
       } catch (error) {
         console.error(error);
