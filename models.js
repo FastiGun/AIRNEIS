@@ -55,7 +55,6 @@ const adresseSchema = new mongoose.Schema({
   cp: String,
   pays: String,
   region: String,
-  num: String,
   complement: String,
 });
 
