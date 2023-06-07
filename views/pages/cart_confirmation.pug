@@ -19,8 +19,8 @@ block content
 
                     .wrapper-delivery-address-form
                         .input-nom-adresse
-                            input#nom-adresse(name="nom-adresse", placeholder="Nom de l'adresse")
-                            label(for="nom-adresse")
+                            input#nomAdresse(name="nomAdresse", placeholder="Nom de l'adresse")
+                            label(for="nomAdresse")
                         .input-nom-adresse
                             input#nom-adresse(hidden name="prixTotal" value=cartInfo.prixTotal)
                         .input-nom-adresse
@@ -60,14 +60,14 @@ block content
                     select#paiements(name="paiements")
                         if cartInfo.paiements.length !== 0
                             each paiement in cartInfo.paiements
-                                option(value=paiement._id) #{paiement.nom}
+                                option(value=paiement._id) #{paiement.libelle_carte}
                         else 
                             option(value="") No card registered 
                     
                     .wrapper-delivery-address-form
                         .input-nom-card
-                            input#nom-card(name="nom-card", placeholder="Surnom de la carte")
-                            label(for="nom-card")
+                            input#nnomCard(name="nomCard", placeholder="Surnom de la carte")
+                            label(for="nomCard")
                         
                         .input-fullname
                             input#fullname(name="fullname", placeholder="Fullname*", required)
