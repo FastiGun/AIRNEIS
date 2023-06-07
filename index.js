@@ -392,7 +392,7 @@ mongoose
 
         res
           .status(200)
-          .json({ message: "Connexion réussie", token, clientId: client._id });
+          .json({ message: "Connexion réussie", token, _id: client._id });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Erreur lors de la connexion" });
