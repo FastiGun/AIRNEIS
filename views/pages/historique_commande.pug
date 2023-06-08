@@ -4,21 +4,22 @@ block links
   link(rel='stylesheet' href='/assets/css/historique_commande.css')
 
 block content
-    .historique-commande-wrapper 
-        h1 Historique des commandes
+    .historique-commande-wrapper.container-commandes
+        h1.contact-h1 Historique des commandes
         if commande !== null
             each commande in commandes 
                 .commande-wrapper 
                     .left-side
+                        .id Comande n°#{ commande.id }
                         .date #{ commande.date }
                         each product in commande.produits
                             .produit-wrapper
-                                .name-article #{ product.produit.nom }
-                                .quantite-article #{ product.quantite }
+                                .name-article -#{ product.produit.nom }
+                                .quantite-article Quantity : #{ product.quantite }
                     .right-side
-                        .prix-HT #{ commande.prixHT }
-                        .prix-TTC #{ commande.prixTTC }
-                        .status #{ commande.status }
+                        .prix-HT HT price : #{ commande.prixHT } €
+                        .prix-TTC Total price : #{ commande.prixTTC } €
+                        .status Statut : #{ commande.statut }
                         a.waves-effect.waves-light.btn-large() See details
         else 
             .no-command No order found

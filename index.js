@@ -258,18 +258,35 @@ mongoose
           nom,
           prenom,
           tel,
+          nomAdresseFactu,
           rueFactu,
           complementFactu,
           villeFactu,
           regionFactu,
           codepostalFactu,
           paysFactu,
+          regaddressFactu,
         } = req.body;
 
         const produitsCommande = [];
         const panier = await Panier.find({ client: req.session.userId })
           .populate("article")
           .exec();
+
+        if (regaddressFactu) {
+          const adresseLivraisonFact = new Adresse({
+            client: req.session.userId,
+            nom: nomAdresseFactu,
+            rue: rueFactu,
+            complement: complementFactu,
+            ville: villeFactu,
+            cp: codepostalFactu,
+            pays: paysFactu,
+            region: regionFactu,
+          });
+
+          const adresseLivraisonEnregistree = await adresseLivraisonFact.save();
+        }
 
         if (regaddress) {
           const adresseLivraison = new Adresse({
@@ -349,7 +366,7 @@ mongoose
 
         await Panier.deleteMany({ client: req.session.userId });
 
-        res.redirect("/cart");
+        res.redirect("/historique_commande");
       } catch (error) {
         console.error(error);
         res
@@ -652,6 +669,33 @@ mongoose
         res
           .status(500)
           .send("Erreur lors de la récupération des informations du client");
+      }
+    });
+
+    app.post("/api/client/:clientId", authenticate, async (req, res) => {
+      try {
+        const clientId = req.params.clientId;
+        const client = await Client.findById(clientId);
+        if (!client) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Client non trouvé" });
+        }
+
+        // Mettez à jour les informations du client avec les données fournies dans la requête
+        client.nom = req.body.nom;
+        client.prenom = req.body.prenom;
+        client.telephone = req.body.telephone;
+
+        await client.save();
+
+        res.json({ success: true, client });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({
+          success: false,
+          error: "Erreur lors de la modification des informations du client",
+        });
       }
     });
 
