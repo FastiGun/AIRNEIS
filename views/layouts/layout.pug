@@ -10,7 +10,6 @@ head
     script(src='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js')
     link(rel='shortcut icon' href='/assets/img/favico.png')
     block links
-    block scripts
     title AIRNEIS - #{title}
 
 body 
@@ -22,5 +21,4 @@ body
   block footer 
     include ../layouts/footer.pug
   script(src='/assets/scripts/menu_burger.js')
-  script(src='/assets/scripts/ajuste-panier.js')
-  script(src='/assets/scripts/passwordValidation.js')
+  block script
