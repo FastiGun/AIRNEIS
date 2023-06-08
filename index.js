@@ -672,6 +672,33 @@ mongoose
       }
     });
 
+    app.post("/api/client/:clientId", authenticate, async (req, res) => {
+      try {
+        const clientId = req.params.clientId;
+        const client = await Client.findById(clientId);
+        if (!client) {
+          return res
+            .status(404)
+            .json({ success: false, error: "Client non trouvé" });
+        }
+
+        // Mettez à jour les informations du client avec les données fournies dans la requête
+        client.nom = req.body.nom;
+        client.prenom = req.body.prenom;
+        client.telephone = req.body.telephone;
+
+        await client.save();
+
+        res.json({ success: true, client });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({
+          success: false,
+          error: "Erreur lors de la modification des informations du client",
+        });
+      }
+    });
+
     app.get(
       "/api/client/:clientId/adresses",
       authenticate,
