@@ -12,6 +12,7 @@ block content
                     label(for="address-factu")
                     select#address-factu(name="address-factu")
                         if cartInfo.adresses.length !== 0
+                            option(value="") -Choose an address-
                             each adresse in cartInfo.adresses
                                 option(value=adresse._id) #{adresse.nom}
                         else 
@@ -63,6 +64,7 @@ block content
                     label(for="address")
                     select#address(name="address")
                         if cartInfo.adresses.length !== 0
+                            option(value="") -Choose an address-
                             each adresse in cartInfo.adresses
                                 option(value=adresse._id) #{adresse.nom}
                         else 
@@ -110,6 +112,7 @@ block content
                     label(for="paiements")
                     select#paiements(name="paiements")
                         if cartInfo.paiements.length !== 0
+                            option(value="") -Choose a card-
                             each paiement in cartInfo.paiements
                                 option(value=paiement._id) #{paiement.libelle_carte}
                         else 
@@ -154,3 +157,6 @@ block content
                     .tva-price VAT
                     .tva-amount #{ cartInfo.prixTVA } €
                 button.waves-effect.waves-light.btn-large(type="submit") Pay
+
+block script
+  script(src='/assets/scripts/update_cart_confirmation.js')
