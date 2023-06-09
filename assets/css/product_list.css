@@ -47,16 +47,19 @@ select{
 .filtres-products{
     display: flex;
     gap: 3rem;
+    align-items: center;
+    margin-bottom: 4rem;
 }
 
 .filtres-products > *{
     flex: 1;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
     .filtres-products{
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        align-items: normal;
     }
 }
