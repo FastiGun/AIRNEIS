@@ -11,11 +11,11 @@ block content
             select#materialSelect(name="materialSelect") 
                 option(value="") Materials
                 each material in materials
-                    option(value=material, selected=filters.materiaux === material) #{material}
+                    option(value=material, selected=filters.materialSelect === material) #{material}
             select#stockSelect(name="stockSelect")
                 option(value="", selected=filters.stockSelect === "") Stock
-                option(value="true", selected=filters.stockSelect === true) In stock 
-                option(value="false", selected=filters.stockSelect === false) Out of stock 
+                option(value="true", selected=filters.stockSelect === "true") In stock 
+                option(value="false", selected=filters.stockSelect === "false") Out of stock 
             label(for="priceMin") Min price
             input#priceMin(type="number", name="priceMin", value=filters.priceMin)
             label(for="priceMax") Max price
