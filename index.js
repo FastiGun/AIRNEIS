@@ -30,7 +30,7 @@ cloudinary.config({
   api_secret: process.env.SECRET_CLOUDINARY,
 });
 
-const secretKey = "maclesecrete";
+const secretKey = "Ceciestmaclesecrete767676!!!";
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -1143,7 +1143,8 @@ mongoose
     // Middleware d'authentification
     function authenticate(req, res, next) {
       const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
-      const tokenToVerify = token.split("")[1];
+      const tokenToVerify = token.split(" ")[1];
+      console.log(tokenToVerify);
       if (!token) {
         return res
           .status(401)
