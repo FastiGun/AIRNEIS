@@ -21,7 +21,8 @@ block content
                 input#priceMin(type="number", name="priceMin", placeholder="20", value=filters.priceMin)
             label(for="priceMax") Max price
                 input#priceMax(type="number", name="priceMax", placeholder="700", value=filters.priceMax)
-            button.btn-search.btn.waves-effect.waves-light(type="submit") Search
+            button.btn-search.btn.waves-effect.waves-light(type="submit")
+                i.material-icons search
     .product-list-wrapper.container-lis-products
         if produits.length === 0
             p.no-products No products to show

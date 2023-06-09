@@ -5,12 +5,12 @@ block links
 
 block content
     .historique-commande-wrapper.container-commandes
-        h1.contact-h1 Historique des commandes
+        h1.contact-h1 My orders
         if commande !== null
             each commande in commandes 
                 .commande-wrapper 
                     .left-side
-                        .id Comande n°#{ commande.id }
+                        .id Order n°#{ commande.id }
                         .date #{ commande.date }
                         each product in commande.produits
                             .produit-wrapper

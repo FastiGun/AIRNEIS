@@ -474,9 +474,11 @@ mongoose
         res.json({ adresse });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Erreur lors de la recuperation de l'adresse" });
+        res
+          .status(500)
+          .json({ message: "Erreur lors de la recuperation de l'adresse" });
       }
-    })
+    });
 
     app.get("/getCard/:cardId", async (req, res) => {
       const cardId = req.params;
@@ -486,9 +488,11 @@ mongoose
         res.json({ card });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Erreur lors de la recuperation de l'adresse" });
+        res
+          .status(500)
+          .json({ message: "Erreur lors de la recuperation de l'adresse" });
       }
-    })
+    });
 
     app.get("/ajuste-quantite-panier/:panierId/:quantite", async (req, res) => {
       const { panierId, quantite } = req.params;
@@ -856,7 +860,6 @@ mongoose
       try {
         let { nameText, materialSelect, stockSelect, priceMin, priceMax } =
           req.query;
-        console.log(nameText, materialSelect, stockSelect, priceMin, priceMax);
         const filters = {
           nameText,
           materialSelect,
@@ -896,7 +899,6 @@ mongoose
           const max = parseFloat(priceMax);
           filter.prix = { ...filter.prix, $lte: max };
         }
-        console.log(filter);
 
         // Exécutez votre requête avec les filtres
         const produits = await Produit.find(filter);
@@ -1140,7 +1142,7 @@ mongoose
 
     // Middleware d'authentification
     function authenticate(req, res, next) {
-      const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
+      const token = req.headers.Authorization; // Récupérer le token depuis les en-têtes de la requête
 
       if (!token) {
         return res
@@ -1365,6 +1367,45 @@ mongoose
           error:
             "Une erreur s'est produite lors de la création ou de la mise à jour du produit.",
         });
+      }
+    });
+
+    app.get("/backoffice/orders", requireAdmin, async (req, res) => {
+      try {
+        // Récupérer toutes les commandes depuis la base de données
+        const commandes = await Commande.find()
+          .populate("produits.produit")
+          .exec();
+
+        // Passer les données des commandes à la vue "backoffice_orders"
+        res.render("pages/backoffice_orders", { commandes });
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération des commandes");
+      }
+    });
+
+    app.post("/backoffice/orders/:idCommande/statut", async (req, res) => {
+      try {
+        const idCommande = req.params.idCommande;
+        const newStatut = req.body.statut;
+
+        // Mettez à jour le statut de la commande dans la base de données
+        // Remplacez cette logique avec votre propre code pour mettre à jour le statut
+
+        // Exemple de mise à jour de statut avec Mongoose
+        const commande = await Commande.findByIdAndUpdate(
+          idCommande,
+          { statut: newStatut },
+          { new: true }
+        );
+
+        res.json({ message: "Statut mis à jour avec succès", commande });
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour du statut :", error);
+        res
+          .status(500)
+          .json({ error: "Erreur lors de la mise à jour du statut" });
       }
     });
 

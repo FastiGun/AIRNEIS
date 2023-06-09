@@ -1,0 +1,47 @@
+.historique-commande-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 2rem auto 7rem auto;
+  padding: 0 2rem;
+}
+.commande-wrapper {
+  display:flex;
+  justify-content: space-between;
+  padding: 2rem 0;
+  border-bottom: 1px solid grey;
+}
+
+.left-side, .right-side{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.produit-wrapper{
+  display: flex;
+  gap: 1rem;
+}
+
+.id{
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.container-commandes{
+  max-width: 900px;
+}
+
+.right-side{
+  text-align: right;
+}
+
+#statutOrder{
+  display: inline;
+}
+
+.status{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

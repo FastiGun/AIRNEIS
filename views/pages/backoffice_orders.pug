@@ -1,0 +1,39 @@
+extends ../layouts/layout.pug
+
+block links
+  link(rel='stylesheet' href='/assets/css/backoffice_orders.css')
+
+block content
+  form(action="backoffice/orders", method="post")
+    .historique-commande-wrapper.container-commandes
+          h1.contact-h1 Orders
+          if commande !== null
+              each commande in commandes 
+                  input(hidden name="idCommande" value=commande._id)
+                  .commande-wrapper 
+                      .left-side
+                          .id Order n°#{ commande.id }
+                          .date #{ commande.date }
+                          each product in commande.produits
+                              .produit-wrapper
+                                  .name-article -#{ product.produit.nom }
+                                  .quantite-article Quantity : #{ product.quantite }
+                      .right-side
+                          .prix-HT HT price : #{ commande.prixHT } €
+                          .prix-TTC Total price : #{ commande.prixTTC } €
+                          .status Statut: 
+                            select#statutOrder(name="statutOrder")
+                              option(value="En attente", selected=(commande.statut === "En attente"), data-commande-id=commande._id) En attente
+                              option(value="En préparation", selected=(commande.statut === "En préparation"), data-commande-id=commande._id) En préparation
+                              option(value="En livraison", selected=(commande.statut === "En livraison"), data-commande-id=commande._id) En livraison
+                              option(value="Livrée", selected=(commande.statut === "Livrée"), data-commande-id=commande._id) Livrée
+                              option(value="Retour demandé", selected=(commande.statut === "Retour demandé"), data-commande-id=commande._id) Retour demandé
+                              option(value="Retour en cours", selected=(commande.statut === "Retour en cours"), data-commande-id=commande._id) Retour en cours
+                              option(value="Retournée", selected=(commande.statut === "Retournée"), data-commande-id=commande._id) Retournée
+                              option(value="Annulée", selected=(commande.statut === "Annulée"), data-commande-id=commande._id) Annulée
+
+          else 
+              .no-command No order found
+
+block script
+  script(src='/assets/scripts/ajuste-statut-commande.js')
