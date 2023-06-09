@@ -7,7 +7,8 @@ block content
     h1.contact-h1 #{categorie ? categorie : "Products"}
     if filters
         form.filtres-products.container(action="/product/filter", method="get")
-            input#nameText(type="text", name="nameText", placeholder="Search", value=filters.nameText)
+            label(for="nameText") Search
+                input#nameText(type="text", name="nameText", placeholder="Product", value=filters.nameText)
             select#materialSelect(name="materialSelect") 
                 option(value="") Materials
                 each material in materials
@@ -17,10 +18,10 @@ block content
                 option(value="true", selected=filters.stockSelect === "true") In stock 
                 option(value="false", selected=filters.stockSelect === "false") Out of stock 
             label(for="priceMin") Min price
-            input#priceMin(type="number", name="priceMin", value=filters.priceMin)
+                input#priceMin(type="number", name="priceMin", placeholder="20", value=filters.priceMin)
             label(for="priceMax") Max price
-            input#priceMax(type="number", name="priceMax", value=filters.priceMax)
-            button.btn.waves-effect.waves-light(type="submit") Filter
+                input#priceMax(type="number", name="priceMax", placeholder="700", value=filters.priceMax)
+            button.btn-search.btn.waves-effect.waves-light(type="submit") Search
     .product-list-wrapper.container-lis-products
         if produits.length === 0
             p.no-products No products to show
