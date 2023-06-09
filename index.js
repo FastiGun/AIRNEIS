@@ -1143,7 +1143,7 @@ mongoose
     // Middleware d'authentification
     function authenticate(req, res, next) {
       const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
-
+      const tokenToVerify = token.split("")[1];
       if (!token) {
         return res
           .status(401)
@@ -1152,9 +1152,7 @@ mongoose
 
       try {
         // Clé secrète utilisée lors de la génération du token
-        const decodedToken = jwt.verify(token, secretKey); // Vérifier la validité du token
-
-        req.userId = decodedToken.id; // Ajouter l'identifiant de l'utilisateur extrait du token à l'objet req
+        const decodedToken = jwt.verify(tokenToVerify, secretKey); // Vérifier la validité du token
 
         next(); // Passer au prochain middleware ou à la route suivante
       } catch (error) {
