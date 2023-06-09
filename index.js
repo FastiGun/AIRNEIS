@@ -30,7 +30,7 @@ cloudinary.config({
   api_secret: process.env.SECRET_CLOUDINARY,
 });
 
-const secretKey = process.env.SECRET_KEY;
+const secretKey = "maclesecrete";
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
