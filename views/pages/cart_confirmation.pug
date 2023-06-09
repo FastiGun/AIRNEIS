@@ -18,13 +18,13 @@ block content
                         else 
                             option(value="") No address registered
                     .wrapper-facturation-address-form
-                        .input-nom-adresse
+                        .input-nom-user
                             input#nom(name="nom", placeholder="FirstName*", required, value=cartInfo.client.nom)
                             label(for="nom")
-                        .input-nom-adresse
+                        .input-prenom-user
                             input#prenom(name="prenom", placeholder="LastName*", required, value=cartInfo.client.prenom)
                             label(for="prenom")
-                        .input-nom-adresse
+                        .input-tel-user
                             input#tel(name="tel", placeholder="Telephone number*", required, value=(cartInfo.client.telephone != null ? cartInfo.client.telephone : ""))
                             label(for="tel")
                             
@@ -120,7 +120,7 @@ block content
                     
                     .wrapper-delivery-address-form
                         .input-nom-card
-                            input#nnomCard(name="nomCard", placeholder="Surnom de la carte")
+                            input#nomCard(name="nomCard", placeholder="Surnom de la carte")
                             label(for="nomCard")
                         
                         .input-fullname

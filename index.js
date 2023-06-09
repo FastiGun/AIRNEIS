@@ -466,6 +466,30 @@ mongoose
       }
     });
 
+    app.get("/getAdresse/:adresseId", async (req, res) => {
+      const adresseId = req.params;
+
+      try {
+        const adresse = await Adresse.findById(adresseId.adresseId);
+        res.json({ adresse });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur lors de la recuperation de l'adresse" });
+      }
+    })
+
+    app.get("/getCard/:cardId", async (req, res) => {
+      const cardId = req.params;
+
+      try {
+        const card = await Paiement.findById(cardId.cardId);
+        res.json({ card });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erreur lors de la recuperation de l'adresse" });
+      }
+    })
+
     app.get("/ajuste-quantite-panier/:panierId/:quantite", async (req, res) => {
       const { panierId, quantite } = req.params;
 
