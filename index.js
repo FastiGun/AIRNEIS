@@ -1133,7 +1133,7 @@ mongoose
 
     // Fonction pour générer le token d'authentification (par exemple, JWT)
     function generateAuthToken(client) {
-      const secretKey = secretKey; // Clé secrète pour signer le token
+      // Clé secrète pour signer le token
       const token = jwt.sign({ id: client._id }, secretKey, {
         expiresIn: "24h",
       }); // Exemple avec une expiration d'une journée
