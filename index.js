@@ -1142,7 +1142,7 @@ mongoose
 
     // Middleware d'authentification
     function authenticate(req, res, next) {
-      const token = req.headers.Authorization; // Récupérer le token depuis les en-têtes de la requête
+      const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
 
       if (!token) {
         return res
