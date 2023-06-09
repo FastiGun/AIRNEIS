@@ -835,20 +835,13 @@ mongoose
     });
 
     app.get("/products", async (req, res) => {
-      const filters = {
-        nameText: req.query.nameText || "",
-        materialSelect: req.query.materialSelect || "",
-        stockSelect: req.query.stockSelect || "",
-        priceMin: req.query.priceMin || "",
-        priceMax: req.query.priceMax || "",
-      };
       try {
         // Récupérer tous les produits
         const produits = await Produit.find();
         const materials = await Produit.distinct("materiaux");
 
         // Rendre la page des produits avec les données récupérées
-        res.render("pages/product_list", { produits, materials, filters });
+        res.render("pages/product_list", { produits, materials });
       } catch (error) {
         console.error(error);
         res
@@ -927,20 +920,12 @@ mongoose
           return res.status(404).send("Catégorie non trouvée");
         }
         const materials = await Produit.distinct("materiaux");
-        const filters = {
-          nameText: req.query.nameText || "",
-          materialSelect: req.query.materialSelect || "",
-          stockSelect: req.query.stockSelect || "",
-          priceMin: req.query.priceMin || "",
-          priceMax: req.query.priceMax || "",
-        };
         const produits = await Produit.find({ categorie: categorie_id });
         res.render("pages/product_list", {
           title: "Product List",
           produits: produits,
           categorie: categorie.nom,
           materials: materials,
-          filters,
         });
       } catch (error) {
         console.error(error);

@@ -4,7 +4,7 @@ nav
     ul#nav-mobile.right
       if !req.session.isAdmin
         li
-          a(href='/products')
+          a(href='/product/filter?nameText=&materialSelect=&stockSelect=&priceMin=&priceMax=')
             i.material-icons search
       if !req.session.isAdmin
         li

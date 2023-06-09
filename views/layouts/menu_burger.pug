@@ -1,6 +1,6 @@
 .burgermenu.hidden
   if !req.session.isAdmin
-    a.burgermenu-link(href='/products') Products
+    a.burgermenu-link(href='/product/filter?nameText=&materialSelect=&stockSelect=&priceMin=&priceMax=') Products
     a.burgermenu-link(href='/category') Categories
     a.burgermenu-link(href='/contact') Contact
   if isLoggedIn 
