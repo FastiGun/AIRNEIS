@@ -7,10 +7,17 @@ const paysFactu = document.querySelector("#paysFactu");
 const regionFactu = document.querySelector("#regionFactu");
 const complementFactu = document.querySelector("#complementFactu");
 const codepostalFactu = document.querySelector("#codepostalFactu");
+const checkboxFactu = document.querySelector("#register-addressFactu");
+
 
 selectAddressFactu.onchange = function() {
     const addressIdFactu = selectAddressFactu.value;
-    updateDisplayFactu(addressIdFactu) 
+    if (addressIdFactu != ""){
+        updateDisplayFactu(addressIdFactu) 
+        checkboxFactu.setAttribute("disabled", "true")
+    } else {
+        checkboxFactu.removeAttribute("disabled")
+    }
 }
 
 function updateDisplayFactu(addressIdFactu) {
@@ -38,10 +45,16 @@ const pays = document.querySelector("#pays");
 const region = document.querySelector("#region");
 const complement = document.querySelector("#complement");
 const codepostal = document.querySelector("#codepostal");
+const checkboxAddress = document.querySelector("#register-address");
 
 selectAddress.onchange = function() {
     const addressId = selectAddress.value;
-    updateDisplayAddress(addressId) 
+    if (addressId != ""){
+        updateDisplayAddress(addressId) 
+        checkboxAddress.setAttribute("disabled", "true")
+    } else {
+        checkboxAddress.removeAttribute("disabled")
+    }
 }
 
 
@@ -67,10 +80,16 @@ const fullname = document.querySelector("#fullname");
 const cardnumber = document.querySelector("#cardnumber");
 const expiration = document.querySelector("#expiration");
 const cvv = document.querySelector("#cvv");
+const checkboxCard = document.querySelector("#register-card");
 
 selectPaiements.onchange = function() {
     const cardId = selectPaiements.value;
-    updateDisplayCard(cardId) 
+    if (cardId != ""){
+        updateDisplayCard(cardId) 
+        checkboxCard.setAttribute("disabled", "true")
+    } else {
+        checkboxCard.removeAttribute("disabled")
+    }
 }
 
 
