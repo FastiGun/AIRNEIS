@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: center;
     margin: 2rem auto 7rem auto;
+    padding: 0 2rem;
 }
 
 .commande-wrapper {
