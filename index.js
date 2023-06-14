@@ -536,6 +536,38 @@ mongoose
       }
     });
 
+    app.get("/espace-utilisateur", async (req, res) => {
+      try {
+        clientId = req.session.userId; 
+        if(clientId != null){
+          const client = await Client.findById(clientId);
+          const adresses = await Adresse.find({client: clientId});
+          const cards = await Paiement.find({client: clientId});
+
+          res.render("pages/espace_utilisateur", {title: "Espace Utilisateur", client, adresses, cards})
+        } else {
+          return res.redirect("/connexion")
+        }
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({ message: "Erreur lors de la recuperation des donnees" });
+      }
+    })
+
+    app.get("/espace-utilisateur/delete-adresse", async (req, res) => {
+      const adresseId = req.query.id
+      await Adresse.findByIdAndRemove(adresseId);
+      res.redirect("/espace-utilisateur");
+    } )
+
+    app.get("/espace-utilisateur/delete-card", async (req, res) => {
+      const cardId = req.query.id
+      await Paiement.findByIdAndRemove(cardId);
+      res.redirect("/espace-utilisateur");
+    } )
+
     app.get("/contact", function (req, res) {
       res.render("pages/contact", { title: "Contact" });
     });
@@ -1006,10 +1038,6 @@ mongoose
         console.error(error);
         res.status(500).send("Erreur lors de la récupération du produit.");
       }
-    });
-
-    app.get("/delivery_address", function (req, res) {
-      res.render("pages/delivery_address", { title: "Delivery Address" });
     });
 
     app.get("/backoffice/produit", requireAdmin, async (req, res) => {

@@ -6,7 +6,7 @@
   if isLoggedIn 
     if !req.session.isAdmin 
       a.burgermenu-link(href='/historique_commande') My orders
-      a.burgermenu-link(href='/') My account
+      a.burgermenu-link(href='/espace-utilisateur') My account
     a.burgermenu-link(href='/deconnexion') Disconnect
   else 
     a.burgermenu-link(href='/connexion') Log in

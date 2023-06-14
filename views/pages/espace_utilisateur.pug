@@ -1,0 +1,71 @@
+extends ../layouts/layout.pug
+
+block links 
+  link(rel='stylesheet' href='/assets/css/espace_utilisateur.css')
+
+
+block content
+    .user-espace-wrapper 
+        h1 User Space 
+        h3 User information
+        form.user-info-form(action="", method="post")
+            .input-nom
+                input#user-nom(required name="nom", placeholder="FirstName*", value=client.nom)
+                label(for="nom")
+            .input-prenom
+                input#user-prenom(required name="prenom", placeholder="LastName*", value=client.prenom)
+                label(for="prenom")
+            .input-mail
+                input#user-mail(required name="mail", placeholder="Mail*", value=client.mail)
+                label(for="mail")
+            .input-mdp
+                input#user-mdp(required name="mdp", placeholder="Password*")
+                label(for="mdp")
+            .input-tel
+                input#user-tel(name="tel", placeholder="Telephone number", value=(client.telephone == null) ? "" : client.telephone)
+                label(for="tel")
+            .user-form-submit
+                button.waves-effect.waves-light.btn-large.submit(type="submit") Save changes
+
+        h3 User Addresses
+        table.container-user-address
+            thead 
+                tr 
+                    th Name 
+                    th Streat
+                    th Complement 
+                    th Town
+                    th Address code
+                    th Region
+                    th Country
+            tbody
+                each adresse in adresses
+                    tr.view-address-list-item
+                        td.address-name #{ adresse.nom }
+                        td.address-streat #{ adresse.rue }
+                        td.address-complement #{ adresse.complement }
+                        td.address-town #{ adresse.ville }
+                        td.address-code #{ adresse.cp }
+                        td.address-region #{ adresse.region }
+                        td.address-country #{ adresse.pays}
+                        td
+                            a(href=""+adresse._id)
+                                i.material-icons create
+                        td
+                            a(href=`/espace-utilisateur/delete-adresse?id=${adresse._id}`)
+                                i.material-icons delete
+
+        h3 User Cards
+        table.container-user-paiement
+            thead 
+                tr 
+                    th Name 
+                    th Expiration date
+            tbody
+                each card in cards
+                    tr.view-address-list-item
+                        td.address-name #{ card.libelle_carte }
+                        td.address-streat #{ card.date_expiration }
+                        td
+                            a(href=`/espace-utilisateur/delete-card?id=${card._id}`)
+                                i.material-icons delete
