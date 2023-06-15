@@ -558,40 +558,45 @@ mongoose
     })
 
     app.post("/espace-utilisateur", async (req, res) => {
-      try {
-        const { nom, prenom, mdp, tel } = req.body;
-        const clientId = req.session.userId; 
-        if (mdp !== "" && !passwordRegex.test(mdp)) {
-          return res
-            .status(400)
-            .send(
-              "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
-            );
+      if(req.session.userId){
+        try {
+          const { nom, prenom, mdp, tel } = req.body;
+          const clientId = req.session.userId; 
+          if (mdp !== "" && !passwordRegex.test(mdp)) {
+            return res
+              .status(400)
+              .send(
+                "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
+              );
+          }
+          const adresses = await Adresse.find({client: clientId});
+          const cards = await Paiement.find({client: clientId});
+          const client = await Client.find({clientId});
+      
+          // Effectuer les opérations nécessaires pour appliquer les modifications des informations du client
+          const updatedFields = {
+            nom: nom,
+            prenom: prenom,
+            telephone: tel,
+          };
+          
+          // Vérifier si le mot de passe est renseigné
+          if (mdp !== "") {
+            // Hasher le nouveau mot de passe
+            const hashedPassword = await bcrypt.hash(mdp, saltRounds);
+            updatedFields.mdp = hashedPassword;
+          }
+          
+          const updatedClient = await Client.findByIdAndUpdate(clientId, updatedFields);
+      
+          res.render("pages/espace_utilisateur", {title: "User space", client, adresses, cards})
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: "Une erreur est survenue lors de la mise à jour des informations du client" });
         }
-        const adresses = await Adresse.find({client: clientId});
-        const cards = await Paiement.find({client: clientId});
-        const client = await Client.find({clientId});
-    
-        // Effectuer les opérations nécessaires pour appliquer les modifications des informations du client
-        const updatedFields = {
-          nom: nom,
-          prenom: prenom,
-          telephone: tel,
-        };
-        
-        // Vérifier si le mot de passe est renseigné
-        if (mdp !== "") {
-          // Hasher le nouveau mot de passe
-          const hashedPassword = await bcrypt.hash(mdp, saltRounds);
-          updatedFields.mdp = hashedPassword;
-        }
-        
-        const updatedClient = await Client.findByIdAndUpdate(clientId, updatedFields);
-    
-        res.render("pages/espace_utilisateur", {title: "User space", client, adresses, cards})
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Une erreur est survenue lors de la mise à jour des informations du client" });
+      }
+      else{
+        res.redirect("/connexion");
       }
     });
 
