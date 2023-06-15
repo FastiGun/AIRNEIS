@@ -8,7 +8,7 @@ block content
     .user-espace-wrapper.container 
         h1.contact-h1 User Space 
         h3 My informations
-        form.user-info-form(action="", method="post")
+        form.user-info-form(action="/espace-utilisateur", method="post")
             .input-nom
                 input#user-nom(required name="nom", placeholder="FirstName*", value=client.nom)
                 label(for="nom")
@@ -49,7 +49,7 @@ block content
                         td.address-region #{ adresse.region }
                         td.address-country #{ adresse.pays}
                         td
-                            a(href=""+adresse._id)
+                            a(href="/espace-utilisateur/modifier-adresse/"+adresse._id)
                                 i.material-icons create
                         td
                             a(href=`/espace-utilisateur/delete-adresse?id=${adresse._id}`)

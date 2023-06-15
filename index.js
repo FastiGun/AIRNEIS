@@ -556,6 +556,47 @@ mongoose
       }
     })
 
+    app.post("/espace-utilisateur", async (req, res) => {
+      try {
+        const { nom, prenom, mdp, tel } = req.body;
+        const clientId = req.session.userId; 
+
+        const adresses = await Adresse.find({client: clientId});
+        const cards = await Paiement.find({client: clientId});
+    
+        // Effectuer les opérations nécessaires pour appliquer les modifications des informations du client
+        const updatedClient = await Client.findByIdAndUpdate(clientId, {
+          nom: nom,
+          prenom: prenom,
+          mdp: bcrypt.hash(mdp, saltRounds),
+          telephone: tel,
+        });
+    
+        res.render("pages/espace_utilisateur", {title: "Espace Utilisateur", client, adresses, cards})
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Une erreur est survenue lors de la mise à jour des informations du client" });
+      }
+    });
+
+    app.get("/espace-utilisateur/modifier-adresse/:id", async (req, res) => {
+      try {
+        const adresseId = req.params.id;
+    
+        // Récupérer l'adresse à partir de l'ID
+        const adresse = await Adresse.findOne({ _id: adresseId });
+    
+        if (!adresse) {
+          return res.status(404).json({ message: "Adresse non trouvée" });
+        }
+    
+        res.render("pages/modifier-adresse", { adresse: adresse });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Une erreur est survenue lors de la récupération de l'adresse" });
+      }
+    });
+
     app.get("/espace-utilisateur/delete-adresse", async (req, res) => {
       const adresseId = req.query.id
       await Adresse.findByIdAndRemove(adresseId);
