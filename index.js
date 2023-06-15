@@ -561,7 +561,7 @@ mongoose
       try {
         const { nom, prenom, mdp, tel } = req.body;
         const clientId = req.session.userId; 
-        if (!passwordRegex.test(mdp)) {
+        if (mdp !== "" && !passwordRegex.test(mdp)) {
           return res
             .status(400)
             .send(
@@ -572,12 +572,20 @@ mongoose
         const cards = await Paiement.find({client: clientId});
     
         // Effectuer les opérations nécessaires pour appliquer les modifications des informations du client
-        const updatedClient = await Client.findByIdAndUpdate(clientId, {
+        const updatedFields = {
           nom: nom,
           prenom: prenom,
-          mdp: bcrypt.hash(mdp, saltRounds),
           telephone: tel,
-        });
+        };
+        
+        // Vérifier si le mot de passe est renseigné
+        if (mdp !== "") {
+          // Hasher le nouveau mot de passe
+          const hashedPassword = await bcrypt.hash(mdp, saltRounds);
+          updatedFields.mdp = hashedPassword;
+        }
+        
+        const updatedClient = await Client.findByIdAndUpdate(clientId, updatedFields);
     
         res.render("pages/espace_utilisateur", {title: "Espace Utilisateur", client, adresses, cards})
       } catch (error) {
