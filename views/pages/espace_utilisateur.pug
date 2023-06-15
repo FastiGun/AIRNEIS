@@ -19,7 +19,7 @@ block content
                 input#user-mail(required name="mail", placeholder="Mail*", value=client.mail)
                 label(for="mail")
             .input-mdp
-                input#user-mdp(required name="mdp", placeholder="Password*")
+                input#user-mdp(name="mdp", placeholder="Password*")
                 label(for="mdp")
             .input-tel
                 input#user-tel(name="tel", placeholder="Telephone number", value=(client.telephone == null) ? "" : client.telephone)
