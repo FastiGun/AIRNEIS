@@ -1,0 +1,39 @@
+extends ../layouts/layout.pug
+
+block links 
+  link(rel='stylesheet' href='/assets/css/modifier-adresse.css')
+
+block content
+    .wrapper-delivery-address-form
+        form(action="", method="post")
+                        .input-nom-adresse
+                            input#nomAdresse(name="nomAdresse", placeholder="Nom de l'adresse", value=adresse.nom)
+                            label(for="nomAdresse")
+
+                        .input-rue
+                            input#rue(name="rue", placeholder="Rue*", required, value=adresse.rue)
+                            label(for="rue")
+
+                        .input-complement
+                            input#complement(name="complement", placeholder="Complement d'adresse", value=adresse.complement)
+                            label(for="rue")
+
+                        .input-ville
+                            input#ville(name="ville", placeholder="Ville*", required, value=adresse.ville)
+                            label(for="ville")
+
+                        .input-region
+                            input#region(name="region", placeholder="Region*", required, value=adresse.region)
+                            label(for="region")
+
+                        .input-codepostal
+                            input#codepostal(name="codepostal", placeholder="Code postal*", required, value=adresse.cp)
+                            label(for="codepostal")
+
+                        .input-pays
+                            input#pays(name="pays", placeholder="Pays*", required, value=adresse.pays)
+                            label(for="pays")
+
+                        button.waves-effect.waves-light.btn-large(type="submit") Valid Changes
+
+    a.waves-effect.waves-light.btn-large(href="/espace-utilisateur") Return

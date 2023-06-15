@@ -589,7 +589,7 @@ mongoose
           
           const updatedClient = await Client.findByIdAndUpdate(clientId, updatedFields);
       
-          res.render("pages/espace_utilisateur", {title: "User space", client, adresses, cards})
+          res.redirect("/espace-utilisateur")
         } catch (error) {
           console.error(error);
           res.status(500).json({ message: "Une erreur est survenue lors de la mise à jour des informations du client" });
