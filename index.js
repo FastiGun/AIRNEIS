@@ -366,7 +366,7 @@ mongoose
 
         await Panier.deleteMany({ client: req.session.userId });
 
-        res.redirect("/historique_commande");
+        res.redirect("/confirmation-paiement");
       } catch (error) {
         console.error(error);
         res
@@ -628,7 +628,11 @@ mongoose
       const cardId = req.query.id
       await Paiement.findByIdAndRemove(cardId);
       res.redirect("/espace-utilisateur");
-    } )
+    } );
+
+    app.get("/confirmation-paiement", function (req, res) {
+      res.render("pages/confirmation_paiement", { title: "Confirm Paiement" });
+    });
 
     app.get("/contact", function (req, res) {
       res.render("pages/contact", { title: "Contact" });

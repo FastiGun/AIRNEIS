@@ -1,0 +1,11 @@
+.wrapper-confirmation-paiement {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.buttons {
+    display: flex;
+    gap: 3rem;
+}

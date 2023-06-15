@@ -1,0 +1,18 @@
+extends ../layouts/layout.pug
+
+block links 
+  link(rel='stylesheet' href='/assets/css/confirmation_paiement.css')
+
+
+block content
+    .wrapper-confirmation-paiement 
+        h1 Purchase Completed 
+        p
+            | Thank you for your patronage, your order has been registered and is being processed. In case of any problem, you can 
+            span
+                a(href="/contact") contact
+            |  us or aply for a return request.
+
+        .buttons
+            a.waves-effect.waves-light.btn-large(href="/") Return to store 
+            a.waves-effect.waves-light.btn-large(href="/historique_commande") Consult my order
