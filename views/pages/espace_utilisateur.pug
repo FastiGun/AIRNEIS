@@ -10,10 +10,10 @@ block content
         h3 My informations
         form.user-info-form(action="/espace-utilisateur", method="post")
             .input-nom
-                input#user-nom(required name="nom", placeholder="FirstName*", value=client.nom)
+                input#user-nom(required name="nom", placeholder="Lastname*", value=client.nom)
                 label(for="nom")
             .input-prenom
-                input#user-prenom(required name="prenom", placeholder="LastName*", value=client.prenom)
+                input#user-prenom(required name="prenom", placeholder="Firstname*", value=client.prenom)
                 label(for="prenom")
             .input-mail
                 input#user-mail(required name="mail", placeholder="Mail*", value=client.mail)
@@ -32,7 +32,7 @@ block content
             thead 
                 tr 
                     th Name 
-                    th Streat
+                    th Street
                     th Complement 
                     th Town
                     th Address code
