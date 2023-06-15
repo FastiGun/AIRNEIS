@@ -6,8 +6,8 @@ block links
 
 block content
     .user-espace-wrapper 
-        h1 User Space 
-        h3 User information
+        h1.contact-h1 User Space 
+        h3 My informations
         form.user-info-form(action="", method="post")
             .input-nom
                 input#user-nom(required name="nom", placeholder="FirstName*", value=client.nom)
@@ -27,7 +27,7 @@ block content
             .user-form-submit
                 button.waves-effect.waves-light.btn-large.submit(type="submit") Save changes
 
-        h3 User Addresses
+        h3 My addresses
         table.container-user-address
             thead 
                 tr 
@@ -55,7 +55,7 @@ block content
                             a(href=`/espace-utilisateur/delete-adresse?id=${adresse._id}`)
                                 i.material-icons delete
 
-        h3 User Cards
+        h3 My cards
         table.container-user-paiement
             thead 
                 tr 
