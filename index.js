@@ -570,7 +570,7 @@ mongoose
         }
         const adresses = await Adresse.find({client: clientId});
         const cards = await Paiement.find({client: clientId});
-        const client = await Client.find({_id: clientId});
+        const client = await Client.find({clientId});
     
         // Effectuer les opérations nécessaires pour appliquer les modifications des informations du client
         const updatedFields = {
