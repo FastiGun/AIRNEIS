@@ -539,6 +539,7 @@ mongoose
     app.get("/espace-utilisateur", async (req, res) => {
       try {
         clientId = req.session.userId; 
+        
         if(clientId != null){
           const client = await Client.findById(clientId);
           const adresses = await Adresse.find({client: clientId});
@@ -560,7 +561,13 @@ mongoose
       try {
         const { nom, prenom, mdp, tel } = req.body;
         const clientId = req.session.userId; 
-
+        if (!passwordRegex.test(mdp)) {
+          return res
+            .status(400)
+            .send(
+              "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
+            );
+        }
         const adresses = await Adresse.find({client: clientId});
         const cards = await Paiement.find({client: clientId});
     
