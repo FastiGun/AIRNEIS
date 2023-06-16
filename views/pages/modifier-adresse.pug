@@ -4,40 +4,42 @@ block links
   link(rel='stylesheet' href='/assets/css/modifier-adresse.css')
 
 block content
-    .wrapper-delivery-address-form
-        h1 Change Address
+    .wrapper-delivery-address-form.container
+        h1.contact-h1 Change Address
         form.form-adresse-change(action="", method="post")
-                        .input-nom-adresse
-                            input#nomAdresse(name="nomAdresse", placeholder="Nom de l'adresse", value=adresse.nom)
-                            label(for="nomAdresse")
+            .input-nom-adresse
+                input#nomAdresse(name="nomAdresse", placeholder="Address name*", value=adresse.nom)
+                label(for="nomAdresse")
 
-                        .input-rue
-                            input#rue(name="rue", placeholder="Rue*", required, value=adresse.rue)
-                            label(for="rue")
+            input#rue(name="id", hidden, value=adresse._id)
 
-                        .input-complement
-                            input#complement(name="complement", placeholder="Complement d'adresse", value=adresse.complement)
-                            label(for="rue")
+            .input-rue
+                input#rue(name="rue", placeholder="Street*", required, value=adresse.rue)
+                label(for="rue")
 
-                        .input-ville
-                            input#ville(name="ville", placeholder="Ville*", required, value=adresse.ville)
-                            label(for="ville")
+            .input-complement
+                input#complement(name="complement", placeholder="Address complement*", value=adresse.complement)
+                label(for="complement")
 
-                        .input-region
-                            input#region(name="region", placeholder="Region*", required, value=adresse.region)
-                            label(for="region")
+            .input-ville
+                input#ville(name="ville", placeholder="City*", required, value=adresse.ville)
+                label(for="ville")
 
-                        .input-codepostal
-                            input#codepostal(name="codepostal", placeholder="Code postal*", required, value=adresse.cp)
-                            label(for="codepostal")
+            .input-region
+                input#region(name="region", placeholder="Region*", required, value=adresse.region)
+                label(for="region")
 
-                        .input-pays
-                            input#pays(name="pays", placeholder="Pays*", required, value=adresse.pays)
-                            label(for="pays")
+            .input-codepostal
+                input#codepostal(name="codepostal", placeholder="ZIP Code*", required, value=adresse.cp)
+                label(for="codepostal")
 
-                        .buttons
-                            button.waves-effect.waves-light.btn-large.submit-button(type="submit") Valid Changes
-                            a.waves-effect.waves-light.btn-large.return-button(href="/espace-utilisateur") 
-                                span.arrow
-                                    i.material-icons arrow_back_ios
-                                span.text Return
+            .input-pays
+                input#pays(name="pays", placeholder="Country*", required, value=adresse.pays)
+                label(for="pays")
+
+            .buttons
+                button.waves-effect.waves-light.btn-large.submit-button(type="submit") Valid Changes
+                a.waves-effect.waves-light.btn-large.return-button(href="/espace-utilisateur") 
+                    span.arrow
+                        i.material-icons arrow_back_ios
+                    span.text Return

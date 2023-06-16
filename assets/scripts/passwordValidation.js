@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const passwordInput = document.getElementById("mdp");
   const submitButton = document.querySelector('button[name="action"]');
+  const submitButtonUser = document.querySelector('button[name="ation"]');
 
   const lengthSpan = document.getElementById("mdp-length");
   const uppercaseSpan = document.getElementById("mdp-uppercase");
@@ -9,12 +10,19 @@ document.addEventListener("DOMContentLoaded", function () {
   const specialSpan = document.getElementById("mdp-special");
 
   passwordInput.addEventListener("input", function () {
+
     const password = passwordInput.value;
     const lengthRegex = /^.{8,}$/;
     const uppercaseRegex = /^(?=.*[A-Z])/;
     const lowercaseRegex = /^(?=.*[a-z])/;
     const digitRegex = /^(?=.*\d)/;
     const specialRegex = /^(?=.*[@$!%*?&])/;
+
+    if(submitButtonUser && password!==""){
+      submitButtonUser.disabled = true
+    } else if (submitButtonUser && password==="") {
+      submitButtonUser.disabled = false
+    }
 
     lengthSpan.textContent = lengthRegex.test(password)
       ? ""
@@ -50,8 +58,13 @@ document.addEventListener("DOMContentLoaded", function () {
       specialRegex.test(password);
 
     if (isPasswordValid && isFormComplete()) {
-      submitButton.disabled = false;
-      submitButton.classList.remove("disabled");
+      if (submitButton !== null){
+        submitButton.disabled = false;
+        submitButton.classList.remove("disabled");
+      } else {
+        submitButtonUser.disabled = false
+        submitButtonUser.classList.remove("disabled");
+      }
     } else {
       submitButton.disabled = true;
       submitButton.classList.add("disabled");

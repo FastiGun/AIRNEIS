@@ -10,22 +10,27 @@ block content
         h3 My informations
         form.user-info-form(action="/espace-utilisateur", method="post")
             .input-nom
-                input#user-nom(required name="nom", placeholder="Lastname*", value=client.nom)
+                input#nom(required name="nom", placeholder="Lastname*", value=client.nom)
                 label(for="nom")
             .input-prenom
-                input#user-prenom(required name="prenom", placeholder="Firstname*", value=client.prenom)
+                input#prenom(required name="prenom", placeholder="Firstname*", value=client.prenom)
                 label(for="prenom")
             .input-mail
-                input#user-mail(required name="mail", placeholder="Mail*", value=client.mail disabled="disabled")
+                input#mail(required name="mail", placeholder="Mail*", value=client.mail disabled="disabled")
                 label(for="mail")
             .input-mdp
-                input#user-mdp(name="mdp", placeholder="Password*")
+                input#mdp(type="password" name="mdp", placeholder="Password")
                 label(for="mdp")
+            span#mdp-length.error
+            span#mdp-uppercase.error
+            span#mdp-lowercase.error
+            span#mdp-digit.error
+            span#mdp-special.error
             .input-tel
-                input#user-tel(name="tel", placeholder="Telephone number", value=(client.telephone == null) ? "" : client.telephone)
+                input#tel(name="tel", placeholder="Telephone number", value=(client.telephone == null) ? "" : client.telephone)
                 label(for="tel")
             .user-form-submit
-                button.waves-effect.waves-light.btn-large.submit(type="submit") Save changes
+                button.waves-effect.waves-light.btn-large.submit(type="submit"  name='ation') Save changes
 
         h3 My addresses
         table.container-user-address
@@ -34,8 +39,8 @@ block content
                     th Name 
                     th Street
                     th Complement 
-                    th Town
-                    th Address code
+                    th City
+                    th ZIP Code
                     th Region
                     th Country
             tbody
@@ -69,3 +74,5 @@ block content
                         td
                             a(href=`/espace-utilisateur/delete-card?id=${card._id}`)
                                 i.material-icons delete
+block script 
+  script(src='/assets/scripts/passwordValidation.js')

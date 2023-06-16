@@ -1,3 +1,22 @@
 .user-espace-wrapper{
     margin-bottom: 5rem;
 }
+
+h3{
+    margin-top: 5rem;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  button:disabled:hover {
+    opacity: 0.5;
+  }
+  
+  span.error {
+    display: block;
+    font-size: 0.7rem;
+    color: red;
+  }
