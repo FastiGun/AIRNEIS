@@ -20,7 +20,7 @@ block content
                         .prix-HT HT price : #{ commande.prixHT } €
                         .prix-TTC Total price : #{ commande.prixTTC } €
                         .status Statut : #{ commande.statut }
-                        a.waves-effect.waves-light.btn-large() See details
+                        a.waves-effect.waves-light.btn-large(href="/commande-detail/"+commande.id) See details
         else 
             .no-command No order found
             a(href="/products")

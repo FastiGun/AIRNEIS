@@ -393,6 +393,25 @@ mongoose
       } catch (error) {}
     });
 
+    app.get("/commande-detail/:commandeId", async (req, res) => {
+      try {
+        const commandeId = req.params.commandeId;
+        if (!req.session.userId) {
+          // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+          return res.redirect("/connexion");
+        }
+
+        const commande = await Commande.findById(commandeId)
+          .populate("produits.produit")
+          .exec();
+
+        res.render("pages/commande_details", {
+          title: "Detail Order",
+          commande: commande,
+        });
+      } catch (error) {}
+    });
+
     app.get("/add-produit-panier/:articleId", async (req, res) => {
       if (!req.session.userId) {
         // L'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
