@@ -6,7 +6,7 @@ block links
 block content
     .wrapper-delivery-address-form.container
         h1.contact-h1 Change Address
-        form.form-adresse-change(action="", method="post")
+        form.form-adresse-change(action="/espace-utilisateur/modifier-adresse", method="post")
             .input-nom-adresse
                 input#nomAdresse(name="nomAdresse", placeholder="Address name*", value=adresse.nom)
                 label(for="nomAdresse")
@@ -38,7 +38,7 @@ block content
                 label(for="pays")
 
             .buttons
-                button.waves-effect.waves-light.btn-large.submit-button(type="submit") Valid Changes
+                button.waves-effect.waves-light.btn-large.submit-button(type="submit" name="action") Valid Changes
                 a.waves-effect.waves-light.btn-large.return-button(href="/espace-utilisateur") 
                     span.arrow
                         i.material-icons arrow_back_ios

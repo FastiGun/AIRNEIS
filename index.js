@@ -618,6 +618,33 @@ mongoose
       }
     });
 
+    app.post("/espace-utilisateur/modifier-adresse", async (req, res) =>{
+      try {
+        const { nomAdresse, rue, complement, ville, codepostal, pays, region } = req.body;
+    
+        // Vérifiez si l'adresse existe déjà
+        const existingAddress = await Adresse.findOne({ _id: req.body.id });
+        if (existingAddress) {
+          // Mettez à jour les propriétés de l'adresse existante
+          existingAddress.nom = nomAdresse;
+          existingAddress.rue = rue;
+          existingAddress.complement = complement;
+          existingAddress.ville = ville;
+          existingAddress.cp = codepostal;
+          existingAddress.pays = pays;
+          existingAddress.region = region;
+          await existingAddress.save();
+        } else {
+          res.status(500).send("Adresse introuvable");
+        }
+    
+        res.redirect("/espace-utilisateur");
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Une erreur est survenue lors de la modification de l'adresse.");
+      }
+    })
+
     app.get("/espace-utilisateur/delete-adresse", async (req, res) => {
       const adresseId = req.query.id
       await Adresse.findByIdAndRemove(adresseId);
