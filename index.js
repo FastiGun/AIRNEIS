@@ -773,14 +773,9 @@ mongoose
       try {
         // Récupérer l'e-mail renseigné dans le formulaire
         const email = req.body.email;
+        const idClient = req.session.userId
     
-        // Générer un token de réinitialisation de mot de passe
-        const resetToken = generateResetToken();
-    
-        // Enregistrer le token de réinitialisation de mot de passe dans la base de données pour l'utilisateur correspondant
-    
-        // Envoyer l'e-mail de réinitialisation de mot de passe
-        await sendResetEmail(email, resetToken);
+        await sendResetEmail(email, idClient);
     
         // Répondre avec une confirmation
         res.status(200).send("Password reset request received.");
@@ -790,21 +785,22 @@ mongoose
       }
     })
 
-    async function sendResetEmail(email, resetToken) {      
+    async function sendResetEmail(email, idClient) {      
       // Construire le contenu de l'e-mail
       const mailOptions = {
         from: "airneis.junia@gmail.com",
         to: email,
         subject: "Password Reset",
-        text: "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" + resetToken,
+        text: "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" + idClient,
       };
     
       // Envoyer l'e-mail
       await transporter.sendMail(mailOptions);
     }
 
-    app.get("/reset-password/:resetToken", async (req,res) =>{
-      res.render("pages/reset_password", {title: "Reset password"});
+    app.get("/reset-password/:idClient", async (req,res) =>{
+      const idClient = req.params.idClient;
+      res.render("pages/reset_password", {title: "Reset password", idClient});
     })
 
     app.post("/api/inscription", async (req, res) => {
