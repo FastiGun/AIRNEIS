@@ -817,7 +817,7 @@ mongoose
         }
     
         // Mettre à jour le mot de passe du client
-        client.mdp = newPassword;
+        client.mdp = await bcrypt.hash(newPassword, saltRounds);
         await client.save();
     
         return res.redirect("/connexion")
