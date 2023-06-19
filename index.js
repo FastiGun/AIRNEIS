@@ -772,10 +772,11 @@ mongoose
     app.post("/api/reset-password", async (req, res) =>{
       try {
         // Récupérer l'e-mail renseigné dans le formulaire
-        const email = req.body.email;
-        const idClient = req.session.userId
+        const mail = req.body.email;
+        const client = Client.findOne(mail)
+        const idClient = client.id;
     
-        await sendResetEmail(email, idClient);
+        await sendResetEmail(mail, idClient);
     
         // Répondre avec une confirmation
         res.status(200).send("Password reset request received.");
