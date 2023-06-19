@@ -50,9 +50,10 @@ function formatDate(date) {
     second: "numeric",
     timeZone: "Europe/Paris",
   };
-
-  return date.toLocaleString("fr-FR", options);
+  return date.toLocaleString("en-GB", options);
 }
+
+  
 
 mongoose
   .connect(process.env.DB_URL, {
@@ -308,9 +309,9 @@ mongoose
             client: req.session.userId,
             libelle_carte: nomCard,
             nom_carte: fullname,
-            num_carte: cardnumber,
+            num_carte: bcrypt.hashSync(cardnumber, saltRounds),
             date_expiration: expiration,
-            cvv,
+            cvv: bcrypt.hashSync(cvv, saltRounds),
           });
 
           const paiementEnregistre = await paiement.save();
@@ -385,6 +386,7 @@ mongoose
         const commandes = await Commande.find({ client: req.session.userId })
           .populate("produits.produit")
           .exec();
+        commandes.reverse();
 
         res.render("pages/historique_commande", {
           title: "Orders Record",
@@ -1515,7 +1517,7 @@ mongoose
         const commandes = await Commande.find()
           .populate("produits.produit")
           .exec();
-
+        commandes.reverse();
         // Passer les données des commandes à la vue "backoffice_orders"
         res.render("pages/backoffice_orders", { commandes });
       } catch (error) {
@@ -1530,7 +1532,7 @@ mongoose
         const commandes = await Commande.find({ statut: "Retour demandé" })
           .populate("produits.produit")
           .exec();
-
+        commandes.reverse();
         // Passer les données des commandes à la vue "backoffice_orders"
         res.render("pages/backoffice_orders", { commandes });
       } catch (error) {
@@ -1574,11 +1576,7 @@ mongoose
           { statut: newStatut },
           { new: true }
         );
-        const commandes = await Commande.find()
-          .populate("produits.produit")
-          .exec();
-        // Passer les données des commandes à la vue "backoffice_orders"
-        res.render("pages/backoffice_orders", { commandes });
+        res.redirect("/backoffice/orders")
       } catch (error) {
         console.error("Erreur lors de la mise à jour du statut :", error);
         res
