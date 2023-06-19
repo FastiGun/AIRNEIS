@@ -4,7 +4,7 @@ const statutOrderSelect = document.querySelector("#statutOrder");
 // Ajoutez un écouteur d'événement "change"
 statutOrderSelect.addEventListener("change", (event) => {
   const newStatut = event.target.value; // Obtenez la nouvelle valeur sélectionnée
-  const idCommande =  String.toString(event.target.dataset.commande); // Obtenez l'ID de la commande correspondante
+  const idCommande =  event.target.dataset.commande; // Obtenez l'ID de la commande correspondante
 
   // Effectuez une requête AJAX pour mettre à jour le statut de la commande
   fetch(`/backoffice/orders/${idCommande}/statut`, {
