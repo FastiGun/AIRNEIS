@@ -1524,6 +1524,45 @@ mongoose
       }
     });
 
+    app.get("/backoffice/returnRequests", requireAdmin, async (req, res) => {
+      try {
+        // Récupérer toutes les commandes depuis la base de données
+        const commandes = await Commande.find({ statut: "Retour demandé" })
+          .populate("produits.produit")
+          .exec();
+
+        // Passer les données des commandes à la vue "backoffice_orders"
+        res.render("pages/backoffice_orders", { commandes });
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération des commandes");
+      }
+    });
+
+    app.get("/order/changeStatut/:idCommande/:statut", async(req,res)=>{
+      try {
+        const idCommande = req.params.idCommande;
+        const statut = req.params.statut;
+        if(statut==="askCancel"){
+          newStatut = "Annulée"
+        }
+        if(statut==="askReturn"){
+          newStatut = "Retour demandé"
+        }
+        const commande = await Commande.findByIdAndUpdate(
+          idCommande,
+          { statut: newStatut },
+          { new: true }
+        )
+        res.redirect("/historique_commande")
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour du statut :", error);
+        res
+          .status(500)
+          .json({ error: "Erreur lors de la mise à jour du statut" });
+      }
+    })
+
     app.post("/backoffice/orders/:idCommande/statut", async (req, res) => {
       try {
         const idCommande = req.params.idCommande;
