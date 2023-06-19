@@ -34,7 +34,7 @@ const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: "airneis.junia@gmail.com",
-    pass: "npkcbvjytryzcspk",
+    pass: process.env.PASSWORD_MAIL,
   },
 });
 
@@ -791,7 +791,7 @@ mongoose
       const mailOptions = {
         from: "airneis.junia@gmail.com",
         to: email,
-        subject: "Password Reset",
+        subject: "AIRNEIS - Password reset",
         text: "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" + idClient,
       };
     
