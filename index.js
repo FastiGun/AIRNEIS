@@ -773,8 +773,8 @@ mongoose
       try {
         // Récupérer l'e-mail renseigné dans le formulaire
         const mail = req.body.email;
-        const client = Client.findOne(mail)
-        const idClient = client.id;
+        const client = await Client.findOne({ mail });
+        const idClient = client._id; // Récupérer l'ID du client
     
         await sendResetEmail(mail, idClient);
     
@@ -803,6 +803,29 @@ mongoose
       const idClient = req.params.idClient;
       res.render("pages/reset_password", {title: "Reset password", idClient});
     })
+
+    app.post("/reset-password-form", async (req, res) => {
+      const idClient = req.body.idClient;
+      const newPassword = req.body.mdp;
+    
+      try {
+        // Rechercher le client par son ID
+        const client = await Client.findById(idClient);
+    
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+    
+        // Mettre à jour le mot de passe du client
+        client.mdp = newPassword;
+        await client.save();
+    
+        return res.redirect("/connexion")
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    });
 
     app.post("/api/inscription", async (req, res) => {
       try {
