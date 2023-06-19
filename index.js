@@ -30,6 +30,14 @@ cloudinary.config({
   api_secret: process.env.SECRET_CLOUDINARY,
 });
 
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "airneis.junia@gmail.com",
+    pass: "npkcbvjytryzcspk",
+  },
+});
+
 const secretKey = "Ceciestmaclesecrete767676!!!";
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -755,6 +763,49 @@ mongoose
     app.get("/inscription", function (req, res) {
       res.render("pages/inscription", { title: "Inscription" });
     });
+
+    function generateResetToken() {
+      const token = require("crypto").randomBytes(20).toString("hex");
+      return token;
+    }    
+
+    app.post("/api/reset-password", async (req, res) =>{
+      try {
+        // Récupérer l'e-mail renseigné dans le formulaire
+        const email = req.body.email;
+    
+        // Générer un token de réinitialisation de mot de passe
+        const resetToken = generateResetToken();
+    
+        // Enregistrer le token de réinitialisation de mot de passe dans la base de données pour l'utilisateur correspondant
+    
+        // Envoyer l'e-mail de réinitialisation de mot de passe
+        await sendResetEmail(email, resetToken);
+    
+        // Répondre avec une confirmation
+        res.status(200).send("Password reset request received.");
+      } catch (error) {
+        console.error("Error sending password reset email:", error);
+        res.status(500).send("Failed to send password reset email.");
+      }
+    })
+
+    async function sendResetEmail(email, resetToken) {      
+      // Construire le contenu de l'e-mail
+      const mailOptions = {
+        from: "airneis.junia@gmail.com",
+        to: email,
+        subject: "Password Reset",
+        text: "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" + resetToken,
+      };
+    
+      // Envoyer l'e-mail
+      await transporter.sendMail(mailOptions);
+    }
+
+    app.get("/reset-password/:resetToken", async (req,res) =>{
+      res.render("pages/reset_password", {title: "Reset password"});
+    })
 
     app.post("/api/inscription", async (req, res) => {
       try {

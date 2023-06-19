@@ -5,7 +5,7 @@ block links
 
 block content
   .container
-    h1.connexion-h1 Connexion
+    h1.connexion-h1 Log in
     .connexion
       form(action="/connexion", method="post")
         .row1
@@ -14,13 +14,18 @@ block content
             label(for="mail")
         .row2
           .input-field
-            input#mdp(name="mdp", placeholder="Mot de passe*", type="password", required)
+            input#mdp(name="mdp", placeholder="Password*", type="password", required)
             label(for="mdp")
         .row3
-          p.compte-p Pas de compte ?
-          a(href="/inscription") Inscrivez-vous.  
+          p.compte-p Not registered yet ?
+          a(href="/inscription") Sign up
+        .row3
+          p.compte-p Forgot password ?
+          a(href="#" onclick="forgotPassword();") Get a new one
         .row4
           .input-field
             button.btn.waves-effect.waves-light(type='submit' name='action')
-              | Se connecter 
-              
+              | Log in
+  
+block script
+  script(src='/assets/scripts/reinitialisePassword.js')
