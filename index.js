@@ -1529,17 +1529,17 @@ mongoose
         const idCommande = req.params.idCommande;
         const newStatut = req.body.statut;
 
-        // Mettez à jour le statut de la commande dans la base de données
-        // Remplacez cette logique avec votre propre code pour mettre à jour le statut
-
         // Exemple de mise à jour de statut avec Mongoose
         const commande = await Commande.findByIdAndUpdate(
           idCommande,
           { statut: newStatut },
           { new: true }
         );
-
-        res.json({ message: "Statut mis à jour avec succès", commande });
+        const commandes = await Commande.find()
+          .populate("produits.produit")
+          .exec();
+        // Passer les données des commandes à la vue "backoffice_orders"
+        res.render("pages/backoffice_orders", { commandes });
       } catch (error) {
         console.error("Erreur lors de la mise à jour du statut :", error);
         res
