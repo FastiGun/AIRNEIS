@@ -471,6 +471,27 @@ mongoose
       }
     });
 
+    app.get("/api/paniers/:client", authenticate, async (req, res) => {
+      const clientId = req.params.client;
+
+      try {
+        // Vérifier si le client existe
+        const client = await Client.findById(clientId);
+
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+
+        // Rechercher tous les paniers du client
+        const paniers = await Panier.find({ client: client._id });
+
+        return res.status(200).json({ paniers });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    });
+
     app.post(
       "/api/add-produit-panier/:client",
       authenticate,
@@ -703,12 +724,10 @@ mongoose
           res.redirect("/espace-utilisateur");
         } catch (error) {
           console.error(error);
-          res
-            .status(500)
-            .json({
-              message:
-                "Une erreur est survenue lors de la mise à jour des informations du client",
-            });
+          res.status(500).json({
+            message:
+              "Une erreur est survenue lors de la mise à jour des informations du client",
+          });
         }
       } else {
         res.redirect("/connexion");
@@ -729,12 +748,10 @@ mongoose
         res.render("pages/modifier-adresse", { adresse: adresse });
       } catch (error) {
         console.error(error);
-        res
-          .status(500)
-          .json({
-            message:
-              "Une erreur est survenue lors de la récupération de l'adresse",
-          });
+        res.status(500).json({
+          message:
+            "Une erreur est survenue lors de la récupération de l'adresse",
+        });
       }
     });
 
