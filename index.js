@@ -30,6 +30,14 @@ cloudinary.config({
   api_secret: process.env.SECRET_CLOUDINARY,
 });
 
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: "airneis.junia@gmail.com",
+    pass: process.env.PASSWORD_MAIL,
+  },
+});
+
 const secretKey = "Ceciestmaclesecrete767676!!!";
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -50,9 +58,10 @@ function formatDate(date) {
     second: "numeric",
     timeZone: "Europe/Paris",
   };
-
-  return date.toLocaleString("fr-FR", options);
+  return date.toLocaleString("en-GB", options);
 }
+
+  
 
 mongoose
   .connect(process.env.DB_URL, {
@@ -308,9 +317,9 @@ mongoose
             client: req.session.userId,
             libelle_carte: nomCard,
             nom_carte: fullname,
-            num_carte: cardnumber,
+            num_carte: bcrypt.hashSync(cardnumber, saltRounds),
             date_expiration: expiration,
-            cvv,
+            cvv: bcrypt.hashSync(cvv, saltRounds),
           });
 
           const paiementEnregistre = await paiement.save();
@@ -385,6 +394,7 @@ mongoose
         const commandes = await Commande.find({ client: req.session.userId })
           .populate("produits.produit")
           .exec();
+        commandes.reverse();
 
         res.render("pages/historique_commande", {
           title: "Orders Record",
@@ -752,6 +762,69 @@ mongoose
 
     app.get("/inscription", function (req, res) {
       res.render("pages/inscription", { title: "Inscription" });
+    });
+
+    function generateResetToken() {
+      const token = require("crypto").randomBytes(20).toString("hex");
+      return token;
+    }    
+
+    app.post("/api/reset-password", async (req, res) =>{
+      try {
+        // Récupérer l'e-mail renseigné dans le formulaire
+        const mail = req.body.email;
+        const client = await Client.findOne({ mail });
+        const idClient = client._id; // Récupérer l'ID du client
+    
+        await sendResetEmail(mail, idClient);
+    
+        // Répondre avec une confirmation
+        res.status(200).send("Password reset request received.");
+      } catch (error) {
+        console.error("Error sending password reset email:", error);
+        res.status(500).send("Failed to send password reset email.");
+      }
+    })
+
+    async function sendResetEmail(email, idClient) {      
+      // Construire le contenu de l'e-mail
+      const mailOptions = {
+        from: "airneis.junia@gmail.com",
+        to: email,
+        subject: "AIRNEIS - Password reset",
+        text: "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" + idClient,
+      };
+    
+      // Envoyer l'e-mail
+      await transporter.sendMail(mailOptions);
+    }
+
+    app.get("/reset-password/:idClient", async (req,res) =>{
+      const idClient = req.params.idClient;
+      res.render("pages/reset_password", {title: "Reset password", idClient});
+    })
+
+    app.post("/reset-password-form", async (req, res) => {
+      const idClient = req.body.idClient;
+      const newPassword = req.body.mdp;
+    
+      try {
+        // Rechercher le client par son ID
+        const client = await Client.findById(idClient);
+    
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+    
+        // Mettre à jour le mot de passe du client
+        client.mdp = await bcrypt.hash(newPassword, saltRounds);
+        await client.save();
+    
+        return res.redirect("/connexion")
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
     });
 
     app.post("/api/inscription", async (req, res) => {
@@ -1516,7 +1589,7 @@ mongoose
         const commandes = await Commande.find()
           .populate("produits.produit")
           .exec();
-
+        commandes.reverse();
         // Passer les données des commandes à la vue "backoffice_orders"
         res.render("pages/backoffice_orders", { commandes });
       } catch (error) {
@@ -1531,7 +1604,7 @@ mongoose
         const commandes = await Commande.find({ statut: "Retour demandé" })
           .populate("produits.produit")
           .exec();
-
+        commandes.reverse();
         // Passer les données des commandes à la vue "backoffice_orders"
         res.render("pages/backoffice_orders", { commandes });
       } catch (error) {
@@ -1575,11 +1648,7 @@ mongoose
           { statut: newStatut },
           { new: true }
         );
-        const commandes = await Commande.find()
-          .populate("produits.produit")
-          .exec();
-        // Passer les données des commandes à la vue "backoffice_orders"
-        res.render("pages/backoffice_orders", { commandes });
+        res.redirect("/backoffice/orders")
       } catch (error) {
         console.error("Erreur lors de la mise à jour du statut :", error);
         res
