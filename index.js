@@ -61,8 +61,6 @@ function formatDate(date) {
   return date.toLocaleString("en-GB", options);
 }
 
-  
-
 mongoose
   .connect(process.env.DB_URL, {
     useNewUrlParser: true,
@@ -473,6 +471,82 @@ mongoose
       }
     });
 
+    app.post(
+      "/api/add-produit-panier/:client",
+      authenticate,
+      async (req, res) => {
+        const clientId = req.params.client;
+        const { article, quantite } = req.body;
+
+        try {
+          // Vérifier que la quantité et le produit sont renseignés
+          if (!quantite || !article) {
+            return res
+              .status(400)
+              .json({ message: "Quantity and product are required" });
+          }
+
+          // Rechercher le client par son ID
+          const client = await Client.findById(clientId);
+
+          if (!client) {
+            return res.status(404).json({ message: "Client not found" });
+          }
+
+          // Vérifier si un panier existe pour ce client et cet article
+          const existingPanier = await Panier.findOne({
+            client: client._id,
+            article: article,
+          });
+
+          if (existingPanier) {
+            // Mettre à jour la quantité dans le panier existant
+            existingPanier.quantite += quantite;
+
+            // Vérifier si la quantité est devenue 0, auquel cas on supprime le panier
+            if (existingPanier.quantite === 0) {
+              await existingPanier.remove();
+              return res
+                .status(200)
+                .json({ message: "Product removed from cart" });
+            }
+
+            await existingPanier.save();
+            return res
+              .status(200)
+              .json({ message: "Product quantity updated in cart" });
+          }
+
+          // Rechercher le produit par son ID
+          const produit = await Produit.findById(article);
+
+          if (!produit) {
+            return res.status(404).json({ message: "Product not found" });
+          }
+
+          // Vérifier si le produit est en stock
+          if (produit.stock < quantite) {
+            return res.status(400).json({ message: "Insufficient stock" });
+          }
+
+          // Créer le nouvel objet panier
+          const panier = new Panier({
+            client: client._id,
+            article: produit._id,
+            quantite: quantite,
+          });
+
+          // Enregistrer le panier
+          await panier.save();
+
+          return res.status(200).json({ message: "Product added to cart" });
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+      }
+    );
+
     app.get("/remove-produit-panier/:articleId", async (req, res) => {
       const articleId = req.params.articleId;
       const client = req.session.userId;
@@ -567,16 +641,21 @@ mongoose
 
     app.get("/espace-utilisateur", async (req, res) => {
       try {
-        clientId = req.session.userId; 
-        
-        if(clientId != null){
-          const client = await Client.findById(clientId);
-          const adresses = await Adresse.find({client: clientId});
-          const cards = await Paiement.find({client: clientId});
+        clientId = req.session.userId;
 
-          res.render("pages/espace_utilisateur", {title: "Espace Utilisateur", client, adresses, cards})
+        if (clientId != null) {
+          const client = await Client.findById(clientId);
+          const adresses = await Adresse.find({ client: clientId });
+          const cards = await Paiement.find({ client: clientId });
+
+          res.render("pages/espace_utilisateur", {
+            title: "Espace Utilisateur",
+            client,
+            adresses,
+            cards,
+          });
         } else {
-          return res.redirect("/connexion")
+          return res.redirect("/connexion");
         }
       } catch (error) {
         console.error(error);
@@ -584,13 +663,13 @@ mongoose
           .status(500)
           .json({ message: "Erreur lors de la recuperation des donnees" });
       }
-    })
+    });
 
     app.post("/espace-utilisateur", async (req, res) => {
-      if(req.session.userId){
+      if (req.session.userId) {
         try {
           const { nom, prenom, mdp, tel } = req.body;
-          const clientId = req.session.userId; 
+          const clientId = req.session.userId;
           if (mdp !== "" && !passwordRegex.test(mdp)) {
             return res
               .status(400)
@@ -598,33 +677,40 @@ mongoose
                 "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
               );
           }
-          const adresses = await Adresse.find({client: clientId});
-          const cards = await Paiement.find({client: clientId});
-          const client = await Client.find({clientId});
-      
+          const adresses = await Adresse.find({ client: clientId });
+          const cards = await Paiement.find({ client: clientId });
+          const client = await Client.find({ clientId });
+
           // Effectuer les opérations nécessaires pour appliquer les modifications des informations du client
           const updatedFields = {
             nom: nom,
             prenom: prenom,
             telephone: tel,
           };
-          
+
           // Vérifier si le mot de passe est renseigné
           if (mdp !== "") {
             // Hasher le nouveau mot de passe
             const hashedPassword = await bcrypt.hash(mdp, saltRounds);
             updatedFields.mdp = hashedPassword;
           }
-          
-          const updatedClient = await Client.findByIdAndUpdate(clientId, updatedFields);
-      
-          res.redirect("/espace-utilisateur")
+
+          const updatedClient = await Client.findByIdAndUpdate(
+            clientId,
+            updatedFields
+          );
+
+          res.redirect("/espace-utilisateur");
         } catch (error) {
           console.error(error);
-          res.status(500).json({ message: "Une erreur est survenue lors de la mise à jour des informations du client" });
+          res
+            .status(500)
+            .json({
+              message:
+                "Une erreur est survenue lors de la mise à jour des informations du client",
+            });
         }
-      }
-      else{
+      } else {
         res.redirect("/connexion");
       }
     });
@@ -632,25 +718,31 @@ mongoose
     app.get("/espace-utilisateur/modifier-adresse/:id", async (req, res) => {
       try {
         const adresseId = req.params.id;
-    
+
         // Récupérer l'adresse à partir de l'ID
         const adresse = await Adresse.findOne({ _id: adresseId });
-    
+
         if (!adresse) {
           return res.status(404).json({ message: "Adresse non trouvée" });
         }
-    
+
         res.render("pages/modifier-adresse", { adresse: adresse });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ message: "Une erreur est survenue lors de la récupération de l'adresse" });
+        res
+          .status(500)
+          .json({
+            message:
+              "Une erreur est survenue lors de la récupération de l'adresse",
+          });
       }
     });
 
-    app.post("/espace-utilisateur/modifier-adresse", async (req, res) =>{
+    app.post("/espace-utilisateur/modifier-adresse", async (req, res) => {
       try {
-        const { nomAdresse, rue, complement, ville, codepostal, pays, region } = req.body;
-    
+        const { nomAdresse, rue, complement, ville, codepostal, pays, region } =
+          req.body;
+
         // Vérifiez si l'adresse existe déjà
         const existingAddress = await Adresse.findOne({ _id: req.body.id });
         if (existingAddress) {
@@ -666,25 +758,29 @@ mongoose
         } else {
           res.status(500).send("Adresse introuvable");
         }
-    
+
         res.redirect("/espace-utilisateur");
       } catch (error) {
         console.error(error);
-        res.status(500).send("Une erreur est survenue lors de la modification de l'adresse.");
+        res
+          .status(500)
+          .send(
+            "Une erreur est survenue lors de la modification de l'adresse."
+          );
       }
-    })
+    });
 
     app.get("/espace-utilisateur/delete-adresse", async (req, res) => {
-      const adresseId = req.query.id
+      const adresseId = req.query.id;
       await Adresse.findByIdAndRemove(adresseId);
       res.redirect("/espace-utilisateur");
-    } )
+    });
 
     app.get("/espace-utilisateur/delete-card", async (req, res) => {
-      const cardId = req.query.id
+      const cardId = req.query.id;
       await Paiement.findByIdAndRemove(cardId);
       res.redirect("/espace-utilisateur");
-    } );
+    });
 
     app.get("/confirmation-paiement", function (req, res) {
       res.render("pages/confirmation_paiement", { title: "Confirm Paiement" });
@@ -767,60 +863,62 @@ mongoose
     function generateResetToken() {
       const token = require("crypto").randomBytes(20).toString("hex");
       return token;
-    }    
+    }
 
-    app.post("/api/reset-password", async (req, res) =>{
+    app.post("/api/reset-password", async (req, res) => {
       try {
         // Récupérer l'e-mail renseigné dans le formulaire
         const mail = req.body.email;
         const client = await Client.findOne({ mail });
         const idClient = client._id; // Récupérer l'ID du client
-    
+
         await sendResetEmail(mail, idClient);
-    
+
         // Répondre avec une confirmation
         res.status(200).send("Password reset request received.");
       } catch (error) {
         console.error("Error sending password reset email:", error);
         res.status(500).send("Failed to send password reset email.");
       }
-    })
+    });
 
-    async function sendResetEmail(email, idClient) {      
+    async function sendResetEmail(email, idClient) {
       // Construire le contenu de l'e-mail
       const mailOptions = {
         from: "airneis.junia@gmail.com",
         to: email,
         subject: "AIRNEIS - Password reset",
-        text: "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" + idClient,
+        text:
+          "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" +
+          idClient,
       };
-    
+
       // Envoyer l'e-mail
       await transporter.sendMail(mailOptions);
     }
 
-    app.get("/reset-password/:idClient", async (req,res) =>{
+    app.get("/reset-password/:idClient", async (req, res) => {
       const idClient = req.params.idClient;
-      res.render("pages/reset_password", {title: "Reset password", idClient});
-    })
+      res.render("pages/reset_password", { title: "Reset password", idClient });
+    });
 
     app.post("/reset-password-form", async (req, res) => {
       const idClient = req.body.idClient;
       const newPassword = req.body.mdp;
-    
+
       try {
         // Rechercher le client par son ID
         const client = await Client.findById(idClient);
-    
+
         if (!client) {
           return res.status(404).json({ message: "Client not found" });
         }
-    
+
         // Mettre à jour le mot de passe du client
         client.mdp = await bcrypt.hash(newPassword, saltRounds);
         await client.save();
-    
-        return res.redirect("/connexion")
+
+        return res.redirect("/connexion");
       } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });
@@ -1613,29 +1711,29 @@ mongoose
       }
     });
 
-    app.get("/order/changeStatut/:idCommande/:statut", async(req,res)=>{
+    app.get("/order/changeStatut/:idCommande/:statut", async (req, res) => {
       try {
         const idCommande = req.params.idCommande;
         const statut = req.params.statut;
-        if(statut==="askCancel"){
-          newStatut = "Annulée"
+        if (statut === "askCancel") {
+          newStatut = "Annulée";
         }
-        if(statut==="askReturn"){
-          newStatut = "Retour demandé"
+        if (statut === "askReturn") {
+          newStatut = "Retour demandé";
         }
         const commande = await Commande.findByIdAndUpdate(
           idCommande,
           { statut: newStatut },
           { new: true }
-        )
-        res.redirect("/historique_commande")
+        );
+        res.redirect("/historique_commande");
       } catch (error) {
         console.error("Erreur lors de la mise à jour du statut :", error);
         res
           .status(500)
           .json({ error: "Erreur lors de la mise à jour du statut" });
       }
-    })
+    });
 
     app.post("/backoffice/orders/:idCommande/statut", async (req, res) => {
       try {
@@ -1648,7 +1746,7 @@ mongoose
           { statut: newStatut },
           { new: true }
         );
-        res.redirect("/backoffice/orders")
+        res.redirect("/backoffice/orders");
       } catch (error) {
         console.error("Erreur lors de la mise à jour du statut :", error);
         res
