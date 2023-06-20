@@ -835,7 +835,8 @@ mongoose
         const adresses = await Adresse.find({ client: clientId });
         const paiements = await Paiement.find({ client: clientId });
 
-        res.json({ client, adresses, paiements });
+        //res.json({ client, adresses, paiements });
+        res.json(client);
       } catch (error) {
         console.log(error);
         res
