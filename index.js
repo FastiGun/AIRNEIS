@@ -623,6 +623,33 @@ mongoose
       }
     });
 
+    app.put("/api/adresses/:idAdresse", authenticate, async (req, res) => {
+      const idAdresse = req.params.idAdresse;
+      const { nom, rue, ville, cp, pays, region, complement } = req.body;
+
+      try {
+        const adresse = await Adresse.findById(idAdresse);
+        if (!adresse) {
+          return res.status(404).json({ message: "L'adresse n'a pas été trouvée" });
+        }
+
+        adresse.nom = nom || adresse.nom;
+        adresse.rue = rue || adresse.rue;
+        adresse.ville = ville || adresse.ville;
+        adresse.cp = cp || adresse.cp;
+        adresse.pays = pays || adresse.pays;
+        adresse.region = region || adresse.region;
+        adresse.complement = complement || adresse.complement;
+
+        await adresse.save();
+
+        res.status(200).json(adresse);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Erreur serveur" });
+      }
+    })
+
     app.get("/ajuste-quantite-panier/:panierId/:quantite", async (req, res) => {
       const { panierId, quantite } = req.params;
 
