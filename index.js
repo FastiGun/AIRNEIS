@@ -38,7 +38,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const secretKey = "Ceciestmaclesecrete767676!!!";
+const secretKey = process.env.SECRET_KEY;
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -87,7 +87,7 @@ mongoose
 
     app.use(
       session({
-        secret: "votre-secret",
+        secret: secretKey,
         resave: false,
         saveUninitialized: true,
       })
