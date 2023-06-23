@@ -595,7 +595,7 @@ mongoose
       }
     });
 
-    app.get("/getAdresse/:adresseId", async (req, res) => {
+    app.get("/api/get-adresse/:adresseId", async (req, res) => {
       const adresseId = req.params;
 
       try {
@@ -609,7 +609,7 @@ mongoose
       }
     });
 
-    app.get("/getCard/:cardId", async (req, res) => {
+    app.get("/api/get-card/:cardId", async (req, res) => {
       const cardId = req.params;
 
       try {
