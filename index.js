@@ -1505,7 +1505,6 @@ mongoose
     function authenticate(req, res, next) {
       const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
       const tokenToVerify = token.split(" ")[1];
-      console.log(tokenToVerify);
       if (!token) {
         return res
           .status(401)
