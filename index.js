@@ -595,7 +595,7 @@ mongoose
       }
     });
 
-    app.get("/api/adresses/:client", async (req, res) => {
+    app.get("/api/adresses/:client", authenticate, async (req, res) => {
       const client = req.params.client;
 
       try {
@@ -609,7 +609,7 @@ mongoose
       }
     });
 
-    app.get("/api/paiements/:client", async (req, res) => {
+    app.get("/api/paiements/:client", authenticate, async (req, res) => {
       const client = req.params.client;
 
       try {
