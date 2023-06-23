@@ -19,7 +19,7 @@ block content
                   .right-side
                       .prix-HT HT price : #{ commande.prixHT } €
                       .prix-TTC Total price : #{ commande.prixTTC } €
-                      .status Statut: 
+                      .status Status: 
                         select#statutOrder(name="statutOrder")
                           option(value="En attente", selected=(commande.statut === "En attente"), data-commande=commande.id) En attente
                           option(value="En préparation", selected=(commande.statut === "En préparation"), data-commande=commande.id) En préparation

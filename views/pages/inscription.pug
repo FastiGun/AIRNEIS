@@ -5,7 +5,7 @@ block links
 
 block content
   .container
-    h1.inscription-h1 Inscription
+    h1.inscription-h1 Register
     .inscription
       form(action="/inscription", method="post")
         .row1
@@ -30,12 +30,12 @@ block content
             span#mdp-digit.error
             span#mdp-special.error
         .row5
-          p.compte-p Déjà un compte ?
-          a(href="/connexion") Connectez-vous.  
+          p.compte-p Already registered ? 
+          a(href="/connexion") Log in. 
         .row6
           .input-field.col.s12
             button.btn.waves-effect.waves-light(type='submit' name='action' disabled)
-              | S'inscrire
+              | Register
 
 block script 
   script(src='/assets/scripts/passwordValidation.js')

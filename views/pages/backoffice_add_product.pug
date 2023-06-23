@@ -35,16 +35,16 @@ block content
                         else
                             option(value=category._id) #{ category.nom }
             .input-img1
-                label(for="photo1") Photo principale
+                label(for="photo1") Picture 1
                 input(required type="text", name="photo1", id="photo1", value=isProduit ? produit.image1 : "")
             .input-img2
-                label(for="photo2") Photo 2 (optionnelle)
+                label(for="photo2") Picture 2 (not required)
                 input(type="text", name="photo2", id="photo2", value=isProduit ? produit.image2 : "")
             .input-img3
-                label(for="photo3") Photo 3 (optionnelle)
+                label(for="photo3") Picture 3 (not required)
                 input(type="text", name="photo3", id="photo3", value=isProduit ? produit.image3 : "")
             .input-img4
-                label(for="photo4") Photo 4 (optionnelle)
+                label(for="photo4") Picture 4 (not required)
                 input(type="text", name="photo4", id="photo4", value=isProduit ? produit.image4 : "")
 
-            button.submit(type="submit") Valider
+            button.submit(type="submit") Confirm
