@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
+const MemoryStore = require('memorystore')(session);
 const { string } = require("yup");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -87,11 +88,15 @@ mongoose
 
     app.use(
       session({
-        secret: secretKey,
-        resave: false,
         saveUninitialized: true,
+        cookie: { maxAge: 86400000 },
+        store: new MemoryStore({
+          checkPeriod: 86400000,
+        }),
+        resave: false,
+        secret: secretKey,
       })
-    );
+    )
 
     const requireAdmin = (req, res, next) => {
       if (!req.session.isAdmin) {
