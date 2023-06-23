@@ -61,6 +61,11 @@ function formatDate(date) {
   return date.toLocaleString("en-GB", options);
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 mongoose
   .connect(process.env.DB_URL, {
     useNewUrlParser: true,
@@ -398,7 +403,7 @@ mongoose
           title: "Orders Record",
           commandes: commandes,
         });
-      } catch (error) {}
+      } catch (error) { }
     });
 
     app.get("/commande-detail/:commandeId", async (req, res) => {
@@ -417,7 +422,7 @@ mongoose
           title: "Detail Order",
           commande: commande,
         });
-      } catch (error) {}
+      } catch (error) { }
     });
 
     app.get("/add-produit-panier/:articleId", async (req, res) => {
@@ -669,12 +674,16 @@ mongoose
           const adresses = await Adresse.find({ client: clientId });
           const cards = await Paiement.find({ client: clientId });
 
+<<<<<<< Updated upstream
           res.render("pages/espace_utilisateur", {
             title: "Espace Utilisateur",
             client,
             adresses,
             cards,
           });
+=======
+          res.render("pages/espace_utilisateur", { title: "Espace Utilisateur", client, adresses, cards })
+>>>>>>> Stashed changes
         } else {
           return res.redirect("/connexion");
         }
@@ -716,12 +725,18 @@ mongoose
             updatedFields.mdp = hashedPassword;
           }
 
+<<<<<<< Updated upstream
           const updatedClient = await Client.findByIdAndUpdate(
             clientId,
             updatedFields
           );
 
           res.redirect("/espace-utilisateur");
+=======
+          const updatedClient = await Client.findByIdAndUpdate(clientId, updatedFields);
+
+          res.redirect("/espace-utilisateur")
+>>>>>>> Stashed changes
         } catch (error) {
           console.error(error);
           res.status(500).json({
@@ -729,7 +744,12 @@ mongoose
               "Une erreur est survenue lors de la mise à jour des informations du client",
           });
         }
+<<<<<<< Updated upstream
       } else {
+=======
+      }
+      else {
+>>>>>>> Stashed changes
         res.redirect("/connexion");
       }
     });
@@ -757,8 +777,12 @@ mongoose
 
     app.post("/espace-utilisateur/modifier-adresse", async (req, res) => {
       try {
+<<<<<<< Updated upstream
         const { nomAdresse, rue, complement, ville, codepostal, pays, region } =
           req.body;
+=======
+        const { nomAdresse, rue, complement, ville, codepostal, pays, region } = req.body;
+>>>>>>> Stashed changes
 
         // Vérifiez si l'adresse existe déjà
         const existingAddress = await Adresse.findOne({ _id: req.body.id });
@@ -791,7 +815,11 @@ mongoose
       const adresseId = req.query.id;
       await Adresse.findByIdAndRemove(adresseId);
       res.redirect("/espace-utilisateur");
+<<<<<<< Updated upstream
     });
+=======
+    })
+>>>>>>> Stashed changes
 
     app.get("/espace-utilisateur/delete-card", async (req, res) => {
       const cardId = req.query.id;
@@ -917,7 +945,11 @@ mongoose
     app.get("/reset-password/:idClient", async (req, res) => {
       const idClient = req.params.idClient;
       res.render("pages/reset_password", { title: "Reset password", idClient });
+<<<<<<< Updated upstream
     });
+=======
+    })
+>>>>>>> Stashed changes
 
     app.post("/reset-password-form", async (req, res) => {
       const idClient = req.body.idClient;
@@ -935,7 +967,11 @@ mongoose
         client.mdp = await bcrypt.hash(newPassword, saltRounds);
         await client.save();
 
+<<<<<<< Updated upstream
         return res.redirect("/connexion");
+=======
+        return res.redirect("/connexion")
+>>>>>>> Stashed changes
       } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Internal server error" });
@@ -1733,10 +1769,17 @@ mongoose
         const idCommande = req.params.idCommande;
         const statut = req.params.statut;
         if (statut === "askCancel") {
+<<<<<<< Updated upstream
           newStatut = "Annulée";
         }
         if (statut === "askReturn") {
           newStatut = "Retour demandé";
+=======
+          newStatut = "Annulée"
+        }
+        if (statut === "askReturn") {
+          newStatut = "Retour demandé"
+>>>>>>> Stashed changes
         }
         const commande = await Commande.findByIdAndUpdate(
           idCommande,
