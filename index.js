@@ -623,7 +623,7 @@ mongoose
       }
     });
 
-    app.put("/api/adresses/:idAdresse", authenticate, async (req, res) => {
+    app.post("/api/adresses/:idAdresse", authenticate, async (req, res) => {
       const idAdresse = req.params.idAdresse;
       const { nom, rue, ville, cp, pays, region, complement } = req.body;
 
