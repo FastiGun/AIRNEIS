@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
-const MemoryStore = require('memorystore')(session);
+const MemoryStore = require("memorystore")(session);
 const { string } = require("yup");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -96,7 +96,7 @@ mongoose
         resave: false,
         secret: secretKey,
       })
-    )
+    );
 
     const requireAdmin = (req, res, next) => {
       if (!req.session.isAdmin) {
@@ -403,7 +403,7 @@ mongoose
           title: "Orders Record",
           commandes: commandes,
         });
-      } catch (error) { }
+      } catch (error) {}
     });
 
     app.get("/commande-detail/:commandeId", async (req, res) => {
@@ -422,7 +422,7 @@ mongoose
           title: "Detail Order",
           commande: commande,
         });
-      } catch (error) { }
+      } catch (error) {}
     });
 
     app.get("/add-produit-panier/:articleId", async (req, res) => {
@@ -600,7 +600,7 @@ mongoose
 
       try {
         const adresse = await Adresse.findById(idAdresse);
-        res.json( adresse );
+        res.json(adresse);
       } catch (error) {
         console.error(error);
         res
@@ -614,12 +614,46 @@ mongoose
 
       try {
         const paiement = await Paiement.findById(idPaiement);
-        res.json( paiement );
+        res.json(paiement);
       } catch (error) {
         console.error(error);
         res
           .status(500)
-          .json({ message: "Erreur lors de la recuperation du moyen de paiement" });
+          .json({
+            message: "Erreur lors de la recuperation du moyen de paiement",
+          });
+      }
+    });
+
+    api.delete("/api/paiements/:idPaiement", authenticate, async (req, res) => {
+      const idPaiement = req.params.idPaiement;
+
+      try {
+        const paiement = await Paiement.findByIdAndDelete(idPaiement);
+        res.json({ message: "Carte supprimée avec succès" });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({
+            message: "Erreur lors de la recuperation du moyen de paiement",
+          });
+      }
+    });
+
+    api.delete("/api/adresses/:idAdresse", authenticate, async (req, res) => {
+      const idAdresse = req.params.idAdresse;
+
+      try {
+        const adresse = await Adresse.findByIdAndDelete(idAdresse);
+        res.json({ message: "Adresse supprimée avec succès" });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({
+            message: "Erreur lors de la recuperation du moyen de paiement",
+          });
       }
     });
 
@@ -630,7 +664,9 @@ mongoose
       try {
         const adresse = await Adresse.findById(idAdresse);
         if (!adresse) {
-          return res.status(404).json({ message: "L'adresse n'a pas été trouvée" });
+          return res
+            .status(404)
+            .json({ message: "L'adresse n'a pas été trouvée" });
         }
 
         adresse.nom = nom || adresse.nom;
@@ -648,7 +684,7 @@ mongoose
         console.error(err);
         res.status(500).json({ message: "Erreur serveur" });
       }
-    })
+    });
 
     app.get("/ajuste-quantite-panier/:panierId/:quantite", async (req, res) => {
       const { panierId, quantite } = req.params;
