@@ -10,11 +10,11 @@ block content
       form(action="/inscription", method="post")
         .row1
           .input-field.col.s12
-            input#nom(name="nom", placeholder="Nom*", required)
+            input#nom(name="nom", placeholder="Lastname*", required)
             label(for="nom")
         .row2
           .input-field.col.s12
-            input#prenom(name="prenom", placeholder="Prénom*", required)
+            input#prenom(name="prenom", placeholder="Firstname*", required)
             label(for="prenom")   
         .row3
           .input-field.col.s12
@@ -22,7 +22,7 @@ block content
             label(for="mail")
         .row4    
           .input-field.col.s12
-            input#mdp(name="mdp", placeholder="Mot de passe*", type="password", required)
+            input#mdp(name="mdp", placeholder="Password*", type="password", required)
             label(for="mdp")
             span#mdp-length.error
             span#mdp-uppercase.error

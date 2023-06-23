@@ -7,7 +7,7 @@ block content
     .add-category-wrapper.container.container-backo
         form(action="/backoffice/categorie/add" method="post")
             .input-id(hidden)
-                    input#nom(name="_id", placeholder="Name*", value=isCategory ? categorie._id : "")
+                    input#nom(name="_id", value=isCategory ? categorie._id : "")
                     label(for="_id")
             .input-name
                 input#nom(required name="nom", placeholder="Name*", value=isCategory ? categorie.nom : "")

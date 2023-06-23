@@ -19,28 +19,28 @@ block content
                             option(value="") No address registered
                     .wrapper-facturation-address-form
                         .input-nom-user
-                            input#nom(name="nom", placeholder="FirstName*", required, value=cartInfo.client.nom)
+                            input#nom(name="nom", placeholder="Firstname*", required, value=cartInfo.client.nom)
                             label(for="nom")
                         .input-prenom-user
-                            input#prenom(name="prenom", placeholder="LastName*", required, value=cartInfo.client.prenom)
+                            input#prenom(name="prenom", placeholder="Lastname*", required, value=cartInfo.client.prenom)
                             label(for="prenom")
                         .input-tel-user
                             input#tel(name="tel", placeholder="Telephone number*", required, value=(cartInfo.client.telephone != null ? cartInfo.client.telephone : ""))
                             label(for="tel")
                             
                         .input-nom-adresse
-                            input#nomAdresseFactu(name="nomAdresseFactu", placeholder="Nom de l'adresse")
+                            input#nomAdresseFactu(name="nomAdresseFactu", placeholder="Address name")
                             label(for="nomAdresseFactu")
                         .input-rue
-                            input#rueFactu(name="rueFactu", placeholder="Rue*", required)
+                            input#rueFactu(name="rueFactu", placeholder="Street*", required)
                             label(for="rueFactu")
 
                         .input-complement
-                            input#complementFactu(name="complementFactu", placeholder="Complement d'adresse")
+                            input#complementFactu(name="complementFactu", placeholder="Complement")
                             label(for="complementFactu")
 
                         .input-ville
-                            input#villeFactu(name="villeFactu", placeholder="Ville*", required)
+                            input#villeFactu(name="villeFactu", placeholder="City*", required)
                             label(for="villeFactu")
 
                         .input-region
@@ -48,11 +48,11 @@ block content
                             label(for="regionFactu")
 
                         .input-codepostal
-                            input#codepostalFactu(name="codepostalFactu", placeholder="Code postal*", required)
+                            input#codepostalFactu(name="codepostalFactu", placeholder="ZIP Code*", required)
                             label(for="codepostalFactu")
 
                         .input-pays
-                            input#paysFactu(name="paysFactu", placeholder="Pays*", required)
+                            input#paysFactu(name="paysFactu", placeholder="Country*", required)
                             label(for="paysFactu")
 
                         .input-register 
@@ -72,7 +72,7 @@ block content
 
                     .wrapper-delivery-address-form
                         .input-nom-adresse
-                            input#nomAdresse(name="nomAdresse", placeholder="Nom de l'adresse")
+                            input#nomAdresse(name="nomAdresse", placeholder="Address name")
                             label(for="nomAdresse")
                         .input-nom-adresse
                             input#nom-adresse(hidden name="prixTotal" value=cartInfo.prixTotal)
@@ -80,15 +80,15 @@ block content
                             input#nom-adresse(hidden name="prixTVA" value=cartInfo.prixTVA)
 
                         .input-rue
-                            input#rue(name="rue", placeholder="Rue*", required)
+                            input#rue(name="rue", placeholder="Street*", required)
                             label(for="rue")
 
                         .input-complement
-                            input#complement(name="complement", placeholder="Complement d'adresse")
+                            input#complement(name="complement", placeholder="Complement")
                             label(for="rue")
 
                         .input-ville
-                            input#ville(name="ville", placeholder="Ville*", required)
+                            input#ville(name="ville", placeholder="City*", required)
                             label(for="ville")
 
                         .input-region
@@ -96,11 +96,11 @@ block content
                             label(for="region")
 
                         .input-codepostal
-                            input#codepostal(name="codepostal", placeholder="Code postal*", required)
+                            input#codepostal(name="codepostal", placeholder="ZIP Code*", required)
                             label(for="codepostal")
 
                         .input-pays
-                            input#pays(name="pays", placeholder="Pays*", required)
+                            input#pays(name="pays", placeholder="Country*", required)
                             label(for="pays")
 
                         .input-register 
@@ -120,7 +120,7 @@ block content
                     
                     .wrapper-delivery-address-form
                         .input-nom-card
-                            input#nomCard(name="nomCard", placeholder="Surnom de la carte")
+                            input#nomCard(name="nomCard", placeholder="Card's nickname")
                             label(for="nomCard")
                         
                         .input-fullname
