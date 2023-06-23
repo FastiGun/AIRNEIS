@@ -595,31 +595,31 @@ mongoose
       }
     });
 
-    app.get("/api/get-adresse/:adresseId", async (req, res) => {
-      const adresseId = req.params;
+    app.get("/api/adresses/:client", async (req, res) => {
+      const client = req.params.client;
 
       try {
-        const adresse = await Adresse.findById(adresseId.adresseId);
-        res.json({ adresse });
+        const adresses = await Adresse.find({ client: client });
+        res.json({ adresses });
       } catch (error) {
         console.error(error);
         res
           .status(500)
-          .json({ message: "Erreur lors de la recuperation de l'adresse" });
+          .json({ message: "Erreur lors de la recuperation des adresses" });
       }
     });
 
-    app.get("/api/get-card/:cardId", async (req, res) => {
-      const cardId = req.params;
+    app.get("/api/paiements/:client", async (req, res) => {
+      const client = req.params.client;
 
       try {
-        const card = await Paiement.findById(cardId.cardId);
-        res.json({ card });
+        const paiements = await Paiement.find({ client: client });
+        res.json({ paiements });
       } catch (error) {
         console.error(error);
         res
           .status(500)
-          .json({ message: "Erreur lors de la recuperation de l'adresse" });
+          .json({ message: "Erreur lors de la recuperation des moyens de paiements" });
       }
     });
 
