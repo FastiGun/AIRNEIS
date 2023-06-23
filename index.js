@@ -600,7 +600,7 @@ mongoose
 
       try {
         const adresse = await Adresse.findById(idAdresse);
-        res.json({ adresse });
+        res.json( adresse );
       } catch (error) {
         console.error(error);
         res
@@ -614,7 +614,7 @@ mongoose
 
       try {
         const paiement = await Paiement.findById(idPaiement);
-        res.json({ paiement });
+        res.json( paiement );
       } catch (error) {
         console.error(error);
         res
