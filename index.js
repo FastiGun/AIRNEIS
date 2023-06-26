@@ -403,7 +403,7 @@ mongoose
           title: "Orders Record",
           commandes: commandes,
         });
-      } catch (error) {}
+      } catch (error) { }
     });
 
     app.get("/commande-detail/:commandeId", async (req, res) => {
@@ -422,7 +422,7 @@ mongoose
           title: "Detail Order",
           commande: commande,
         });
-      } catch (error) {}
+      } catch (error) { }
     });
 
     app.get("/add-produit-panier/:articleId", async (req, res) => {
@@ -625,7 +625,7 @@ mongoose
       }
     });
 
-    api.delete("/api/paiements/:idPaiement", authenticate, async (req, res) => {
+    app.delete("/api/paiements/:idPaiement", authenticate, async (req, res) => {
       const idPaiement = req.params.idPaiement;
 
       try {
@@ -641,7 +641,7 @@ mongoose
       }
     });
 
-    api.delete("/api/adresses/:idAdresse", authenticate, async (req, res) => {
+    app.delete("/api/adresses/:idAdresse", authenticate, async (req, res) => {
       const idAdresse = req.params.idAdresse;
 
       try {
