@@ -629,7 +629,7 @@ mongoose
       const idPaiement = req.params.idPaiement;
 
       try {
-        const paiement = await Paiement.findByIdAndDelete(idPaiement);
+        await Paiement.findByIdAndDelete(idPaiement);
         res.json({ message: "Carte supprimée avec succès" });
       } catch (error) {
         console.error(error);
@@ -645,7 +645,7 @@ mongoose
       const idAdresse = req.params.idAdresse;
 
       try {
-        const adresse = await Adresse.findByIdAndDelete(idAdresse);
+        await Adresse.findByIdAndDelete(idAdresse);
         res.json({ message: "Adresse supprimée avec succès" });
       } catch (error) {
         console.error(error);
