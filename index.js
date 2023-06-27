@@ -353,7 +353,7 @@ mongoose
           date: formatDate(new Date()),
           prixHT: (prixTotal - prixTVA).toFixed(2),
           prixTTC: prixTotal,
-          statut: "En attente",
+          statut: "On hold",
           produits: produitsCommande,
           adresseFacturation: {
             rue: rueFactu,
