@@ -23,13 +23,13 @@ selectAddressFactu.onchange = function () {
 function updateDisplayFactu(addressIdFactu) {
     fetch("/getAdresse/" + addressIdFactu).then(function (response) {
         response.json().then(function (obj) {
-            nameAddressFactu.value = obj.adresse.nom;
-            rueFactu.value = obj.adresse.rue;
-            villeFactu.value = obj.adresse.ville;
-            paysFactu.value = obj.adresse.pays;
-            regionFactu.value = obj.adresse.region;
-            complementFactu.value = obj.adresse.complement;
-            codepostalFactu.value = obj.adresse.cp;
+            nameAddressFactu.value = obj.nom;
+            rueFactu.value = obj.rue;
+            villeFactu.value = obj.ville;
+            paysFactu.value = obj.pays;
+            regionFactu.value = obj.region;
+            complementFactu.value = obj.complement;
+            codepostalFactu.value = obj.cp;
         })
     })
 }
@@ -61,13 +61,13 @@ selectAddress.onchange = function () {
 function updateDisplayAddress(addressId) {
     fetch("/getAdresse/" + addressId).then(function (response) {
         response.json().then(function (obj) {
-            nameAddress.value = obj.adresse.nom;
-            rue.value = obj.adresse.rue;
-            ville.value = obj.adresse.ville;
-            pays.value = obj.adresse.pays;
-            region.value = obj.adresse.region;
-            complement.value = obj.adresse.complement;
-            codepostal.value = obj.adresse.cp;
+            nameAddress.value = obj.nom;
+            rue.value = obj.rue;
+            ville.value = obj.ville;
+            pays.value = obj.pays;
+            region.value = obj.region;
+            complement.value = obj.complement;
+            codepostal.value = obj.cp;
         })
     })
 }
@@ -96,7 +96,6 @@ selectPaiements.onchange = function () {
 function updateDisplayCard(cardId) {
     fetch("/getPaiement/" + cardId).then(function (response) {
         response.json().then(function (obj) {
-            console.log(obj)
             nomCard.value = obj.libelle_carte;
             fullname.value = obj.nom_carte;
             cardnumber.value = obj.num_carte;
