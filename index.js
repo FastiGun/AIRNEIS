@@ -595,6 +595,44 @@ mongoose
       }
     });
 
+    app.get("/api/orders/:idClient", authenticate, async (req, res) => {
+      const idClient = req.params.idClient;
+
+      try {
+        const commandes = await Commande.find({ client: idClient });
+        commandes.reverse();
+        res.json(commandes);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message: "Erreur lors de la récupération des commandes du client",
+        });
+      }
+    });
+
+    app.get("/api/orders/details/:idCommande", authenticate, async (req, res) => {
+      const idCommande = req.params.idCommande;
+
+      try {
+        const detailsCommande = await Commande.findById(idCommande)
+          .populate("produits.produit")
+          .exec();
+
+        if (!detailsCommande) {
+          return res.status(404).json({
+            message: "Commande introuvable",
+          });
+        }
+
+        res.json(detailsCommande);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message: "Erreur lors de la récupération des détails de la commande",
+        });
+      }
+    })
+
     app.get("/api/adresses/:idAdresse", authenticate, async (req, res) => {
       const idAdresse = req.params.idAdresse;
 
