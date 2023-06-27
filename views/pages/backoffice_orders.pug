@@ -11,7 +11,8 @@ block content
               .commande-wrapper 
                   .left-side
                       .id Order n°#{ commande.id }
-                      .date #{ commande.client.prenom } #{ commande.client.nom } #{ commande.client.mail }
+                      .date #{ commande.client.prenom } #{ commande.client.nom } 
+                      .date #{ commande.client.mail }
                       .date #{ commande.date }
                       each product in commande.produits
                           .produit-wrapper
