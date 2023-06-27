@@ -24,9 +24,9 @@ block content
             .prix-tva 
                 .tva-price VAT
                 .tva-amount #{ commande.prixTTC } €
-            if commande.statut === "En attente"
+            if commande.statut === "On hold"
                 a.waves-effect.waves-light.btn-large.button(href=`/order/changeStatut/${commande.id}/askCancel`) Cancel order
-            if commande.statut === "Livrée"
+            if commande.statut === "Delivered"
                 a.waves-effect.waves-light.btn-large.button(href=`/order/changeStatut/${commande.id}/askReturn`) Return order
 
         h3 Addresses

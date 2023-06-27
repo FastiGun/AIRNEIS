@@ -21,15 +21,15 @@ block content
                       .prix-TTC Total price : #{ commande.prixTTC } €
                       .status Status: 
                         select#statutOrder(name="statutOrder")
-                          option(value="En attente", selected=(commande.statut === "En attente"), data-commande=commande.id) En attente
-                          option(value="En préparation", selected=(commande.statut === "En préparation"), data-commande=commande.id) En préparation
-                          option(value="En livraison", selected=(commande.statut === "En livraison"), data-commande=commande.id) En livraison
-                          option(value="Livrée", selected=(commande.statut === "Livrée"), data-commande=commande.id) Livrée
-                          option(value="Retour demandé", selected=(commande.statut === "Retour demandé"), data-commande=commande.id) Retour demandé
-                          option(value="Retour refusé", selected=(commande.statut === "Retour refusé"), data-commande=commande.id) Retour refusé
-                          option(value="Retour en cours", selected=(commande.statut === "Retour en cours"), data-commande=commande.id) Retour en cours
-                          option(value="Retournée", selected=(commande.statut === "Retournée"), data-commande=commande.id) Retournée
-                          option(value="Annulée", selected=(commande.statut === "Annulée"), data-commande=commande.id) Annulée
+                          option(value="On hold", selected=(commande.statut === "On hold"), data-commande=commande.id) On hold
+                          option(value="In preparation", selected=(commande.statut === "In preparation"), data-commande=commande.id) In preparation
+                          option(value="Delivering", selected=(commande.statut === "Delivering"), data-commande=commande.id) Delivering
+                          option(value="Delivered", selected=(commande.statut === "Delivered"), data-commande=commande.id) Delivered
+                          option(value="Return requested", selected=(commande.statut === "Return requested"), data-commande=commande.id) Return requested
+                          option(value="Return refused", selected=(commande.statut === "Return refused"), data-commande=commande.id) Return refused
+                          option(value="Back in progress", selected=(commande.statut === "Back in progress"), data-commande=commande.id) Back in progress
+                          option(value="Returned", selected=(commande.statut === "Returned"), data-commande=commande.id) Returned
+                          option(value="Canceled", selected=(commande.statut === "Canceled"), data-commande=commande.id) Canceled
 
         else 
             .no-command No order found

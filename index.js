@@ -1851,7 +1851,7 @@ mongoose
     app.get("/backoffice/returnRequests", requireAdmin, async (req, res) => {
       try {
         // Récupérer toutes les commandes depuis la base de données
-        const commandes = await Commande.find({ statut: "Retour demandé" })
+        const commandes = await Commande.find({ statut: "Return requested" })
           .populate("produits.produit")
           .exec();
         commandes.reverse();
@@ -1868,10 +1868,10 @@ mongoose
         const idCommande = req.params.idCommande;
         const statut = req.params.statut;
         if (statut === "askCancel") {
-          newStatut = "Annulée";
+          newStatut = "Canceled";
         }
         if (statut === "askReturn") {
-          newStatut = "Retour demandé";
+          newStatut = "Return requested";
         }
         const commande = await Commande.findByIdAndUpdate(
           idCommande,
