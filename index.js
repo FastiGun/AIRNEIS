@@ -1838,6 +1838,7 @@ mongoose
         // Récupérer toutes les commandes depuis la base de données
         const commandes = await Commande.find()
           .populate("produits.produit")
+          .populate("client")
           .exec();
         commandes.reverse();
         // Passer les données des commandes à la vue "backoffice_orders"
