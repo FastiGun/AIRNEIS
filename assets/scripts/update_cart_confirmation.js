@@ -97,11 +97,11 @@ function updateDisplayCard(cardId) {
     fetch("/getPaiement/" + cardId).then(function (response) {
         response.json().then(function (obj) {
             console.log(obj)
-            nomCard.value = obj.card.libelle_carte;
-            fullname.value = obj.card.nom_carte;
-            cardnumber.value = obj.card.num_carte;
-            expiration.value = obj.card.date_expiration;
-            cvv.value = obj.card.cvv;
+            nomCard.value = obj.libelle_carte;
+            fullname.value = obj.nom_carte;
+            cardnumber.value = obj.num_carte;
+            expiration.value = obj.date_expiration;
+            cvv.value = obj.cvv;
         })
     })
 }
