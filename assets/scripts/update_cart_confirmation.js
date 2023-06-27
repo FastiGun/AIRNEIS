@@ -21,7 +21,7 @@ selectAddressFactu.onchange = function () {
 }
 
 function updateDisplayFactu(addressIdFactu) {
-    fetch("/api/adresses/" + addressIdFactu).then(function (response) {
+    fetch("/getAdresse/" + addressIdFactu).then(function (response) {
         response.json().then(function (obj) {
             nameAddressFactu.value = obj.adresse.nom;
             rueFactu.value = obj.adresse.rue;
@@ -59,7 +59,7 @@ selectAddress.onchange = function () {
 
 
 function updateDisplayAddress(addressId) {
-    fetch("/api/adresses/" + addressId).then(function (response) {
+    fetch("/getAdresse/" + addressId).then(function (response) {
         response.json().then(function (obj) {
             nameAddress.value = obj.adresse.nom;
             rue.value = obj.adresse.rue;
@@ -94,7 +94,7 @@ selectPaiements.onchange = function () {
 
 
 function updateDisplayCard(cardId) {
-    fetch("/api/paiements/" + cardId).then(function (response) {
+    fetch("/getPaiement/" + cardId).then(function (response) {
         response.json().then(function (obj) {
             console.log(obj)
             nomCard.value = obj.card.libelle_carte;

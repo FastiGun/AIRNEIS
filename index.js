@@ -647,7 +647,37 @@ mongoose
       }
     });
 
+    app.get("/getAdresse/:idAdresse", async (req, res) => {
+      const idAdresse = req.params.idAdresse;
+
+      try {
+        const adresse = await Adresse.findById(idAdresse);
+        res.json(adresse);
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({ message: "Erreur lors de la recuperation de l'adresse" });
+      }
+    });
+
     app.get("/api/paiements/:idPaiement", authenticate, async (req, res) => {
+      const idPaiement = req.params.idPaiement;
+
+      try {
+        const paiement = await Paiement.findById(idPaiement);
+        res.json(paiement);
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({
+            message: "Erreur lors de la recuperation du moyen de paiement",
+          });
+      }
+    });
+
+    app.get("/getPaiement/:idPaiement", async (req, res) => {
       const idPaiement = req.params.idPaiement;
 
       try {
