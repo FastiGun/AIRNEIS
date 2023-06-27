@@ -10,13 +10,13 @@ function forgotPassword() {
     })
       .then(function(response) {
         if (response.ok) {
-            alert('Un email de réinitialisation a été envoyé à votre adresse email.');
+            alert('An email has been send to your email to configure a new password');
         } else {
-            throw new Error("Une erreur s'est produite lors de l'envoi de la demande de réinitialisation de mot de passe.");
+            throw new Error("Please verify your mail address");
         }
       })
       .catch(function(error) {
         console.error(error);
-        alert('Une erreur s\'est produite lors de l\'envoi de la demande de réinitialisation de mot de passe. Veuillez réessayer ultérieurement.');
+        alert('Please verify your mail address');
       });
   }
