@@ -10,7 +10,7 @@ block content
             each commande in commandes 
                 .commande-wrapper 
                     .left-side
-                        .id Order n°#{ commande.id }
+                        .id Order n°#{ commande.id.slice(0, 5) }...
                         .date #{ commande.date }
                         each product in commande.produits
                             .produit-wrapper

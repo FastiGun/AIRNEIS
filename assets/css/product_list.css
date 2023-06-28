@@ -59,6 +59,10 @@ select{
     flex: 0.2;
 }
 
+.product-name{
+    font-weight: 600;
+  }
+
 @media (max-width: 1100px) {
     .filtres-products{
         display: flex;
