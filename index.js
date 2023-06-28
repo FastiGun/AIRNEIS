@@ -453,7 +453,7 @@ mongoose
           title: "Orders Record",
           commandes: commandes,
         });
-      } catch (error) { }
+      } catch (error) {}
     });
 
     app.get("/commande-detail/:commandeId", async (req, res) => {
@@ -472,7 +472,7 @@ mongoose
           title: "Detail Order",
           commande: commande,
         });
-      } catch (error) { }
+      } catch (error) {}
     });
 
     app.get("/add-produit-panier/:articleId", async (req, res) => {
@@ -570,11 +570,9 @@ mongoose
         res.json(paiement);
       } catch (error) {
         console.error(error);
-        res
-          .status(500)
-          .json({
-            message: "Erreur lors de la recuperation du moyen de paiement",
-          });
+        res.status(500).json({
+          message: "Erreur lors de la recuperation du moyen de paiement",
+        });
       }
     });
 
@@ -1203,28 +1201,33 @@ mongoose
       }
     });
 
-    app.get("/api/orders/details/:idCommande", authenticate, async (req, res) => {
-      const idCommande = req.params.idCommande;
+    app.get(
+      "/api/orders/details/:idCommande",
+      authenticate,
+      async (req, res) => {
+        const idCommande = req.params.idCommande;
 
-      try {
-        const detailsCommande = await Commande.findById(idCommande)
-          .populate("produits.produit")
-          .exec();
+        try {
+          const detailsCommande = await Commande.findById(idCommande)
+            .populate("produits.produit")
+            .exec();
 
-        if (!detailsCommande) {
-          return res.status(404).json({
-            message: "Commande introuvable",
+          if (!detailsCommande) {
+            return res.status(404).json({
+              message: "Commande introuvable",
+            });
+          }
+
+          res.json(detailsCommande);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({
+            message:
+              "Erreur lors de la récupération des détails de la commande",
           });
         }
-
-        res.json(detailsCommande);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({
-          message: "Erreur lors de la récupération des détails de la commande",
-        });
       }
-    })
+    );
 
     app.get("/api/adresses/:idAdresse", authenticate, async (req, res) => {
       const idAdresse = req.params.idAdresse;
@@ -1248,11 +1251,9 @@ mongoose
         res.json(paiement);
       } catch (error) {
         console.error(error);
-        res
-          .status(500)
-          .json({
-            message: "Erreur lors de la recuperation du moyen de paiement",
-          });
+        res.status(500).json({
+          message: "Erreur lors de la recuperation du moyen de paiement",
+        });
       }
     });
 
@@ -1264,11 +1265,9 @@ mongoose
         res.json({ message: "Carte supprimée avec succès" });
       } catch (error) {
         console.error(error);
-        res
-          .status(500)
-          .json({
-            message: "Erreur lors de la recuperation du moyen de paiement",
-          });
+        res.status(500).json({
+          message: "Erreur lors de la recuperation du moyen de paiement",
+        });
       }
     });
 
@@ -1280,11 +1279,9 @@ mongoose
         res.json({ message: "Adresse supprimée avec succès" });
       } catch (error) {
         console.error(error);
-        res
-          .status(500)
-          .json({
-            message: "Erreur lors de la recuperation du moyen de paiement",
-          });
+        res.status(500).json({
+          message: "Erreur lors de la recuperation du moyen de paiement",
+        });
       }
     });
 
@@ -1603,15 +1600,24 @@ mongoose
       }
     });
 
-    app.get("/api/favoris", async(req,res) =>{
+    app.get("/api/favoris", async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris);
         res.json(favoris);
       } catch (error) {
         res.status(500).send("Erreur lors de la récupération des favoris.");
       }
-    })
+    });
 
+    app.get("/api/categorie/:idCategorie", async (req, res) => {
+      const idCategorie = req.params.idCategorie;
+      try {
+        const categorie = await Categorie.findById(idCategorie);
+        res.json(categorie);
+      } catch (error) {
+        res.status(500).send("Erreur lors de la récupération de la catégorie.");
+      }
+    });
 
     /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
     /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
