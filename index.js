@@ -1580,6 +1580,31 @@ mongoose
       }
     });
 
+    app.post("/api/contact", authenticate, async (req, res) => {
+      const { email, sujet, contenu } = req.body;
+
+      try {
+        const nouveauMessage = new Message({
+          email,
+          sujet,
+          contenu,
+        });
+
+        const messageEnregistre = await nouveauMessage.save();
+
+        res.json({
+          message: "Message envoyé avec succès",
+          messageEnregistre,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message: "Erreur lors de l'enregistrement du message",
+        });
+      }
+    });
+
+
     /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
     /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
     /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
