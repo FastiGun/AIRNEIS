@@ -111,6 +111,60 @@ mongoose
       next();
     });
 
+    function generateResetToken() {
+      const token = require("crypto").randomBytes(20).toString("hex");
+      return token;
+    }
+
+    async function sendResetEmail(email, idClient) {
+      // Construire le contenu de l'e-mail
+      const mailOptions = {
+        from: "airneis.junia@gmail.com",
+        to: email,
+        subject: "AIRNEIS - Password reset",
+        text:
+          "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" +
+          idClient,
+      };
+
+      // Envoyer l'e-mail
+      await transporter.sendMail(mailOptions);
+    }
+
+    // Fonction pour générer le token d'authentification (par exemple, JWT)
+    function generateAuthToken(client) {
+      // Clé secrète pour signer le token
+      const token = jwt.sign({ id: client._id }, secretKey, {
+        expiresIn: "24h",
+      }); // Exemple avec une expiration d'une journée
+      return token;
+    }
+
+    // Middleware d'authentification
+    function authenticate(req, res, next) {
+      const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
+      const tokenToVerify = token.split(" ")[1];
+      if (!token) {
+        return res
+          .status(401)
+          .json({ message: "Token d'authentification manquant" });
+      }
+
+      try {
+        // Clé secrète utilisée lors de la génération du token
+        const decodedToken = jwt.verify(tokenToVerify, secretKey); // Vérifier la validité du token
+
+        next(); // Passer au prochain middleware ou à la route suivante
+      } catch (error) {
+        console.error(error);
+        res.status(401).json({ message: "Token d'authentification invalide" });
+      }
+    }
+
+    /// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ///
+    /// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ///
+    /// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ////// Client ///
+
     app.get("/", async (req, res) => {
       try {
         const favoris = await Favoris.findById(idFavoris);
@@ -145,10 +199,6 @@ mongoose
           .status(500)
           .send("Une erreur est survenue lors de la récupération des favoris.");
       }
-    });
-
-    app.get("/search", function (req, res) {
-      res.render("pages/search", { title: "Recherche" });
     });
 
     app.get("/cart", async (req, res) => {
@@ -476,103 +526,6 @@ mongoose
       }
     });
 
-    app.get("/api/paniers/:client", authenticate, async (req, res) => {
-      const clientId = req.params.client;
-
-      try {
-        // Vérifier si le client existe
-        const client = await Client.findById(clientId);
-
-        if (!client) {
-          return res.status(404).json({ message: "Client not found" });
-        }
-
-        // Rechercher tous les paniers du client
-        const paniers = await Panier.find({ client: client._id });
-
-        return res.status(200).json({ paniers });
-      } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error" });
-      }
-    });
-
-    app.post(
-      "/api/add-produit-panier/:client",
-      authenticate,
-      async (req, res) => {
-        const clientId = req.params.client;
-        const { article, quantite } = req.body;
-
-        try {
-          // Vérifier que la quantité et le produit sont renseignés
-          if (!quantite || !article) {
-            return res
-              .status(400)
-              .json({ message: "Quantity and product are required" });
-          }
-
-          // Rechercher le client par son ID
-          const client = await Client.findById(clientId);
-
-          if (!client) {
-            return res.status(404).json({ message: "Client not found" });
-          }
-
-          // Vérifier si un panier existe pour ce client et cet article
-          const existingPanier = await Panier.findOne({
-            client: client._id,
-            article: article,
-          });
-
-          if (existingPanier) {
-            // Mettre à jour la quantité dans le panier existant
-            existingPanier.quantite += quantite;
-
-            // Vérifier si la quantité est devenue 0, auquel cas on supprime le panier
-            if (existingPanier.quantite === 0) {
-              await existingPanier.remove();
-              return res
-                .status(200)
-                .json({ message: "Product removed from cart" });
-            }
-
-            await existingPanier.save();
-            return res
-              .status(200)
-              .json({ message: "Product quantity updated in cart" });
-          }
-
-          // Rechercher le produit par son ID
-          const produit = await Produit.findById(article);
-
-          if (!produit) {
-            return res.status(404).json({ message: "Product not found" });
-          }
-
-          // Vérifier si le produit est en stock
-          if (produit.stock < quantite) {
-            return res.status(400).json({ message: "Insufficient stock" });
-          }
-
-          // Créer le nouvel objet panier
-          const panier = new Panier({
-            client: client._id,
-            article: produit._id,
-            quantite: quantite,
-          });
-
-          // Enregistrer le panier
-          await panier.save();
-
-          return res.status(200).json({ message: "Product added to cart" });
-        } catch (error) {
-          console.error(error);
-          return res.status(500).json({ message: "Internal server error" });
-        }
-      }
-    );
-
     app.get("/remove-produit-panier/:articleId", async (req, res) => {
       const articleId = req.params.articleId;
       const client = req.session.userId;
@@ -595,58 +548,6 @@ mongoose
       }
     });
 
-    app.get("/api/orders/:idClient", authenticate, async (req, res) => {
-      const idClient = req.params.idClient;
-
-      try {
-        const commandes = await Commande.find({ client: idClient });
-        commandes.reverse();
-        res.json(commandes);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({
-          message: "Erreur lors de la récupération des commandes du client",
-        });
-      }
-    });
-
-    app.get("/api/orders/details/:idCommande", authenticate, async (req, res) => {
-      const idCommande = req.params.idCommande;
-
-      try {
-        const detailsCommande = await Commande.findById(idCommande)
-          .populate("produits.produit")
-          .exec();
-
-        if (!detailsCommande) {
-          return res.status(404).json({
-            message: "Commande introuvable",
-          });
-        }
-
-        res.json(detailsCommande);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({
-          message: "Erreur lors de la récupération des détails de la commande",
-        });
-      }
-    })
-
-    app.get("/api/adresses/:idAdresse", authenticate, async (req, res) => {
-      const idAdresse = req.params.idAdresse;
-
-      try {
-        const adresse = await Adresse.findById(idAdresse);
-        res.json(adresse);
-      } catch (error) {
-        console.error(error);
-        res
-          .status(500)
-          .json({ message: "Erreur lors de la recuperation de l'adresse" });
-      }
-    });
-
     app.get("/getAdresse/:idAdresse", async (req, res) => {
       const idAdresse = req.params.idAdresse;
 
@@ -658,22 +559,6 @@ mongoose
         res
           .status(500)
           .json({ message: "Erreur lors de la recuperation de l'adresse" });
-      }
-    });
-
-    app.get("/api/paiements/:idPaiement", authenticate, async (req, res) => {
-      const idPaiement = req.params.idPaiement;
-
-      try {
-        const paiement = await Paiement.findById(idPaiement);
-        res.json(paiement);
-      } catch (error) {
-        console.error(error);
-        res
-          .status(500)
-          .json({
-            message: "Erreur lors de la recuperation du moyen de paiement",
-          });
       }
     });
 
@@ -690,67 +575,6 @@ mongoose
           .json({
             message: "Erreur lors de la recuperation du moyen de paiement",
           });
-      }
-    });
-
-    app.delete("/api/paiements/:idPaiement", authenticate, async (req, res) => {
-      const idPaiement = req.params.idPaiement;
-
-      try {
-        await Paiement.findByIdAndDelete(idPaiement);
-        res.json({ message: "Carte supprimée avec succès" });
-      } catch (error) {
-        console.error(error);
-        res
-          .status(500)
-          .json({
-            message: "Erreur lors de la recuperation du moyen de paiement",
-          });
-      }
-    });
-
-    app.delete("/api/adresses/:idAdresse", authenticate, async (req, res) => {
-      const idAdresse = req.params.idAdresse;
-
-      try {
-        await Adresse.findByIdAndDelete(idAdresse);
-        res.json({ message: "Adresse supprimée avec succès" });
-      } catch (error) {
-        console.error(error);
-        res
-          .status(500)
-          .json({
-            message: "Erreur lors de la recuperation du moyen de paiement",
-          });
-      }
-    });
-
-    app.put("/api/adresses/:idAdresse", authenticate, async (req, res) => {
-      const idAdresse = req.params.idAdresse;
-      const { nom, rue, ville, cp, pays, region, complement } = req.body;
-
-      try {
-        const adresse = await Adresse.findById(idAdresse);
-        if (!adresse) {
-          return res
-            .status(404)
-            .json({ message: "L'adresse n'a pas été trouvée" });
-        }
-
-        adresse.nom = nom || adresse.nom;
-        adresse.rue = rue || adresse.rue;
-        adresse.ville = ville || adresse.ville;
-        adresse.cp = cp || adresse.cp;
-        adresse.pays = pays || adresse.pays;
-        adresse.region = region || adresse.region;
-        adresse.complement = complement || adresse.complement;
-
-        await adresse.save();
-
-        res.status(200).json(adresse);
-      } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Erreur serveur" });
       }
     });
 
@@ -979,6 +803,520 @@ mongoose
       }
     });
 
+    app.get("/inscription", function (req, res) {
+      res.render("pages/inscription", { title: "Inscription" });
+    });
+
+    app.get("/reset-password/:idClient", async (req, res) => {
+      const idClient = req.params.idClient;
+      res.render("pages/reset_password", { title: "Reset password", idClient });
+    });
+
+    app.post("/reset-password-form", async (req, res) => {
+      const idClient = req.body.idClient;
+      const newPassword = req.body.mdp;
+
+      try {
+        // Rechercher le client par son ID
+        const client = await Client.findById(idClient);
+
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+
+        // Mettre à jour le mot de passe du client
+        client.mdp = await bcrypt.hash(newPassword, saltRounds);
+        await client.save();
+
+        return res.redirect("/connexion");
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    });
+
+    app.get("/category", async (req, res) => {
+      try {
+        const categories = await Categorie.find({});
+        res.render("pages/category", {
+          title: "Catégories",
+          categories: categories,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des catégories.");
+      }
+    });
+
+    app.get("/products", async (req, res) => {
+      try {
+        // Récupérer tous les produits
+        const produits = await Produit.find();
+        const materials = await Produit.distinct("materiaux");
+
+        // Rendre la page des produits avec les données récupérées
+        res.render("pages/product_list", { produits, materials });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .send(
+            "Une erreur s'est produite lors de la récupération des produits."
+          );
+      }
+    });
+
+    app.get("/product/filter", async (req, res) => {
+      try {
+        let { nameText, materialSelect, stockSelect, priceMin, priceMax } =
+          req.query;
+        const filters = {
+          nameText,
+          materialSelect,
+          stockSelect,
+          priceMin,
+          priceMax,
+        };
+        const filter = {};
+
+        // Filtre par nom
+        if (nameText !== "") {
+          filter.nom = { $regex: nameText, $options: "i" };
+        }
+
+        // Filtre par matériau
+        if (materialSelect !== "") {
+          filter.materiaux = materialSelect;
+        }
+
+        // Filtre par stock
+        if (stockSelect !== "") {
+          if (stockSelect === "true") {
+            filter.stock = { $gt: 0 }; // Produits en stock (stock supérieur à 0)
+          } else {
+            filter.stock = 0; // Produits hors stock (stock égal à 0)
+          }
+        }
+
+        // Filtre par tranche de prix
+        // Filtre par tranche de prix
+        if (priceMin !== "") {
+          const min = parseFloat(priceMin);
+          filter.prix = { $gte: min };
+        }
+
+        if (priceMax !== "") {
+          const max = parseFloat(priceMax);
+          filter.prix = { ...filter.prix, $lte: max };
+        }
+
+        // Exécutez votre requête avec les filtres
+        const produits = await Produit.find(filter);
+        const materials = await Produit.distinct("materiaux");
+        res.render("pages/product_list", {
+          produits,
+          materials,
+          filters,
+        });
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération des produits");
+      }
+    });
+
+    app.get("/product_list", async (req, res) => {
+      try {
+        const categorie_id = req.query.id;
+        const categorie = await Categorie.findById(categorie_id);
+        if (!categorie) {
+          return res.status(404).send("Catégorie non trouvée");
+        }
+        const materials = await Produit.distinct("materiaux");
+        const produits = await Produit.find({ categorie: categorie_id });
+        res.render("pages/product_list", {
+          title: "Product List",
+          produits: produits,
+          categorie: categorie.nom,
+          materials: materials,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des produits.");
+      }
+    });
+
+    app.delete("/categories/:id", (req, res) => {
+      const categoryId = req.params.id;
+      Product.deleteMany({ category: categoryId }, (err) => {
+        if (err) {
+          res
+            .status(500)
+            .send(
+              "Une erreur s'est produite lors de la suppression des produits"
+            );
+        } else {
+          Category.findByIdAndRemove(categoryId, (err, category) => {
+            if (err) {
+              res
+                .status(500)
+                .send(
+                  "Une erreur s'est produite lors de la suppression de la catégorie"
+                );
+            } else {
+              res.send(
+                "La catégorie et tous ses produits ont été supprimés avec succès"
+              );
+            }
+          });
+        }
+      });
+    });
+
+    app.delete("/produits/:id", (req, res) => {
+      const productId = req.params.id;
+      Product.findByIdAndRemove(productId, (err, product) => {
+        if (err) {
+          res
+            .status(500)
+            .send(
+              "Une erreur s'est produite lors de la suppression du produit"
+            );
+        } else {
+          res.send("Le produit a été supprimé avec succès");
+        }
+      });
+      res.send("Le produit a été supprimé avec succès");
+    });
+
+    app.get("/product_detail", async (req, res) => {
+      try {
+        const produit_id = req.query.id;
+        const produit = await Produit.findById(produit_id);
+        if (!produit) {
+          return res.status(404).send("Produit non trouvé");
+        }
+
+        // Récupérer la catégorie du produit principal
+        const categorie = produit.categorie;
+
+        // Récupérer 3 autres produits de la même catégorie
+        const autresProduits = await Produit.find({
+          categorie,
+          _id: { $ne: produit_id },
+        })
+          .limit(3)
+          .lean();
+
+        res.render("pages/product_detail", {
+          title: "Product Detail",
+          produit: produit,
+          autresProduits: autresProduits,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération du produit.");
+      }
+    });
+
+    app.post("/inscription", async (req, res) => {
+      const { id, nom, prenom, mail, mdp, telephone } = req.body;
+      const existingClient = await Client.findOne({ mail: mail });
+      if (existingClient) {
+        return res.status(409).send("Cet e-mail est déjà utilisé");
+      }
+      if (nom === "" || prenom === "" || mail === "" || mdp === "") {
+        return res.status(409).send("Informations manquantes");
+      }
+      if (!passwordRegex.test(mdp)) {
+        return res
+          .status(400)
+          .send(
+            "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
+          );
+      }
+      try {
+        const empreinteMotDePasse = await bcrypt.hash(mdp, saltRounds);
+        const nouveauCompte = new Client({
+          id: uuidv4(),
+          nom,
+          prenom,
+          mail,
+          mdp: empreinteMotDePasse,
+          telephone: "",
+          admin: false,
+        });
+        await nouveauCompte.save();
+        req.session.userId = nouveauCompte.id;
+        res.redirect("/");
+      } catch (erreur) {
+        console.log(erreur);
+        res.status(500).send("Erreur lors de la création du compte");
+      }
+    });
+
+    app.get("/deconnexion", function (req, res) {
+      req.session.destroy(function (err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).send("Erreur lors de la déconnexion");
+        }
+        res.redirect("/");
+      });
+    });
+
+    app.post("/send-mail-contact", async (req, res) => {
+      const { email, sujet, message } = req.body;
+
+      try {
+        // Créer une instance du modèle Message avec les informations fournies
+        const nouveauMessage = new Message({
+          email,
+          sujet,
+          contenu: message,
+        });
+
+        // Enregistrer le nouveau message en base de données
+        await nouveauMessage.save();
+
+        res.redirect("/");
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .send("Une erreur s'est produite lors de la création du message.");
+      }
+    });
+
+    /// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ///
+    /// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ///
+    /// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ////// APIs ///
+
+    app.get("/api/paniers/:client", authenticate, async (req, res) => {
+      const clientId = req.params.client;
+
+      try {
+        // Vérifier si le client existe
+        const client = await Client.findById(clientId);
+
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+
+        // Rechercher tous les paniers du client
+        const paniers = await Panier.find({ client: client._id });
+
+        return res.status(200).json({ paniers });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    });
+
+    app.post(
+      "/api/add-produit-panier/:client",
+      authenticate,
+      async (req, res) => {
+        const clientId = req.params.client;
+        const { article, quantite } = req.body;
+
+        try {
+          // Vérifier que la quantité et le produit sont renseignés
+          if (!quantite || !article) {
+            return res
+              .status(400)
+              .json({ message: "Quantity and product are required" });
+          }
+
+          // Rechercher le client par son ID
+          const client = await Client.findById(clientId);
+
+          if (!client) {
+            return res.status(404).json({ message: "Client not found" });
+          }
+
+          // Vérifier si un panier existe pour ce client et cet article
+          const existingPanier = await Panier.findOne({
+            client: client._id,
+            article: article,
+          });
+
+          if (existingPanier) {
+            // Mettre à jour la quantité dans le panier existant
+            existingPanier.quantite += quantite;
+
+            // Vérifier si la quantité est devenue 0, auquel cas on supprime le panier
+            if (existingPanier.quantite === 0) {
+              await existingPanier.remove();
+              return res
+                .status(200)
+                .json({ message: "Product removed from cart" });
+            }
+
+            await existingPanier.save();
+            return res
+              .status(200)
+              .json({ message: "Product quantity updated in cart" });
+          }
+
+          // Rechercher le produit par son ID
+          const produit = await Produit.findById(article);
+
+          if (!produit) {
+            return res.status(404).json({ message: "Product not found" });
+          }
+
+          // Vérifier si le produit est en stock
+          if (produit.stock < quantite) {
+            return res.status(400).json({ message: "Insufficient stock" });
+          }
+
+          // Créer le nouvel objet panier
+          const panier = new Panier({
+            client: client._id,
+            article: produit._id,
+            quantite: quantite,
+          });
+
+          // Enregistrer le panier
+          await panier.save();
+
+          return res.status(200).json({ message: "Product added to cart" });
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+      }
+    );
+
+    app.get("/api/orders/:idClient", authenticate, async (req, res) => {
+      const idClient = req.params.idClient;
+
+      try {
+        const commandes = await Commande.find({ client: idClient });
+        commandes.reverse();
+        res.json(commandes);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message: "Erreur lors de la récupération des commandes du client",
+        });
+      }
+    });
+
+    app.get("/api/orders/details/:idCommande", authenticate, async (req, res) => {
+      const idCommande = req.params.idCommande;
+
+      try {
+        const detailsCommande = await Commande.findById(idCommande)
+          .populate("produits.produit")
+          .exec();
+
+        if (!detailsCommande) {
+          return res.status(404).json({
+            message: "Commande introuvable",
+          });
+        }
+
+        res.json(detailsCommande);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message: "Erreur lors de la récupération des détails de la commande",
+        });
+      }
+    })
+
+    app.get("/api/adresses/:idAdresse", authenticate, async (req, res) => {
+      const idAdresse = req.params.idAdresse;
+
+      try {
+        const adresse = await Adresse.findById(idAdresse);
+        res.json(adresse);
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({ message: "Erreur lors de la recuperation de l'adresse" });
+      }
+    });
+
+    app.get("/api/paiements/:idPaiement", authenticate, async (req, res) => {
+      const idPaiement = req.params.idPaiement;
+
+      try {
+        const paiement = await Paiement.findById(idPaiement);
+        res.json(paiement);
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({
+            message: "Erreur lors de la recuperation du moyen de paiement",
+          });
+      }
+    });
+
+    app.delete("/api/paiements/:idPaiement", authenticate, async (req, res) => {
+      const idPaiement = req.params.idPaiement;
+
+      try {
+        await Paiement.findByIdAndDelete(idPaiement);
+        res.json({ message: "Carte supprimée avec succès" });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({
+            message: "Erreur lors de la recuperation du moyen de paiement",
+          });
+      }
+    });
+
+    app.delete("/api/adresses/:idAdresse", authenticate, async (req, res) => {
+      const idAdresse = req.params.idAdresse;
+
+      try {
+        await Adresse.findByIdAndDelete(idAdresse);
+        res.json({ message: "Adresse supprimée avec succès" });
+      } catch (error) {
+        console.error(error);
+        res
+          .status(500)
+          .json({
+            message: "Erreur lors de la recuperation du moyen de paiement",
+          });
+      }
+    });
+
+    app.put("/api/adresses/:idAdresse", authenticate, async (req, res) => {
+      const idAdresse = req.params.idAdresse;
+      const { nom, rue, ville, cp, pays, region, complement } = req.body;
+
+      try {
+        const adresse = await Adresse.findById(idAdresse);
+        if (!adresse) {
+          return res
+            .status(404)
+            .json({ message: "L'adresse n'a pas été trouvée" });
+        }
+
+        adresse.nom = nom || adresse.nom;
+        adresse.rue = rue || adresse.rue;
+        adresse.ville = ville || adresse.ville;
+        adresse.cp = cp || adresse.cp;
+        adresse.pays = pays || adresse.pays;
+        adresse.region = region || adresse.region;
+        adresse.complement = complement || adresse.complement;
+
+        await adresse.save();
+
+        res.status(200).json(adresse);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Erreur serveur" });
+      }
+    });
+
     app.post("/api/connexion", async (req, res) => {
       try {
         const { mail, motDePasse } = req.body;
@@ -1009,15 +1347,6 @@ mongoose
       }
     });
 
-    app.get("/inscription", function (req, res) {
-      res.render("pages/inscription", { title: "Inscription" });
-    });
-
-    function generateResetToken() {
-      const token = require("crypto").randomBytes(20).toString("hex");
-      return token;
-    }
-
     app.post("/api/reset-password", async (req, res) => {
       try {
         // Récupérer l'e-mail renseigné dans le formulaire
@@ -1032,49 +1361,6 @@ mongoose
       } catch (error) {
         console.error("Error sending password reset email:", error);
         res.status(500).send("Failed to send password reset email.");
-      }
-    });
-
-    async function sendResetEmail(email, idClient) {
-      // Construire le contenu de l'e-mail
-      const mailOptions = {
-        from: "airneis.junia@gmail.com",
-        to: email,
-        subject: "AIRNEIS - Password reset",
-        text:
-          "Click the link to reset your password: https://airneis-junia.vercel.app/reset-password/" +
-          idClient,
-      };
-
-      // Envoyer l'e-mail
-      await transporter.sendMail(mailOptions);
-    }
-
-    app.get("/reset-password/:idClient", async (req, res) => {
-      const idClient = req.params.idClient;
-      res.render("pages/reset_password", { title: "Reset password", idClient });
-    });
-
-    app.post("/reset-password-form", async (req, res) => {
-      const idClient = req.body.idClient;
-      const newPassword = req.body.mdp;
-
-      try {
-        // Rechercher le client par son ID
-        const client = await Client.findById(idClient);
-
-        if (!client) {
-          return res.status(404).json({ message: "Client not found" });
-        }
-
-        // Mettre à jour le mot de passe du client
-        client.mdp = await bcrypt.hash(newPassword, saltRounds);
-        await client.save();
-
-        return res.redirect("/connexion");
-      } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error" });
       }
     });
 
@@ -1294,637 +1580,9 @@ mongoose
       }
     });
 
-    app.get("/category", async (req, res) => {
-      try {
-        const categories = await Categorie.find({});
-        res.render("pages/category", {
-          title: "Catégories",
-          categories: categories,
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des catégories.");
-      }
-    });
-
-    app.get("/products", async (req, res) => {
-      try {
-        // Récupérer tous les produits
-        const produits = await Produit.find();
-        const materials = await Produit.distinct("materiaux");
-
-        // Rendre la page des produits avec les données récupérées
-        res.render("pages/product_list", { produits, materials });
-      } catch (error) {
-        console.error(error);
-        res
-          .status(500)
-          .send(
-            "Une erreur s'est produite lors de la récupération des produits."
-          );
-      }
-    });
-
-    app.get("/product/filter", async (req, res) => {
-      try {
-        let { nameText, materialSelect, stockSelect, priceMin, priceMax } =
-          req.query;
-        const filters = {
-          nameText,
-          materialSelect,
-          stockSelect,
-          priceMin,
-          priceMax,
-        };
-        const filter = {};
-
-        // Filtre par nom
-        if (nameText !== "") {
-          filter.nom = { $regex: nameText, $options: "i" };
-        }
-
-        // Filtre par matériau
-        if (materialSelect !== "") {
-          filter.materiaux = materialSelect;
-        }
-
-        // Filtre par stock
-        if (stockSelect !== "") {
-          if (stockSelect === "true") {
-            filter.stock = { $gt: 0 }; // Produits en stock (stock supérieur à 0)
-          } else {
-            filter.stock = 0; // Produits hors stock (stock égal à 0)
-          }
-        }
-
-        // Filtre par tranche de prix
-        // Filtre par tranche de prix
-        if (priceMin !== "") {
-          const min = parseFloat(priceMin);
-          filter.prix = { $gte: min };
-        }
-
-        if (priceMax !== "") {
-          const max = parseFloat(priceMax);
-          filter.prix = { ...filter.prix, $lte: max };
-        }
-
-        // Exécutez votre requête avec les filtres
-        const produits = await Produit.find(filter);
-        const materials = await Produit.distinct("materiaux");
-        res.render("pages/product_list", {
-          produits,
-          materials,
-          filters,
-        });
-      } catch (error) {
-        console.log(error);
-        res.status(500).send("Erreur lors de la récupération des produits");
-      }
-    });
-
-    app.get("/product_list", async (req, res) => {
-      try {
-        const categorie_id = req.query.id;
-        const categorie = await Categorie.findById(categorie_id);
-        if (!categorie) {
-          return res.status(404).send("Catégorie non trouvée");
-        }
-        const materials = await Produit.distinct("materiaux");
-        const produits = await Produit.find({ categorie: categorie_id });
-        res.render("pages/product_list", {
-          title: "Product List",
-          produits: produits,
-          categorie: categorie.nom,
-          materials: materials,
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des produits.");
-      }
-    });
-
-    app.delete("/categories/:id", (req, res) => {
-      const categoryId = req.params.id;
-      Product.deleteMany({ category: categoryId }, (err) => {
-        if (err) {
-          res
-            .status(500)
-            .send(
-              "Une erreur s'est produite lors de la suppression des produits"
-            );
-        } else {
-          Category.findByIdAndRemove(categoryId, (err, category) => {
-            if (err) {
-              res
-                .status(500)
-                .send(
-                  "Une erreur s'est produite lors de la suppression de la catégorie"
-                );
-            } else {
-              res.send(
-                "La catégorie et tous ses produits ont été supprimés avec succès"
-              );
-            }
-          });
-        }
-      });
-    });
-
-    app.delete("/produits/:id", (req, res) => {
-      const productId = req.params.id;
-      Product.findByIdAndRemove(productId, (err, product) => {
-        if (err) {
-          res
-            .status(500)
-            .send(
-              "Une erreur s'est produite lors de la suppression du produit"
-            );
-        } else {
-          res.send("Le produit a été supprimé avec succès");
-        }
-      });
-      res.send("Le produit a été supprimé avec succès");
-    });
-
-    app.get("/product_detail", async (req, res) => {
-      try {
-        const produit_id = req.query.id;
-        const produit = await Produit.findById(produit_id);
-        if (!produit) {
-          return res.status(404).send("Produit non trouvé");
-        }
-
-        // Récupérer la catégorie du produit principal
-        const categorie = produit.categorie;
-
-        // Récupérer 3 autres produits de la même catégorie
-        const autresProduits = await Produit.find({
-          categorie,
-          _id: { $ne: produit_id },
-        })
-          .limit(3)
-          .lean();
-
-        res.render("pages/product_detail", {
-          title: "Product Detail",
-          produit: produit,
-          autresProduits: autresProduits,
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération du produit.");
-      }
-    });
-
-    app.get("/backoffice/produit", requireAdmin, async (req, res) => {
-      try {
-        const produits = await Produit.find({})
-          .populate("categorie", "nom") // Récupère le champ "nom" de la collection "categorie"
-          .exec();
-
-        res.render("pages/backoffice_view_product", {
-          title: "BackOffice-Product",
-          produits: produits,
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des produits.");
-      }
-    });
-
-    app.get("/backoffice/produit/add", requireAdmin, async (req, res) => {
-      try {
-        const categories = await Categorie.find({});
-        res.render("pages/backoffice_add_product", {
-          title: "Backoffice-AddProduct",
-          categories: categories,
-          isProduit: false,
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des categories.");
-      }
-    });
-
-    app.get("/backoffice/produit/modify", requireAdmin, async (req, res) => {
-      try {
-        const produit_id = req.query.id;
-        const produit = await Produit.findById(produit_id);
-        if (!produit) {
-          return res.status(404).send("Produit non trouvée");
-        }
-        const categories = await Categorie.find({});
-        res.render("pages/backoffice_add_product", {
-          title: "Backoffice-ModifyProduct",
-          categories: categories,
-          produit: produit,
-          isProduit: true,
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des categories.");
-      }
-    });
-
-    app.post("/inscription", async (req, res) => {
-      const { id, nom, prenom, mail, mdp, telephone } = req.body;
-      const existingClient = await Client.findOne({ mail: mail });
-      if (existingClient) {
-        return res.status(409).send("Cet e-mail est déjà utilisé");
-      }
-      if (nom === "" || prenom === "" || mail === "" || mdp === "") {
-        return res.status(409).send("Informations manquantes");
-      }
-      if (!passwordRegex.test(mdp)) {
-        return res
-          .status(400)
-          .send(
-            "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial parmi @, $, !, %, *, ?, &."
-          );
-      }
-      try {
-        const empreinteMotDePasse = await bcrypt.hash(mdp, saltRounds);
-        const nouveauCompte = new Client({
-          id: uuidv4(),
-          nom,
-          prenom,
-          mail,
-          mdp: empreinteMotDePasse,
-          telephone: "",
-          admin: false,
-        });
-        await nouveauCompte.save();
-        req.session.userId = nouveauCompte.id;
-        res.redirect("/");
-      } catch (erreur) {
-        console.log(erreur);
-        res.status(500).send("Erreur lors de la création du compte");
-      }
-    });
-
-    app.get("/deconnexion", function (req, res) {
-      req.session.destroy(function (err) {
-        if (err) {
-          console.error(err);
-          return res.status(500).send("Erreur lors de la déconnexion");
-        }
-        res.redirect("/");
-      });
-    });
-
-    app.post("/send-mail-contact", async (req, res) => {
-      const { email, sujet, message } = req.body;
-
-      try {
-        // Créer une instance du modèle Message avec les informations fournies
-        const nouveauMessage = new Message({
-          email,
-          sujet,
-          contenu: message,
-        });
-
-        // Enregistrer le nouveau message en base de données
-        await nouveauMessage.save();
-
-        res.redirect("/");
-      } catch (error) {
-        console.log(error);
-        res
-          .status(500)
-          .send("Une erreur s'est produite lors de la création du message.");
-      }
-    });
-
-    // Fonction pour générer le token d'authentification (par exemple, JWT)
-    function generateAuthToken(client) {
-      // Clé secrète pour signer le token
-      const token = jwt.sign({ id: client._id }, secretKey, {
-        expiresIn: "24h",
-      }); // Exemple avec une expiration d'une journée
-      return token;
-    }
-
-    // Middleware d'authentification
-    function authenticate(req, res, next) {
-      const token = req.headers.authorization; // Récupérer le token depuis les en-têtes de la requête
-      const tokenToVerify = token.split(" ")[1];
-      if (!token) {
-        return res
-          .status(401)
-          .json({ message: "Token d'authentification manquant" });
-      }
-
-      try {
-        // Clé secrète utilisée lors de la génération du token
-        const decodedToken = jwt.verify(tokenToVerify, secretKey); // Vérifier la validité du token
-
-        next(); // Passer au prochain middleware ou à la route suivante
-      } catch (error) {
-        console.error(error);
-        res.status(401).json({ message: "Token d'authentification invalide" });
-      }
-    }
-
-    app.get("/backoffice/categorie", requireAdmin, async (req, res) => {
-      try {
-        const categories = await Categorie.find({});
-        res.render("pages/backoffice_view_category", {
-          title: "Backoffice - CategoriesList",
-          categories: categories,
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).send("Erreur lors de la récupération des categories.");
-      }
-    });
-
-    app.get("/backoffice/categorie/add", requireAdmin, async (req, res) => {
-      try {
-        const categoryId = req.query.id;
-
-        // Vérifier si l'ID de la catégorie est fourni pour déterminer s'il s'agit d'une modification
-        if (categoryId) {
-          // Récupérer la catégorie existante depuis la base de données
-          const categorieExistante = await Categorie.findById(categoryId);
-          if (!categorieExistante) {
-            return res.status(404).json({ error: "Catégorie non trouvée." });
-          }
-
-          // Afficher la page de modification de la catégorie avec les détails de la catégorie existante
-          return res.render("pages/backoffice_add_category", {
-            title: "Backoffice - CategoryAdd",
-            isCategory: true,
-            categorie: categorieExistante,
-          });
-        } else {
-          // Afficher la page de création de la catégorie
-          return res.render("pages/backoffice_add_category", {
-            title: "Backoffice - CategoryAdd",
-            isCategory: false,
-          });
-        }
-      } catch (error) {
-        // Une erreur s'est produite lors de la récupération de la catégorie existante
-        console.error(
-          "Erreur lors de la récupération de la catégorie existante :",
-          error
-        );
-        return res.status(500).json({
-          error:
-            "Une erreur s'est produite lors de la récupération de la catégorie existante.",
-        });
-      }
-    });
-
-    app.post("/backoffice/categorie/add", requireAdmin, async (req, res) => {
-      try {
-        const { _id, nom, description, image } = req.body;
-
-        // Vérifier si l'ID de la catégorie est fourni pour déterminer s'il s'agit d'une création ou d'une modification
-        if (_id) {
-          // Modification de la catégorie
-          const categorieExistante = await Categorie.findById(_id);
-
-          if (!categorieExistante) {
-            return res.status(404).json({ error: "Catégorie non trouvée." });
-          }
-
-          // Mise à jour des informations de la catégorie
-          categorieExistante.nom = nom;
-          categorieExistante.image = image;
-          categorieExistante.description = description;
-
-          await categorieExistante.save();
-
-          // La catégorie a été mise à jour avec succès en base de données
-          return res.redirect("/backoffice/categorie");
-        } else {
-          // Création de la catégorie
-          const categorie = new Categorie({
-            nom,
-            description,
-            image,
-          });
-
-          await categorie.save();
-
-          // La catégorie a été créée avec succès en base de données
-          return res.redirect("/backoffice/categorie");
-        }
-      } catch (error) {
-        // Une erreur s'est produite lors de la création ou de la mise à jour de la catégorie
-        console.error(
-          "Erreur lors de la création ou de la mise à jour de la catégorie :",
-          error
-        );
-        return res.status(500).json({
-          error:
-            "Une erreur s'est produite lors de la création ou de la mise à jour de la catégorie.",
-        });
-      }
-    });
-
-    app.get("/categorie/delete/:id", requireAdmin, async (req, res) => {
-      try {
-        const categorieId = req.params.id;
-
-        // Vérifier si la catégorie existe
-        const categorie = await Categorie.findById(categorieId);
-        if (!categorie) {
-          return res.status(404).json({ error: "Catégorie non trouvée." });
-        }
-
-        // Supprimer la catégorie de la base de données
-        await Categorie.findByIdAndRemove(categorieId);
-
-        // Rediriger vers la page de gestion des catégories
-        return res.redirect("/backoffice/categorie");
-      } catch (error) {
-        // Une erreur s'est produite lors de la suppression de la catégorie
-        console.error("Erreur lors de la suppression de la catégorie :", error);
-        return res.status(500).json({
-          error:
-            "Une erreur s'est produite lors de la suppression de la catégorie.",
-        });
-      }
-    });
-
-    app.post("/backoffice/produit/add", requireAdmin, async (req, res) => {
-      try {
-        const {
-          _id,
-          nom,
-          prix,
-          stock,
-          description,
-          materiaux,
-          categorie,
-          photo1,
-          photo2,
-          photo3,
-          photo4,
-        } = req.body;
-
-        // Vérifier si l'ID du produit est fourni pour déterminer s'il s'agit d'une création ou d'une modification
-        if (_id) {
-          // Modification du produit
-          const produitExistant = await Produit.findById(_id);
-
-          if (!produitExistant) {
-            return res.status(404).json({ error: "Produit non trouvé." });
-          }
-
-          // Mise à jour des informations du produit
-          produitExistant.nom = nom;
-          produitExistant.prix = prix;
-          produitExistant.stock = stock;
-          produitExistant.description = description;
-          produitExistant.materiaux = materiaux;
-          produitExistant.categorie = categorie;
-          produitExistant.image1 = photo1 || "";
-          produitExistant.image2 = photo2 || "";
-          produitExistant.image3 = photo3 || "";
-          produitExistant.image4 = photo4 || "";
-
-          await produitExistant.save();
-
-          // Le produit a été mis à jour avec succès en base de données
-          return res.redirect("/backoffice/produit");
-        } else {
-          // Création du produit
-          const categorieExistante = await Categorie.findById(categorie);
-
-          if (!categorieExistante) {
-            return res
-              .status(400)
-              .json({ error: "La catégorie est invalide." });
-          }
-
-          // Enregistrer le produit en base de données avec les liens vers les images
-          const produit = new Produit({
-            nom,
-            prix,
-            stock,
-            description,
-            mateiraux: materiaux ? materiaux : "",
-            categorie: categorie,
-            image1: photo1 || "",
-            image2: photo2 || "",
-            image3: photo3 || "",
-            image4: photo4 || "",
-          });
-
-          await produit.save();
-
-          // Le produit a été enregistré avec succès en base de données
-          return res.redirect("/backoffice/produit");
-        }
-      } catch (error) {
-        // Une erreur s'est produite lors de la création ou de la mise à jour du produit
-        console.error(
-          "Erreur lors de la création ou de la mise à jour du produit :",
-          error
-        );
-        return res.status(500).json({
-          error:
-            "Une erreur s'est produite lors de la création ou de la mise à jour du produit.",
-        });
-      }
-    });
-
-    app.get("/backoffice/orders", requireAdmin, async (req, res) => {
-      try {
-        // Récupérer toutes les commandes depuis la base de données
-        const commandes = await Commande.find()
-          .populate("produits.produit")
-          .populate("client")
-          .exec();
-        commandes.reverse();
-        // Passer les données des commandes à la vue "backoffice_orders"
-        res.render("pages/backoffice_orders", { commandes });
-      } catch (error) {
-        console.log(error);
-        res.status(500).send("Erreur lors de la récupération des commandes");
-      }
-    });
-
-    app.get("/backoffice/returnRequests", requireAdmin, async (req, res) => {
-      try {
-        // Récupérer toutes les commandes depuis la base de données
-        const commandes = await Commande.find({ statut: "Return requested" })
-          .populate("produits.produit")
-          .exec();
-        commandes.reverse();
-        // Passer les données des commandes à la vue "backoffice_orders"
-        res.render("pages/backoffice_orders", { commandes });
-      } catch (error) {
-        console.log(error);
-        res.status(500).send("Erreur lors de la récupération des commandes");
-      }
-    });
-
-    app.get("/order/changeStatut/:idCommande/:statut", async (req, res) => {
-      try {
-        const idCommande = req.params.idCommande;
-        const statut = req.params.statut;
-        if (statut === "askCancel") {
-          newStatut = "Canceled";
-        }
-        if (statut === "askReturn") {
-          newStatut = "Return requested";
-        }
-        const commande = await Commande.findByIdAndUpdate(
-          idCommande,
-          { statut: newStatut },
-          { new: true }
-        );
-        res.redirect("/historique_commande");
-      } catch (error) {
-        console.error("Erreur lors de la mise à jour du statut :", error);
-        res
-          .status(500)
-          .json({ error: "Erreur lors de la mise à jour du statut" });
-      }
-    });
-
-    app.post("/backoffice/orders/:idCommande/statut", async (req, res) => {
-      try {
-        const idCommande = req.params.idCommande;
-        const newStatut = req.body.statut;
-
-        // Exemple de mise à jour de statut avec Mongoose
-        const commande = await Commande.findByIdAndUpdate(
-          idCommande,
-          { statut: newStatut },
-          { new: true }
-        );
-        res.redirect("/backoffice/orders");
-      } catch (error) {
-        console.error("Erreur lors de la mise à jour du statut :", error);
-        res
-          .status(500)
-          .json({ error: "Erreur lors de la mise à jour du statut" });
-      }
-    });
-
-    app.get("/produit/delete/:id", requireAdmin, async (req, res) => {
-      try {
-        const produitId = req.params.id;
-
-        // Supprimez le produit en utilisant l'ID fourni
-        await Produit.findByIdAndRemove(produitId);
-
-        // Redirigez vers la page de la liste des produits après la suppression réussie
-        return res.redirect("/backoffice/produit");
-      } catch (error) {
-        console.error(error);
-        // Gérez les erreurs et renvoyez une réponse appropriée en cas d'échec de suppression
-        return res
-          .status(500)
-          .send("Une erreur s'est produite lors de la suppression du produit.");
-      }
-    });
+    /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
+    /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
+    /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
 
     app.get("/backoffice/favoris", requireAdmin, async (req, res) => {
       try {
@@ -2152,6 +1810,356 @@ mongoose
           message:
             "Une erreur s'est produite lors de la récupération des données",
         });
+      }
+    });
+
+    app.post("/backoffice/orders/:idCommande/statut", async (req, res) => {
+      try {
+        const idCommande = req.params.idCommande;
+        const newStatut = req.body.statut;
+
+        // Exemple de mise à jour de statut avec Mongoose
+        const commande = await Commande.findByIdAndUpdate(
+          idCommande,
+          { statut: newStatut },
+          { new: true }
+        );
+        res.redirect("/backoffice/orders");
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour du statut :", error);
+        res
+          .status(500)
+          .json({ error: "Erreur lors de la mise à jour du statut" });
+      }
+    });
+
+    app.get("/backoffice/returnRequests", requireAdmin, async (req, res) => {
+      try {
+        // Récupérer toutes les commandes depuis la base de données
+        const commandes = await Commande.find({ statut: "Return requested" })
+          .populate("produits.produit")
+          .exec();
+        commandes.reverse();
+        // Passer les données des commandes à la vue "backoffice_orders"
+        res.render("pages/backoffice_orders", { commandes });
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération des commandes");
+      }
+    });
+
+    app.post("/backoffice/produit/add", requireAdmin, async (req, res) => {
+      try {
+        const {
+          _id,
+          nom,
+          prix,
+          stock,
+          description,
+          materiaux,
+          categorie,
+          photo1,
+          photo2,
+          photo3,
+          photo4,
+        } = req.body;
+
+        // Vérifier si l'ID du produit est fourni pour déterminer s'il s'agit d'une création ou d'une modification
+        if (_id) {
+          // Modification du produit
+          const produitExistant = await Produit.findById(_id);
+
+          if (!produitExistant) {
+            return res.status(404).json({ error: "Produit non trouvé." });
+          }
+
+          // Mise à jour des informations du produit
+          produitExistant.nom = nom;
+          produitExistant.prix = prix;
+          produitExistant.stock = stock;
+          produitExistant.description = description;
+          produitExistant.materiaux = materiaux;
+          produitExistant.categorie = categorie;
+          produitExistant.image1 = photo1 || "";
+          produitExistant.image2 = photo2 || "";
+          produitExistant.image3 = photo3 || "";
+          produitExistant.image4 = photo4 || "";
+
+          await produitExistant.save();
+
+          // Le produit a été mis à jour avec succès en base de données
+          return res.redirect("/backoffice/produit");
+        } else {
+          // Création du produit
+          const categorieExistante = await Categorie.findById(categorie);
+
+          if (!categorieExistante) {
+            return res
+              .status(400)
+              .json({ error: "La catégorie est invalide." });
+          }
+
+          // Enregistrer le produit en base de données avec les liens vers les images
+          const produit = new Produit({
+            nom,
+            prix,
+            stock,
+            description,
+            mateiraux: materiaux ? materiaux : "",
+            categorie: categorie,
+            image1: photo1 || "",
+            image2: photo2 || "",
+            image3: photo3 || "",
+            image4: photo4 || "",
+          });
+
+          await produit.save();
+
+          // Le produit a été enregistré avec succès en base de données
+          return res.redirect("/backoffice/produit");
+        }
+      } catch (error) {
+        // Une erreur s'est produite lors de la création ou de la mise à jour du produit
+        console.error(
+          "Erreur lors de la création ou de la mise à jour du produit :",
+          error
+        );
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la création ou de la mise à jour du produit.",
+        });
+      }
+    });
+
+    app.get("/backoffice/orders", requireAdmin, async (req, res) => {
+      try {
+        // Récupérer toutes les commandes depuis la base de données
+        const commandes = await Commande.find()
+          .populate("produits.produit")
+          .populate("client")
+          .exec();
+        commandes.reverse();
+        // Passer les données des commandes à la vue "backoffice_orders"
+        res.render("pages/backoffice_orders", { commandes });
+      } catch (error) {
+        console.log(error);
+        res.status(500).send("Erreur lors de la récupération des commandes");
+      }
+    });
+
+    app.get("/backoffice/categorie", requireAdmin, async (req, res) => {
+      try {
+        const categories = await Categorie.find({});
+        res.render("pages/backoffice_view_category", {
+          title: "Backoffice - CategoriesList",
+          categories: categories,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des categories.");
+      }
+    });
+
+    app.get("/backoffice/categorie/add", requireAdmin, async (req, res) => {
+      try {
+        const categoryId = req.query.id;
+
+        // Vérifier si l'ID de la catégorie est fourni pour déterminer s'il s'agit d'une modification
+        if (categoryId) {
+          // Récupérer la catégorie existante depuis la base de données
+          const categorieExistante = await Categorie.findById(categoryId);
+          if (!categorieExistante) {
+            return res.status(404).json({ error: "Catégorie non trouvée." });
+          }
+
+          // Afficher la page de modification de la catégorie avec les détails de la catégorie existante
+          return res.render("pages/backoffice_add_category", {
+            title: "Backoffice - CategoryAdd",
+            isCategory: true,
+            categorie: categorieExistante,
+          });
+        } else {
+          // Afficher la page de création de la catégorie
+          return res.render("pages/backoffice_add_category", {
+            title: "Backoffice - CategoryAdd",
+            isCategory: false,
+          });
+        }
+      } catch (error) {
+        // Une erreur s'est produite lors de la récupération de la catégorie existante
+        console.error(
+          "Erreur lors de la récupération de la catégorie existante :",
+          error
+        );
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la récupération de la catégorie existante.",
+        });
+      }
+    });
+
+    app.post("/backoffice/categorie/add", requireAdmin, async (req, res) => {
+      try {
+        const { _id, nom, description, image } = req.body;
+
+        // Vérifier si l'ID de la catégorie est fourni pour déterminer s'il s'agit d'une création ou d'une modification
+        if (_id) {
+          // Modification de la catégorie
+          const categorieExistante = await Categorie.findById(_id);
+
+          if (!categorieExistante) {
+            return res.status(404).json({ error: "Catégorie non trouvée." });
+          }
+
+          // Mise à jour des informations de la catégorie
+          categorieExistante.nom = nom;
+          categorieExistante.image = image;
+          categorieExistante.description = description;
+
+          await categorieExistante.save();
+
+          // La catégorie a été mise à jour avec succès en base de données
+          return res.redirect("/backoffice/categorie");
+        } else {
+          // Création de la catégorie
+          const categorie = new Categorie({
+            nom,
+            description,
+            image,
+          });
+
+          await categorie.save();
+
+          // La catégorie a été créée avec succès en base de données
+          return res.redirect("/backoffice/categorie");
+        }
+      } catch (error) {
+        // Une erreur s'est produite lors de la création ou de la mise à jour de la catégorie
+        console.error(
+          "Erreur lors de la création ou de la mise à jour de la catégorie :",
+          error
+        );
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la création ou de la mise à jour de la catégorie.",
+        });
+      }
+    });
+
+    app.get("/backoffice/produit", requireAdmin, async (req, res) => {
+      try {
+        const produits = await Produit.find({})
+          .populate("categorie", "nom") // Récupère le champ "nom" de la collection "categorie"
+          .exec();
+
+        res.render("pages/backoffice_view_product", {
+          title: "BackOffice-Product",
+          produits: produits,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des produits.");
+      }
+    });
+
+    app.get("/backoffice/produit/add", requireAdmin, async (req, res) => {
+      try {
+        const categories = await Categorie.find({});
+        res.render("pages/backoffice_add_product", {
+          title: "Backoffice-AddProduct",
+          categories: categories,
+          isProduit: false,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des categories.");
+      }
+    });
+
+    app.get("/backoffice/produit/modify", requireAdmin, async (req, res) => {
+      try {
+        const produit_id = req.query.id;
+        const produit = await Produit.findById(produit_id);
+        if (!produit) {
+          return res.status(404).send("Produit non trouvée");
+        }
+        const categories = await Categorie.find({});
+        res.render("pages/backoffice_add_product", {
+          title: "Backoffice-ModifyProduct",
+          categories: categories,
+          produit: produit,
+          isProduit: true,
+        });
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("Erreur lors de la récupération des categories.");
+      }
+    });
+
+    app.get("/categorie/delete/:id", requireAdmin, async (req, res) => {
+      try {
+        const categorieId = req.params.id;
+
+        // Vérifier si la catégorie existe
+        const categorie = await Categorie.findById(categorieId);
+        if (!categorie) {
+          return res.status(404).json({ error: "Catégorie non trouvée." });
+        }
+
+        // Supprimer la catégorie de la base de données
+        await Categorie.findByIdAndRemove(categorieId);
+
+        // Rediriger vers la page de gestion des catégories
+        return res.redirect("/backoffice/categorie");
+      } catch (error) {
+        // Une erreur s'est produite lors de la suppression de la catégorie
+        console.error("Erreur lors de la suppression de la catégorie :", error);
+        return res.status(500).json({
+          error:
+            "Une erreur s'est produite lors de la suppression de la catégorie.",
+        });
+      }
+    });
+
+    app.get("/order/changeStatut/:idCommande/:statut", async (req, res) => {
+      try {
+        const idCommande = req.params.idCommande;
+        const statut = req.params.statut;
+        if (statut === "askCancel") {
+          newStatut = "Canceled";
+        }
+        if (statut === "askReturn") {
+          newStatut = "Return requested";
+        }
+        const commande = await Commande.findByIdAndUpdate(
+          idCommande,
+          { statut: newStatut },
+          { new: true }
+        );
+        res.redirect("/historique_commande");
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour du statut :", error);
+        res
+          .status(500)
+          .json({ error: "Erreur lors de la mise à jour du statut" });
+      }
+    });
+
+    app.get("/produit/delete/:id", requireAdmin, async (req, res) => {
+      try {
+        const produitId = req.params.id;
+
+        // Supprimez le produit en utilisant l'ID fourni
+        await Produit.findByIdAndRemove(produitId);
+
+        // Redirigez vers la page de la liste des produits après la suppression réussie
+        return res.redirect("/backoffice/produit");
+      } catch (error) {
+        console.error(error);
+        // Gérez les erreurs et renvoyez une réponse appropriée en cas d'échec de suppression
+        return res
+          .status(500)
+          .send("Une erreur s'est produite lors de la suppression du produit.");
       }
     });
 
