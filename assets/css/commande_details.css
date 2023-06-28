@@ -53,3 +53,13 @@
     width: 100%;
     text-align: center;
 }
+
+.id{
+    font-weight: 600;
+}
+
+@media (max-width: 800px){
+    .id{
+        font-size: 1.2rem;
+    }
+}

@@ -53,3 +53,13 @@
   opacity: 1;
 }
 
+.product-name-title{
+  font-weight: 600;
+}
+
+@media (max-width: 800px){
+  .product-name-title{
+    font-size: 1.2rem;
+  }
+}
+
