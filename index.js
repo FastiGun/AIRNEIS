@@ -1559,7 +1559,6 @@ mongoose
         const categories = await Categorie.find({});
         res.json(categories);
       } catch (error) {
-        console.error(error);
         res.status(500).send("Erreur lors de la récupération des catégories.");
       }
     });
@@ -1603,6 +1602,15 @@ mongoose
         });
       }
     });
+
+    app.get("/api/favoris", async(req,res) =>{
+      try {
+        const favoris = await Favoris.findById(idFavoris);
+        res.json(favoris);
+      } catch (error) {
+        res.status(500).send("Erreur lors de la récupération des favoris.");
+      }
+    })
 
 
     /// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ////// Backoffice ///
