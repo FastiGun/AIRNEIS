@@ -1305,6 +1305,20 @@ mongoose
       }
     });
 
+    app.delete("/api/panier/:idPanier", authenticate, async (req, res) => {
+      const idPanier = req.params.idPanier;
+
+      try {
+        await Panier.findByIdAndDelete(idPanier);
+        res.json({ message: "Panier supprimée avec succès" });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({
+          message: "Erreur lors de la recuperation de l'article",
+        });
+      }
+    });
+
     app.put("/api/adresses/:idAdresse", authenticate, async (req, res) => {
       const idAdresse = req.params.idAdresse;
       const { nom, rue, ville, cp, pays, region, complement } = req.body;
