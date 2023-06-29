@@ -1559,7 +1559,7 @@ mongoose
           }
 
           // Récupérer les paniers du client
-          const paniers = await Panier.find({ client: clientId });
+          const paniers = await Panier.find({ client: clientId }).populate("article");
 
           res.json(paniers);
         } catch (error) {
