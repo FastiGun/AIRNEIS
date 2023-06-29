@@ -6,6 +6,8 @@ block links
 block content
   .container
     h1.contact-h1 Cart
+    if error 
+      span#mdp-special.error #{error}
     if paniers.length === 0
         h4.panier-vide Your cart is empty
         a(href="/products")

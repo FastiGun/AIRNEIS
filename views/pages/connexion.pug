@@ -16,6 +16,8 @@ block content
           .input-field
             input#mdp(name="mdp", placeholder="Password*", type="password", required)
             label(for="mdp")
+            if error 
+              span#mdp-special.error #{error}
         .row3
           p.compte-p Not registered yet ?
           a(href="/inscription") Sign up

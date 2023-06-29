@@ -207,7 +207,13 @@ mongoose
         return res.redirect("/connexion");
       }
       const clientId = req.session.userId;
-
+      let error;
+      if (req.session.error) {
+        error = req.session.error;
+      } else {
+        error = "";
+      }
+      req.session.error = null;
       try {
         const paniers = await Panier.find({ client: clientId }).populate(
           "article"
@@ -220,7 +226,13 @@ mongoose
         TVA = prixTTC - prixTotal;
         TVA = TVA.toFixed(2);
         prixTotal = prixTotal.toFixed(2);
-        res.render("pages/cart", { paniers, prixTotal, TVA, title: "Panier" });
+        res.render("pages/cart", {
+          paniers,
+          prixTotal,
+          TVA,
+          title: "Panier",
+          error,
+        });
       } catch (error) {
         console.error(error);
         res
@@ -502,7 +514,8 @@ mongoose
         if (panier) {
           // Le panier existe déjà, incrémenter la quantité
           if (panier.quantite + 1 > article.stock) {
-            return res.send("Stock insuffisant");
+            req.session.error = "Insufisant stock";
+            return res.redirect("/cart");
           }
           panier.quantite += 1;
         } else {
@@ -597,7 +610,8 @@ mongoose
         }
 
         if (nouvelleQuantite > article.stock) {
-          return res.send("Stock insuffisant");
+          req.session.error = "Insufisant stock";
+          return res.redirect("/cart");
         }
 
         if (!panier) {
@@ -776,11 +790,17 @@ mongoose
       const { mail, mdp } = req.body;
       const existingClient = await Client.findOne({ mail: mail });
       if (!existingClient) {
-        return res.status(401).send("Compte inexistant");
+        return res.render("pages/connexion", {
+          title: "Connexion",
+          error: "Inexisting account",
+        });
       }
       const motDePasseCorrect = await bcrypt.compare(mdp, existingClient.mdp);
       if (!motDePasseCorrect) {
-        return res.status(401).send("Mot de passe incorrect");
+        return res.render("pages/connexion", {
+          title: "Connexion",
+          error: "Incorrect password",
+        });
       }
       if (existingClient.admin) {
         req.session.userId = existingClient.id;
