@@ -9,16 +9,16 @@ block content
             h1 Caroussel pictures
             .caroussel-img-wrapper.container-backo 
                 .input-caroussel-img
-                    label(for="photo1") Photo 1
+                    label(for="photo1") Picture 1
                     input(required type="text", name="photo1", id="photo1", value=favoris.photo1)
                 .input-caroussel-img
-                    label(for="photo2") Photo 2
+                    label(for="photo2") Picture 2
                     input(required type="text", name="photo2", id="photo2", value=favoris.photo2)
                 .input-caroussel-img
-                    label(for="photo3") Photo 3
+                    label(for="photo3") Picture 3
                     input(required type="text", name="photo3", id="photo3", value=favoris.photo3)
                 .input-caroussel-img
-                    label(for="photo4") Photo 4
+                    label(for="photo4") Picture 4
                     input(required type="text", name="photo4", id="photo4", value=favoris.photo4)
 
             h1 Front categories 
@@ -87,4 +87,4 @@ block content
                         else
                             option(value=produit._id) #{ produit.nom }
 
-            button.waves-effect.waves-light.btn-large(type="submit") Validate new favourites
+            button.waves-effect.waves-light.btn-large(type="submit") Confirm

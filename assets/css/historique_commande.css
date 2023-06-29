@@ -36,3 +36,10 @@
 .right-side{
     text-align: right;
 }
+
+@media (max-width: 800px){
+    .id{
+        font-size: 0.9rem;
+        
+    }
+}

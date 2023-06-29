@@ -107,3 +107,9 @@ a > .panier-vide:hover{
     width: 100%;
   }
 }
+
+span.error {
+  display: block;
+  font-size: 0.9rem;
+  color: red;
+}

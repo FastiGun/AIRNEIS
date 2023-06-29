@@ -5,8 +5,8 @@ block links
 
 
 block content
-    .wrapper-commande-details
-        .id Order n°#{ commande.id }
+    .wrapper-commande-details.container
+        .id.contact-h1 Order n°#{ commande.id }
         .date #{ commande.date }
         h3 Order Content
         .produit-list-content
@@ -17,39 +17,34 @@ block content
                         p.product-name #{ article.produit.nom }
                         p.product-price #{ article.produit.prix }€/units
                         p.product-quantity #{ article.quantite } units
+            p.statut-commande Status : #{ commande.statut }
             .prix-total
                 .total-price TOTAL
                 .total-amount #{ commande.prixHT } €
             .prix-tva 
                 .tva-price VAT
                 .tva-amount #{ commande.prixTTC } €
-            a.waves-effect.waves-light.btn-large.button() Return order
+            if commande.statut === "On hold"
+                a.waves-effect.waves-light.btn-large.button(href=`/order/changeStatut/${commande.id}/askCancel`) Cancel order
+            if commande.statut === "Delivered"
+                a.waves-effect.waves-light.btn-large.button(href=`/order/changeStatut/${commande.id}/askReturn`) Return order
 
         h3 Addresses
         table.container-user-address
                 thead 
                     tr 
-                        th Type
+                        th 
                         th Street
-                        th Complement 
                         th City
                         th ZIP Code
-                        th Region
-                        th Country
                 tbody
                     tr.view-address-list-item
                         td Delivery Address
                         td.address-streat #{ commande.adresseLivraison.rue }
-                        td.address-complement #{ commande.adresseLivraison.complement }
                         td.address-town #{ commande.adresseLivraison.ville }
                         td.address-code #{ commande.adresseLivraison.cp }
-                        td.address-region #{ commande.adresseLivraison.region }
-                        td.address-country #{ commande.adresseLivraison.pays}
                     tr.view-address-list-item
                         td Facturation Address
                         td.address-streat #{ commande.adresseFacturation.rue }
-                        td.address-complement #{ commande.adresseFacturation.complement }
                         td.address-town #{ commande.adresseFacturation.ville }
                         td.address-code #{ commande.adresseFacturation.cp }
-                        td.address-region #{ commande.adresseFacturation.region }
-                        td.address-country #{ commande.adresseFacturation.pays}

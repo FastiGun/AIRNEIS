@@ -10,6 +10,7 @@ select {
 
 .cart-confirmation-page{
     display: flex;
+    flex-direction: row;
     gap: 3rem;
     margin-bottom: 5rem;
 }
@@ -47,6 +48,13 @@ button.waves-effect.waves-light.btn-large{
 .prix-total, .prix-tva {
     font-weight: 900;
     font-size: 1.5rem;
+}
+
+
+@media (max-width: 800px){
+    .cart-confirmation-page{
+        flex-direction: column;
+    }
 }
 
 

@@ -4,6 +4,5 @@ document.addEventListener('DOMContentLoaded', function() {
   
     menu_icon.addEventListener('click', function() {
         menu.classList.toggle('hidden');
-        console.log('clicked');
     });
 });

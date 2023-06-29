@@ -7,16 +7,23 @@ h3{
 }
 
 button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  opacity: 0.5;
+}
+
+span.error {
+  display: block;
+  font-size: 0.7rem;
+  color: red;
+}
+
+@media (max-width: 800px){
+  table{
+    font-size: 0.8rem;
   }
-  
-  button:disabled:hover {
-    opacity: 0.5;
-  }
-  
-  span.error {
-    display: block;
-    font-size: 0.7rem;
-    color: red;
-  }
+}
+

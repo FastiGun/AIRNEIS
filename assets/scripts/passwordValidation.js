@@ -18,27 +18,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const digitRegex = /^(?=.*\d)/;
     const specialRegex = /^(?=.*[@$!%*?&])/;
 
-    if(submitButtonUser && password!==""){
+    if (submitButtonUser && password !== "") {
       submitButtonUser.disabled = true
-    } else if (submitButtonUser && password==="") {
+    } else if (submitButtonUser && password === "") {
       submitButtonUser.disabled = false
     }
 
     lengthSpan.textContent = lengthRegex.test(password)
       ? ""
-      : "Le mot de passe doit contenir au moins 8 caractères.";
+      : "The password has to contain at least 8 characters";
     uppercaseSpan.textContent = uppercaseRegex.test(password)
       ? ""
-      : "Le mot de passe doit contenir au moins une lettre majuscule.";
+      : "The password has to contain at least one uppercase";
     lowercaseSpan.textContent = lowercaseRegex.test(password)
       ? ""
-      : "Le mot de passe doit contenir au moins une lettre minuscule.";
+      : "The password has to contain at least one lowercase";
     digitSpan.textContent = digitRegex.test(password)
       ? ""
-      : "Le mot de passe doit contenir au moins un chiffre.";
+      : "The password has to contain at least one digit";
     specialSpan.textContent = specialRegex.test(password)
       ? ""
-      : "Le mot de passe doit contenir au moins un caractère spécial (@, $, !, %, *, ?, &).";
+      : "The password has to contain at least one special character (@, $, !, %, *, ?, &)";
 
     lengthSpan.style.display = lengthRegex.test(password) ? "none" : "block";
     uppercaseSpan.style.display = uppercaseRegex.test(password)
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
       specialRegex.test(password);
 
     if (isPasswordValid && isFormComplete()) {
-      if (submitButton !== null){
+      if (submitButton !== null) {
         submitButton.disabled = false;
         submitButton.classList.remove("disabled");
       } else {

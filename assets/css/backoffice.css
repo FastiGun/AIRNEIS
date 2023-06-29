@@ -1,10 +1,7 @@
 .backoffice-wrapper {
     display: flex;
+    margin: 5rem auto;
     flex-wrap: wrap;
-    gap: 5rem;
-    width: 80%;
-    margin-left: 10%;
-    margin-top: 10rem; 
-    justify-content: space-between;
+    gap: 1rem;
+    justify-content: center;
 }
-

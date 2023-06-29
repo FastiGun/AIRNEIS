@@ -5,21 +5,21 @@ block links
 
 block content
   .container
-    h1.contact-h1 Contactez-nous
+    h1.contact-h1 Contact us
     form(action="/send-mail-contact", method="post")
       .row
         .input-field.col.s6
           input#email(placeholder="Email", name="email", required)
           label(for="email")
         .input-field.col.s6
-          input#objet(placeholder="Objet", name="sujet", required)
+          input#objet(placeholder="Object", name="sujet", required)
           label(for="sujet")
       .row
         .input-field.col.s12
-          textarea.materialize-textarea#mail(name="message", cols="30", rows="10", placeholder="Votre message", required)
+          textarea.materialize-textarea#mail(name="message", cols="30", rows="10", placeholder="Your message", required)
           label(for="message")
       .row 
         .input-field.col.s12
           button.btn.waves-effect.waves-light(type='submit', name='action')
-            | Envoyer le message 
+            | Send message
             i.material-icons.right send

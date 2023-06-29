@@ -2,7 +2,7 @@
   if !req.session.isAdmin
     a.burgermenu-link(href='/product/filter?nameText=&materialSelect=&stockSelect=&priceMin=&priceMax=') Products
     a.burgermenu-link(href='/category') Categories
-    a.burgermenu-link(href='/contact') Contact
+    a.burgermenu-link(href='/contact') Contact us
   if isLoggedIn 
     if !req.session.isAdmin 
       a.burgermenu-link(href='/historique_commande') My orders

@@ -10,10 +10,10 @@ const codepostalFactu = document.querySelector("#codepostalFactu");
 const checkboxFactu = document.querySelector("#register-addressFactu");
 
 
-selectAddressFactu.onchange = function() {
+selectAddressFactu.onchange = function () {
     const addressIdFactu = selectAddressFactu.value;
-    if (addressIdFactu != ""){
-        updateDisplayFactu(addressIdFactu) 
+    if (addressIdFactu != "") {
+        updateDisplayFactu(addressIdFactu)
         checkboxFactu.setAttribute("disabled", "true")
     } else {
         checkboxFactu.removeAttribute("disabled")
@@ -21,15 +21,15 @@ selectAddressFactu.onchange = function() {
 }
 
 function updateDisplayFactu(addressIdFactu) {
-    fetch("/getAdresse/"+addressIdFactu).then(function(response){
-        response.json().then(function(obj) {
-            nameAddressFactu.value = obj.adresse.nom;
-            rueFactu.value = obj.adresse.rue;
-            villeFactu.value = obj.adresse.ville;
-            paysFactu.value = obj.adresse.pays;
-            regionFactu.value = obj.adresse.region;
-            complementFactu.value = obj.adresse.complement;
-            codepostalFactu.value = obj.adresse.cp;
+    fetch("/getAdresse/" + addressIdFactu).then(function (response) {
+        response.json().then(function (obj) {
+            nameAddressFactu.value = obj.nom;
+            rueFactu.value = obj.rue;
+            villeFactu.value = obj.ville;
+            paysFactu.value = obj.pays;
+            regionFactu.value = obj.region;
+            complementFactu.value = obj.complement;
+            codepostalFactu.value = obj.cp;
         })
     })
 }
@@ -47,10 +47,10 @@ const complement = document.querySelector("#complement");
 const codepostal = document.querySelector("#codepostal");
 const checkboxAddress = document.querySelector("#register-address");
 
-selectAddress.onchange = function() {
+selectAddress.onchange = function () {
     const addressId = selectAddress.value;
-    if (addressId != ""){
-        updateDisplayAddress(addressId) 
+    if (addressId != "") {
+        updateDisplayAddress(addressId)
         checkboxAddress.setAttribute("disabled", "true")
     } else {
         checkboxAddress.removeAttribute("disabled")
@@ -59,15 +59,15 @@ selectAddress.onchange = function() {
 
 
 function updateDisplayAddress(addressId) {
-    fetch("/getAdresse/"+addressId).then(function(response){
-        response.json().then(function(obj) {
-            nameAddress.value = obj.adresse.nom;
-            rue.value = obj.adresse.rue;
-            ville.value = obj.adresse.ville;
-            pays.value = obj.adresse.pays;
-            region.value = obj.adresse.region;
-            complement.value = obj.adresse.complement;
-            codepostal.value = obj.adresse.cp;
+    fetch("/getAdresse/" + addressId).then(function (response) {
+        response.json().then(function (obj) {
+            nameAddress.value = obj.nom;
+            rue.value = obj.rue;
+            ville.value = obj.ville;
+            pays.value = obj.pays;
+            region.value = obj.region;
+            complement.value = obj.complement;
+            codepostal.value = obj.cp;
         })
     })
 }
@@ -82,10 +82,10 @@ const expiration = document.querySelector("#expiration");
 const cvv = document.querySelector("#cvv");
 const checkboxCard = document.querySelector("#register-card");
 
-selectPaiements.onchange = function() {
+selectPaiements.onchange = function () {
     const cardId = selectPaiements.value;
-    if (cardId != ""){
-        updateDisplayCard(cardId) 
+    if (cardId != "") {
+        updateDisplayCard(cardId)
         checkboxCard.setAttribute("disabled", "true")
     } else {
         checkboxCard.removeAttribute("disabled")
@@ -94,20 +94,19 @@ selectPaiements.onchange = function() {
 
 
 function updateDisplayCard(cardId) {
-    fetch("/getCard/"+cardId).then(function(response){
-        response.json().then(function(obj) {
-            console.log(obj)
-            nomCard.value = obj.card.libelle_carte;
-            fullname.value = obj.card.nom_carte;
-            cardnumber.value = obj.card.num_carte;
-            expiration.value = obj.card.date_expiration;
-            cvv.value = obj.card.cvv;
+    fetch("/getPaiement/" + cardId).then(function (response) {
+        response.json().then(function (obj) {
+            nomCard.value = obj.libelle_carte;
+            fullname.value = obj.nom_carte;
+            cardnumber.value = obj.num_carte;
+            expiration.value = obj.date_expiration;
+            cvv.value = obj.cvv;
         })
     })
 }
-    
 
 
 
-    
+
+
 
