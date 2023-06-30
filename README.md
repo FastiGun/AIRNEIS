@@ -20,10 +20,10 @@ Avant de pouvoir exécuter l'application, assurez-vous d'avoir les éléments su
 - Installez les dépendances : npm install
   
 - Configurez les variables d'environnement :
-  Créez un fichier .env à la racine du projet et ajoutez les configurations suivantes :
-  PORT=3000
-  MONGODB_URI=mongodb://localhost:27017/airneis
-  Assurez-vous de remplacer mongodb://localhost:27017/airneis par l'URL de votre base de données MongoDB.
+Créez un fichier .env à la racine du projet et ajoutez les configurations suivantes :
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/airneis
+Assurez-vous de remplacer mongodb://localhost:27017/airneis par l'URL de votre base de données MongoDB.
 
 - Démarrez l'application : npm start
 
