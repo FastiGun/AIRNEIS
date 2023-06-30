@@ -15,6 +15,6 @@ Avant de pouvoir exécuter l'application, assurez-vous d'avoir les éléments su
 - MongoDB
 
 # Installation
-- Clonez ce dépôt sur votre machine locale : git clone https://github.com/votre-utilisateur/airneis.git
+- Clonez ce dépôt sur votre machine locale : git clone https://github.com/FastiGun/AIRNEIS.git
 - Accédez au répertoire du projet : cd airneis
 - Installez les dépendances : npm install
