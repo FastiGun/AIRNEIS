@@ -30,3 +30,9 @@ Assurez-vous de remplacer mongodb://localhost:27017/airneis par l'URL de votre b
 - Démarrez l'application : npm start
 
 L'application sera accessible à l'adresse http://localhost:3000.
+
+# Auteurs
+
+- [@RunninZoom](https://github.com/RunninZoom)
+- [@FastiGun](https://github.com/FastiGun)
+- [@belcasam](https://github.com/belcasam)
