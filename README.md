@@ -18,3 +18,13 @@ Avant de pouvoir exécuter l'application, assurez-vous d'avoir les éléments su
 - Clonez ce dépôt sur votre machine locale : git clone https://github.com/FastiGun/AIRNEIS.git
 - Accédez au répertoire du projet : cd airneis
 - Installez les dépendances : npm install
+  
+- Configurez les variables d'environnement :
+  Créez un fichier .env à la racine du projet et ajoutez les configurations suivantes :
+  PORT=3000
+  MONGODB_URI=mongodb://localhost:27017/airneis
+  Assurez-vous de remplacer mongodb://localhost:27017/airneis par l'URL de votre base de données MongoDB.
+
+- Démarrez l'application : npm start
+
+L'application sera accessible à l'adresse http://localhost:3000.
