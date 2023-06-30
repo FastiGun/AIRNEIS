@@ -1,11 +1,11 @@
-:root{
+:root {
     font-family: sans-serif;
     font-size: 16px;
     overflow-x: hidden;
 }
 
-body{
-    margin:0;
+body {
+    margin: 0;
     padding: 0;
     display: grid;
     grid-template-rows: auto 1fr auto;
@@ -15,12 +15,17 @@ body{
     position: relative;
 }
 
-nav, footer.page-footer{
+#contenu {
+    min-height: 100vh;
+}
+
+nav,
+footer.page-footer {
     background-color: rgb(102, 102, 192) !important;
 }
 
-nav{
-    line-height: none ;
+nav {
+    line-height: none;
     height: 4.35rem !important;
     position: fixed;
     top: 0;
@@ -28,18 +33,18 @@ nav{
     z-index: 10;
 }
 
-.nav-wrap{
+.nav-wrap {
     display: flex;
     justify-content: space-between;
     padding-right: 1rem;
     height: auto;
 }
 
-.contentP{
+.contentP {
     font-size: 1.5rem;
 }
 
-.logo{
+.logo {
     font-weight: 900;
     font-size: 2rem;
     padding: 0.2rem 1rem;
@@ -47,32 +52,32 @@ nav{
     letter-spacing: 0.2rem;
 }
 
-.logo:hover{
+.logo:hover {
     color: rgb(206, 206, 206);
     transition: 0.2s;
 }
 
-ul .right{
+ul .right {
     align-items: center;
 }
 
-ul{
+ul {
     display: flex;
     align-items: center;
     justify-content: right;
 }
 
-li a{
+li a {
     width: 56px;
     height: 100%;
     margin: auto;
 }
 
-li a:hover{
+li a:hover {
     border-radius: 5px;
 }
 
-.page-footer ul{
+.page-footer ul {
     display: flex;
     justify-content: left;
     gap: 3rem;
@@ -80,25 +85,25 @@ li a:hover{
     width: 100%;
 }
 
-.page-footer ul li a{
+.page-footer ul li a {
     color: white;
     transition: 0.2s;
 }
 
-.page-footer ul li a:hover{
+.page-footer ul li a:hover {
     transition: 0.2s;
     color: rgb(206, 206, 206);
 }
 
-.footer-copyright a i{
+.footer-copyright a i {
     font-size: 1.3rem;
 }
 
-.footer-copyright a{
+.footer-copyright a {
     margin-left: 2rem;
 }
 
-.img-back{
+.img-back {
     background: url('/assets/img/placeholder.png') center;
     background-repeat: no-repeat, repeat;
     background-size: cover;
@@ -106,7 +111,7 @@ li a:hover{
     width: 100%;
 }
 
-.img{
+.img {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -114,12 +119,12 @@ li a:hover{
     transition: 0.2s;
 }
 
-.img:hover{
+.img:hover {
     opacity: 0.7;
     transition: 0.2s;
 }
 
-.carroussel{
+.carroussel {
     width: 400%;
     overflow-x: hidden;
     white-space: nowrap;
@@ -127,24 +132,23 @@ li a:hover{
     animation: carousel 15s linear infinite;
 }
 
-#contenu{
-    width: 100vw ;
-    max-width: 100% ;
-    margin:  4.35rem 0 0 0;
-    min-height: 40rem;
+#contenu {
+    width: 100vw;
+    max-width: 100%;
+    margin: 4.35rem 0 0 0;
 }
 
-i.fa-brands:hover{
+i.fa-brands:hover {
     opacity: 0.8;
-    transition : 0.2s;
+    transition: 0.2s;
 }
 
-i.fa-brands{
+i.fa-brands {
     opacity: 1;
-    transition : 0.2s;
+    transition: 0.2s;
 }
 
-.container{
+.container {
     max-width: 1100px;
 }
 
@@ -152,47 +156,58 @@ i.fa-brands{
     0% {
         transform: translateX(0);
     }
+
     23% {
         transform: translateX(0);
     }
-    27%{
+
+    27% {
         transform: translateX(-25.00%);
     }
+
     48% {
         transform: translateX(-25.00%);
     }
+
     51% {
         transform: translateX(-50.00%);
-      }
+    }
+
     73% {
         transform: translateX(-50.00%);
-      }
+    }
+
     76% {
         transform: translateX(-75.00%);
     }
+
     97% {
         transform: translateX(-75.00%);
-        }
-    100%{
+    }
+
+    100% {
         transform: translateX(100%);
     }
 }
 
-.contact-h1, .titre-accueil, .titre-produits-accueil{
+.contact-h1,
+.titre-accueil,
+.titre-produits-accueil {
     font-weight: 300;
     font-size: 3rem;
     text-align: center;
 }
 
-.contact-h1{
+.contact-h1 {
     margin-top: 5rem;
 }
 
-.titreh2-index{
+.titreh2-index {
     padding: 3rem 0;
 }
 
-.grille-categories-accueil, .grille-produits-accueil {
+.grille-categories-accueil,
+.grille-produits-accueil {
     display: flex;
     width: 100%;
     align-items: center;
@@ -201,7 +216,8 @@ i.fa-brands{
     flex-wrap: wrap;
 }
 
-.categorie-accueil, .produit-accueil{
+.categorie-accueil,
+.produit-accueil {
     height: 200px;
     width: 300px;
     color: white;
@@ -210,7 +226,10 @@ i.fa-brands{
     margin: 2rem 0;
 }
 
-.button, .btn, .waves-effect, .waves-light{
+.button,
+.btn,
+.waves-effect,
+.waves-light {
     background-color: rgb(102, 102, 192) !important;
 }
 
@@ -249,12 +268,12 @@ i.fa-brands{
     transform: translateX(100%);
 }
 
-.all-cate{
+.all-cate {
     width: 100%;
     text-align: center;
     margin: 2rem 0;
 }
 
-.container-backo{
+.container-backo {
     margin: 3rem auto !important;
 }
