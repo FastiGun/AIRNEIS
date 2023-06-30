@@ -1135,7 +1135,8 @@ mongoose
       authenticate,
       async (req, res) => {
         const clientId = req.params.client;
-        const { article, quantite } = req.body;
+        const article = req.body;
+        const quantite = 1;
 
         try {
           // Vérifier que la quantité et le produit sont renseignés
