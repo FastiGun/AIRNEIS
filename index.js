@@ -1131,12 +1131,13 @@ mongoose
     });
 
     app.post(
-      "/api/add-produit-panier/:client",
+      "/api/add-produit-panier/:client/:article",
       authenticate,
       async (req, res) => {
         const clientId = req.params.client;
-        const article = req.body;
+        const article = req.params.article;
         const quantite = 1;
+        console.log(article);
 
         try {
           // Vérifier que la quantité et le produit sont renseignés
